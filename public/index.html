@@ -1,0 +1,36 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cabaret Chat & Visuals</title>
+  <!-- Google Font for retro console look -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
+  <!-- CSS file -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Chat Window Container -->
+  <div class="chat-window glitch">
+    <!-- Header: avatar + username -->
+    <header class="chat-header">
+      <img src="https://placekitten.com/50/50" alt="Avatar" class="avatar" />
+      <span class="username">CabaretHost</span>
+    </header>
+    <!-- Chat Body: messages appended here -->
+    <div class="chat-body" id="chatBody"></div>
+    <!-- Footer: input field -->
+    <footer class="chat-footer">
+      <input type="text" id="chatInput" placeholder="Type a message…" autocomplete="off" />
+    </footer>
+  </div>
+
+  <!-- Socket.IO client (adjust path if hosting differently) -->
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- p5.js for visuals -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+  <!-- Main JavaScript -->
+  <script src="main.js"></script>
+</body>
+</html>
