@@ -6,28 +6,40 @@ const chatInput = document.getElementById('chatInput');
 // Colors for messages
 const userColor = '#0f0'; // neon-green
 
-// Send message when Enter is pressed
-chatInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && chatInput.value.trim()) {
-    const msgText = chatInput.value.trim();
-    socket.emit('chat', msgText);
-    chatInput.value = '';
-  }
+// Handle sending messages
+chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && chatInput.value.trim()) {
+        // Send message as an object with text property
+        socket.emit('chat', {
+            text: chatInput.value.trim()
+        });
+        chatInput.value = '';
+    }
 });
 
 // Receive chat message and append to chat body
-socket.on('chat', (msg) => {
+socket.on('chat', (messageObj) => {
   const msgDiv = document.createElement('div');
   msgDiv.className = 'message';
-  msgDiv.textContent = msg;
+
+  // Create message content with user ID and text
+  msgDiv.innerHTML = `
+    <span class="user-id">${messageObj.userId}:</span>
+    <span class="text">${messageObj.text}</span>
+    <span class="timestamp">${new Date(messageObj.timestamp).toLocaleTimeString()}</span>
+  `;
+  
   msgDiv.style.color = userColor;
   msgDiv.style.borderLeft = `3px solid ${userColor}`;
   msgDiv.style.paddingLeft = '6px';
+  
   chatBody.appendChild(msgDiv);
   chatBody.scrollTop = chatBody.scrollHeight;
+  
   // Trigger visual effect for this message
-  visuals.onMessage(msg);
+  visuals.onMessage(messageObj.text);
 });
+
 
 // ------------------------------------------------------------------------
 // p5.js Visuals
@@ -96,7 +108,7 @@ function windowResized() {
 
 // Visuals object with onMessage hook
 const visuals = {
-  onMessage(msg) {
+  onMessage(messageObj) {
     // Spawn a burst of particles
     for (let i = 0; i < 30; i++) {
       const angle = random(TWO_PI);
