@@ -15,8 +15,8 @@
   <div class="chat-window glitch">
     <!-- Header: avatar + username -->
     <header class="chat-header">
-      <img src="https://placekitten.com/50/50" alt="Avatar" class="avatar" />
-      <span class="username">CabaretHost</span>
+      <img src="assets/images/profile1.png" alt="Avatar" class="avatar" width="300px" height="300px"/>
+      <span class="username">The B0dy_is_0bs0let3</span>
     </header>
     <!-- Chat Body: messages appended here -->
     <div class="chat-body" id="chatBody"></div>
@@ -24,6 +24,15 @@
     <footer class="chat-footer">
       <input type="text" id="chatInput" placeholder="Type a message…" autocomplete="off" />
     </footer>
+  </div>
+
+  <!-- Username Popup -->
+  <div id="username-popup" class="popup">
+    <div class="popup-content">
+      <h2>Welcome to The B0dy_is_0bs0let3 Chatroom</h2>
+      <input type="text" id="username-input" placeholder="Enter your username" maxlength="20">
+      <button id="username-submit">Join Chat</button>
+    </div>
   </div>
 
   <!-- Socket.IO client (adjust path if hosting differently) -->

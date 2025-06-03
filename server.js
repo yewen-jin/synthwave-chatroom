@@ -29,6 +29,12 @@ io.on('connection', (socket) => {
   const userId = ipMap.get(clientIp);
   console.log(`Client connected - IP: ${clientIp}, ID: ${userId}, Socket: ${socket.id}`);
 
+  let username;
+
+  socket.on('set username', (name) => {
+    username = name;
+    console.log(`User ${socket.id} set username to ${username}`);
+  });
 
   // Listen for chat messages from clients
   socket.on('chat', (msg) => {
@@ -38,7 +44,7 @@ io.on('connection', (socket) => {
     // Add user ID to message object
     const messageWithId = {
       text: messageContent,
-      userId: userId,
+      userId: username || userId, // Use username if available, fallback to userId
       timestamp: new Date().toISOString()
     };
 

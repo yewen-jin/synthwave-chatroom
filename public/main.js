@@ -6,12 +6,38 @@ const chatInput = document.getElementById('chatInput');
 // Colors for messages
 const userColor = '#0f0'; // neon-green
 
+// Add these constants at the top
+const usernamePopup = document.getElementById('username-popup');
+const usernameInput = document.getElementById('username-input');
+const usernameSubmit = document.getElementById('username-submit');
+
+// Initialize username
+let username = localStorage.getItem('username');
+
+// Show popup if no username is stored
+if (!username) {
+    usernamePopup.style.display = 'flex';
+} else {
+    socket.emit('set username', username);
+}
+
+// Handle username submission
+usernameSubmit.addEventListener('click', () => {
+    username = usernameInput.value.trim();
+    if (username) {
+        localStorage.setItem('username', username);
+        usernamePopup.style.display = 'none';
+        socket.emit('set username', username);
+    }
+});
+
 // Handle sending messages
 chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && chatInput.value.trim()) {
         // Send message as an object with text property
         socket.emit('chat', {
-            text: chatInput.value.trim()
+            text: chatInput.value.trim(),
+            username: username // Add username to message
         });
         chatInput.value = '';
     }
@@ -19,25 +45,18 @@ chatInput.addEventListener('keypress', (e) => {
 
 // Receive chat message and append to chat body
 socket.on('chat', (messageObj) => {
-  const msgDiv = document.createElement('div');
-  msgDiv.className = 'message';
-
-  // Create message content with user ID and text
-  msgDiv.innerHTML = `
-    <span class="user-id">${messageObj.userId}:</span>
-    <span class="text">${messageObj.text}</span>
-    <span class="timestamp">${new Date(messageObj.timestamp).toLocaleTimeString()}</span>
-  `;
-  
-  msgDiv.style.color = userColor;
-  msgDiv.style.borderLeft = `3px solid ${userColor}`;
-  msgDiv.style.paddingLeft = '6px';
-  
-  chatBody.appendChild(msgDiv);
-  chatBody.scrollTop = chatBody.scrollHeight;
-  
-  // Trigger visual effect for this message
-  visuals.onMessage(messageObj.text);
+    const msgDiv = document.createElement('div');
+    // Add 'mine' class if message is from current user, 'others' if not
+    msgDiv.className = `message ${messageObj.userId === username ? 'mine' : 'others'}`;
+    
+    msgDiv.innerHTML = `
+        <span class="user-id">${messageObj.userId}:</span>
+        <span class="text">${messageObj.text}</span>
+        <span class="timestamp">${new Date(messageObj.timestamp).toLocaleTimeString()}</span>
+    `;
+    
+    chatBody.appendChild(msgDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
 });
 
 
