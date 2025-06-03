@@ -294,3 +294,84 @@ body {
     background: #0f0;
     border: 1px solid #000000;
 }
+
+/* Mobile Optimization */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 0;
+        height: 100vh;
+    }
+
+    .msn-window {
+        width: 100%;
+        height: 100vh;
+        margin: 0;
+        border: none;
+    }
+
+    .chat-area {
+        width: 100%;
+        height: calc(100vh - 40px); /* Account for title bar */
+    }
+
+    /* Stack input area and avatar vertically on mobile */
+    .input-section {
+        flex-direction: column-reverse;
+        gap: 5px;
+    }
+
+    .user-avatar-panel {
+        width: 100%;
+        padding: 4px;
+        border-left: none;
+        border-bottom: 1px solid #0f0;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Adjust message bubbles for mobile */
+    .message {
+        max-width: 85%;
+        font-size: 14px;
+    }
+
+    /* Make input area more compact */
+    #chatInput {
+        height: 40px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+
+    .toolbar {
+        /* padding: 2px; */
+    }
+
+    /* Adjust popup for mobile */
+    .popup-content {
+        width: 90%;
+        max-width: 300px;
+    }
+
+    /* Hide scrollbars on mobile but keep functionality */
+    .chat-body::-webkit-scrollbar {
+        width: 3px;
+    }
+}
+
+/* Additional adjustments for very small screens */
+@media screen and (max-width: 320px) {
+    .message {
+        max-width: 95%;
+    }
+
+    .title-bar {
+        padding: 2px 4px;
+    }
+
+    .msn-icon {
+        width: 12px;
+        height: 12px;
+    }
+}
