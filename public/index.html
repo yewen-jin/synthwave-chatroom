@@ -4,42 +4,78 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cabaret Chat & Visuals</title>
-  <!-- Google Font for retro console look -->
-  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
-  <!-- CSS file -->
+  <title>The B0dy_is_0bs0let3</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Chat Window Container -->
-  <div class="chat-window glitch">
-    <!-- Header: avatar + username -->
-    <header class="chat-header">
-      <img src="assets/images/profile1.png" alt="Avatar" class="avatar" width="40px" height="40px"/>
-      <span class="username">The B0dy_is_0bs0let3</span>
-    </header>
-    <!-- Chat Body: messages appended here -->
-    <div class="chat-body" id="chatBody"></div>
-    <!-- Footer: input field -->
-    <footer class="chat-footer">
-      <input type="text" id="chatInput" placeholder="Type a message…" autocomplete="off" />
-    </footer>
+  <!-- MSN-style Window Container -->
+  <div class="msn-window">
+    <!-- Title Bar -->
+    <div class="title-bar">
+      <img src="assets/images/icon.png" alt="MSN" class="msn-icon" />
+      <span class="window-title"> </span>
+      <div class="window-controls">
+        <button class="minimize">_</button>
+        <button class="maximize">□</button>
+        <button class="close">×</button>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+      <!-- Contact Info Bar -->
+      <div class="contact-info">
+        <img src="assets/images/profile1.png" alt="Avatar" class="avatar" />
+        <div class="contact-details">
+          <span class="contact-name">The B0dy_is_0bs0let3</span>
+          <span class="status">Online</span>
+        </div>
+      </div>
+
+      <!-- Messages Container -->
+      <div class="chat-body" id="chatBody"></div>
+
+      <!-- Message Input Area -->
+      <div class="input-section">
+        <div class="message-input-area">
+          <div class="toolbar">
+            <button class="emoticon-btn">☺</button>
+            <button class="nudge-btn">≫</button>
+          </div>
+          <div class="input-wrapper">
+            <div class="input-container">
+              <textarea id="chatInput" placeholder="Type a message…"></textarea>
+            </div>
+          </div>
+          <button class="send-btn">Send</button>
+        </div>
+        
+        <!-- User Avatar Side Panel -->
+        <div class="user-avatar-panel">
+          <img src="assets/images/profile1.png" alt="Your Avatar" class="avatar user-avatar" />
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Username Popup -->
   <div id="username-popup" class="popup">
-    <div class="popup-content">
-      <h2>Welcome to The B0dy_is_0bs0let3 Chatroom</h2>
-      <input type="text" id="username-input" placeholder="Enter your username" maxlength="20">
-      <button id="username-submit">Join Chat</button>
+    <div class="popup-content msn-style">
+      <div class="title-bar">
+        <img src="assets/images/msn-icon.png" alt="MSN" class="msn-icon" />
+        <span>Sign In</span>
+      </div>
+      <div class="login-content">
+        <p>Please enter your display name to continue</p>
+        <input type="text" id="username-input" placeholder="Display name" maxlength="20">
+        <button id="username-submit">Sign In</button>
+      </div>
     </div>
   </div>
 
-  <!-- Socket.IO client (adjust path if hosting differently) -->
+  <!-- Scripts -->
   <script src="/socket.io/socket.io.js"></script>
-  <!-- p5.js for visuals -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
-  <!-- Main JavaScript -->
   <script src="main.js"></script>
 </body>
 </html>

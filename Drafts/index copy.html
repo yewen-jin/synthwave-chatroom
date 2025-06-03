@@ -1,0 +1,45 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cabaret Chat & Visuals</title>
+  <!-- Google Font for retro console look -->
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
+  <!-- CSS file -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Chat Window Container -->
+  <div class="chat-window glitch">
+    <!-- Header: avatar + username -->
+    <header class="chat-header">
+      <img src="assets/images/profile1.png" alt="Avatar" class="avatar" width="40px" height="40px"/>
+      <span class="username">The B0dy_is_0bs0let3</span>
+    </header>
+    <!-- Chat Body: messages appended here -->
+    <div class="chat-body" id="chatBody"></div>
+    <!-- Footer: input field -->
+    <footer class="chat-footer">
+      <input type="text" id="chatInput" placeholder="Type a message…" autocomplete="off" />
+    </footer>
+  </div>
+
+  <!-- Username Popup -->
+  <div id="username-popup" class="popup">
+    <div class="popup-content">
+      <h2>Welcome to The B0dy_is_0bs0let3 Chatroom</h2>
+      <input type="text" id="username-input" placeholder="Enter your username" maxlength="20">
+      <button id="username-submit">Join Chat</button>
+    </div>
+  </div>
+
+  <!-- Socket.IO client (adjust path if hosting differently) -->
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- p5.js for visuals -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+  <!-- Main JavaScript -->
+  <script src="main.js"></script>
+</body>
+</html>

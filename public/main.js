@@ -2,6 +2,7 @@
 const socket = io();
 const chatBody = document.getElementById('chatBody');
 const chatInput = document.getElementById('chatInput');
+const sendBtn = document.querySelector('.send-btn');
 
 // Colors for messages
 const userColor = '#0f0'; // neon-green
@@ -31,16 +32,29 @@ usernameSubmit.addEventListener('click', () => {
     }
 });
 
-// Handle sending messages
-chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && chatInput.value.trim()) {
-        // Send message as an object with text property
+// Function to send message
+function sendMessage() {
+    const message = chatInput.value.trim();
+    if (message) {
         socket.emit('chat', {
-            text: chatInput.value.trim(),
-            username: username // Add username to message
+            text: message,
+            username: username
         });
         chatInput.value = '';
     }
+}
+
+// Handle sending messages with Enter key
+chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // Prevent new line
+        sendMessage();
+    }
+});
+
+// Handle sending messages with Send button
+sendBtn.addEventListener('click', () => {
+    sendMessage();
 });
 
 // Receive chat message and append to chat body
@@ -103,13 +117,13 @@ function setup() {
 
 function draw() {
   background(0);
-  // Rotate a central cube
-  push();
-  rotateY(frameCount * 0.005);
-  stroke(0, 255, 0);
-  noFill();
-  box(200);
-  pop();
+  // // Rotate a central cube
+  // push();
+  // rotateY(frameCount * 0.005);
+  // stroke(0, 255, 0);
+  // noFill();
+  // // box(200);
+  // pop();
 
   // Update and show particles
   for (let i = particles.length - 1; i >= 0; i--) {
