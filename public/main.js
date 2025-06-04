@@ -32,32 +32,65 @@ usernameSubmit.addEventListener('click', () => {
     }
 });
 
-// Add this socket listener for join messages
+// Function to add message to chat (handles both chat and system messages)
+function addMessageToChat(element) {
+    // Find the last message in the chat
+    const messages = chatBody.querySelectorAll('.message, .system-message');
+    const lastMessage = messages[messages.length - 1];
+    
+    // Insert the new message after the last message
+    if (lastMessage) {
+        lastMessage.insertAdjacentElement('afterend', element);
+    } else {
+        chatBody.appendChild(element);
+    }
+    
+    // Scroll to bottom
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// Update the join message handler
 socket.on('user joined', (username) => {
     const joinMessage = document.createElement('div');
     joinMessage.className = 'system-message';
     joinMessage.innerHTML = `<i><strong>${username}</strong> entered the room</i>`;
-    chatBody.appendChild(joinMessage);
-    chatBody.scrollTop = chatBody.scrollHeight;
+    addMessageToChat(joinMessage);
 });
 
-// Add this socket listener for leave messages
+// Update the leave message handler
 socket.on('user left', (username) => {
     const leaveMessage = document.createElement('div');
     leaveMessage.className = 'system-message';
     leaveMessage.innerHTML = `<i><strong>${username}</strong> left the room</i>`;
-    chatBody.appendChild(leaveMessage);
-    chatBody.scrollTop = chatBody.scrollHeight;
+    addMessageToChat(leaveMessage);
+});
+
+// Update the chat message handler
+socket.on('chat', (messageObj) => {
+    const msgDiv = document.createElement('div');
+    // Fix username comparison
+    msgDiv.className = `message ${messageObj.username === username ? 'mine' : 'others'}`;
+    
+    // Use the timestamp from messageObj instead of creating new Date()
+    msgDiv.innerHTML = `
+        <span class="user-id">${messageObj.username}:</span>
+        <span class="text">${messageObj.text}</span>
+        <span class="timestamp">${new Date(messageObj.timestamp).toLocaleTimeString()}</span>
+    `;
+    
+    addMessageToChat(msgDiv);
 });
 
 // Function to send message
 function sendMessage() {
     const message = chatInput.value.trim();
     if (message) {
-        socket.emit('chat', {
+        const messageObj = {
             text: message,
-            username: username
-        });
+            username: username,
+            timestamp: Date.now()  // Make sure timestamp is included
+        };
+        socket.emit('chat', messageObj);
         chatInput.value = '';
     }
 }
@@ -74,23 +107,6 @@ chatInput.addEventListener('keypress', (e) => {
 sendBtn.addEventListener('click', () => {
     sendMessage();
 });
-
-// Receive chat message and append to chat body
-socket.on('chat', (messageObj) => {
-    const msgDiv = document.createElement('div');
-    // Add 'mine' class if message is from current user, 'others' if not
-    msgDiv.className = `message ${messageObj.userId === username ? 'mine' : 'others'}`;
-    
-    msgDiv.innerHTML = `
-        <span class="user-id">${messageObj.userId}:</span>
-        <span class="text">${messageObj.text}</span>
-        <span class="timestamp">${new Date(messageObj.timestamp).toLocaleTimeString()}</span>
-    `;
-    
-    chatBody.appendChild(msgDiv);
-    chatBody.scrollTop = chatBody.scrollHeight;
-});
-
 
 // ------------------------------------------------------------------------
 // p5.js Visuals
