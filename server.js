@@ -13,14 +13,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Add active users tracking at the top of file
 const activeUsers = new Map(); // stores socketId -> username
+const takenUsernames = new Set(); // stores all usernames in use
 
 // Handle Socket.IO connections
 io.on('connection', (socket) => {
   console.log('A client connected:', socket.id);
 
+  // Check if username is taken
+  socket.on('check username', (username) => {
+    const isTaken = takenUsernames.has(username);
+    socket.emit('username response', isTaken);
+  });
+
   // Handle user joining
   socket.on('user joined', (username) => {
+    if (takenUsernames.has(username)) {
+      socket.emit('username taken');
+      return;
+    }
+    
     socket.username = username;
+    takenUsernames.add(username);
     activeUsers.set(socket.id, username);
     console.log(`User joined: ${username}`);
     console.log('Active users:', Array.from(activeUsers.values()));
@@ -45,6 +58,7 @@ io.on('connection', (socket) => {
     const username = activeUsers.get(socket.id);
     if (username) {
       console.log(`User left: ${username}`);
+      takenUsernames.delete(username);
       activeUsers.delete(socket.id);
       console.log('Remaining users:', Array.from(activeUsers.values()));
       io.emit('user left', username);

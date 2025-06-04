@@ -22,14 +22,35 @@ if (!username) {
     socket.emit('set username', username);
 }
 
+// Add error message element to the popup
+const errorMessage = document.createElement('p');
+errorMessage.style.color = '#ff0000';
+errorMessage.style.display = 'none';
+errorMessage.textContent = 'This display name has been taken, please use another one';
+document.querySelector('.login-content').appendChild(errorMessage);
+
 // Handle username submission
 usernameSubmit.addEventListener('click', () => {
     username = usernameInput.value.trim();
     if (username) {
+        socket.emit('check username', username);
+    }
+});
+
+// Add username response handler
+socket.on('username response', (isTaken) => {
+    if (isTaken) {
+        errorMessage.style.display = 'block';
+    } else {
         localStorage.setItem('username', username);
         usernamePopup.style.display = 'none';
-        socket.emit('user joined', username); // Changed from 'set username' to 'user joined'
+        socket.emit('user joined', username);
+        errorMessage.style.display = 'none';
     }
+});
+
+socket.on('username taken', () => {
+    errorMessage.style.display = 'block';
 });
 
 // Function to add message to chat (handles both chat and system messages)
