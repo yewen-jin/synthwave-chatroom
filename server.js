@@ -36,6 +36,12 @@ io.on('connection', (socket) => {
     console.log(`User ${socket.id} set username to ${username}`);
   });
 
+  socket.on('user joined', (username) => {
+    socket.username = username;
+    // Broadcast to everyone including sender
+    io.emit('user joined', username);
+  });
+
   // Listen for chat messages from clients
   socket.on('chat', (msg) => {
     // Ensure msg is properly formatted

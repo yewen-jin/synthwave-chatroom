@@ -28,8 +28,17 @@ usernameSubmit.addEventListener('click', () => {
     if (username) {
         localStorage.setItem('username', username);
         usernamePopup.style.display = 'none';
-        socket.emit('set username', username);
+        socket.emit('user joined', username); // Changed from 'set username' to 'user joined'
     }
+});
+
+// Add this socket listener for join messages
+socket.on('user joined', (username) => {
+    const joinMessage = document.createElement('div');
+    joinMessage.className = 'system-message';
+    joinMessage.innerHTML = `<i><strong>${username}</strong> entered the room</i>`;
+    chatBody.appendChild(joinMessage);
+    chatBody.scrollTop = chatBody.scrollHeight;
 });
 
 // Function to send message

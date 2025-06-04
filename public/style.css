@@ -529,3 +529,21 @@ body {
         margin: 16px 0;
     }
 }
+
+.system-message {
+    text-align: center;
+    color: #00ff00;
+    padding: 8px;
+    margin: 8px 0;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.system-message i {
+    font-style: italic;
+}
+
+.system-message strong {
+    font-weight: bold;
+    color: #00ff00;
+}
