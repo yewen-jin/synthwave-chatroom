@@ -34,16 +34,8 @@ usernameSubmit.addEventListener('click', () => {
 
 // Function to add message to chat (handles both chat and system messages)
 function addMessageToChat(element) {
-    // Find the last message in the chat
-    const messages = chatBody.querySelectorAll('.message, .system-message');
-    const lastMessage = messages[messages.length - 1];
-    
-    // Insert the new message after the last message
-    if (lastMessage) {
-        lastMessage.insertAdjacentElement('afterend', element);
-    } else {
-        chatBody.appendChild(element);
-    }
+    // Simply append the new message to chat body
+    chatBody.appendChild(element);
     
     // Scroll to bottom
     chatBody.scrollTop = chatBody.scrollHeight;

@@ -163,9 +163,10 @@ body {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     margin: 8px;
-    padding: 10px;
+    padding: 15px;
     overflow-y: auto;
     color: #00ff00;
+    line-height: 1.5;
 }
 
 .message-input-area {
@@ -249,7 +250,14 @@ body {
 
 /* Update message shadows */
 .message {
-    /* ...existing code... */
+    margin: 12px 0;
+    padding: 8px 12px;
+    font-size: 16px;
+    line-height: 1.4;
+    max-width: 70%;
+    clear: both;
+    display: block;
+    background-color: rgba(0, 255, 0, 0.1);
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);  /* Subtle message shadow */
 }
 
@@ -276,12 +284,13 @@ body {
 }
 
 .message {
-    margin: 8px 0;
-    padding: 4px 8px;
+    margin: 12px 0;
+    padding: 8px 12px;
     font-size: 16px;
     line-height: 1.4;
     max-width: 70%;
     clear: both;
+    display: block;
     background-color: rgba(0, 255, 0, 0.1);
     box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
 }
@@ -531,12 +540,16 @@ body {
 }
 
 .system-message {
+    width: 100%;
+    clear: both;
+    display: block;
     text-align: center;
     color: #00ff00;
-    padding: 8px;
-    margin: 8px 0;
+    padding: 8px 0;
+    margin: 12px 0;
     font-size: 14px;
     opacity: 0.8;
+    line-height: 1.4;
 }
 
 .system-message i {
