@@ -155,7 +155,7 @@ body {
 .msn-window {
     width: 800px;
     background: #000000;
-    border: 1px solid #0f0;
+    border: 3px solid #0f0;  /* Increased from 1px to 3px */
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 

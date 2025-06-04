@@ -116,7 +116,7 @@ function setup() {
 }
 
 function draw() {
-  background(0,12,24);
+  background(10, 10, 10);
   // // Rotate a central cube
   push();
   rotateY(frameCount * 0.005);
