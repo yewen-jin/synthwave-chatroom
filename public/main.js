@@ -26,7 +26,7 @@ if (!username) {
 const errorMessage = document.createElement('p');
 errorMessage.style.color = '#ff0000';
 errorMessage.style.display = 'none';
-errorMessage.textContent = 'This display name has been taken, please use another one';
+errorMessage.textContent = 'This name has been taken, please use another one';
 document.querySelector('.login-content').appendChild(errorMessage);
 
 // Handle username submission
