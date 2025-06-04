@@ -4,8 +4,11 @@
 }
 
 :root {
-    --border-color: #0f0;
+    /* --border-color: #0f0; */
+    --border-color: rgb(255, 255, 255);
     --border-glow: rgb(151, 22, 168);
+    --bg-primary: #9b9b9b;    /* Darker warm grey */
+    --bg-secondary: #000000;  /* Lighter warm grey */
 }
 
 /* Update these elements to use the variable */
@@ -65,7 +68,7 @@ body {
     align-items: center;
     user-select: none;
     cursor: grab;
-    border-bottom: 1px solid #0f0;
+    border-bottom: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
 }
@@ -157,7 +160,7 @@ body {
 
 .chat-body {
     flex: 3;  /* Takes up 3/5 of the space */
-    background: #000000;
+    background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     margin: 8px;
     padding: 10px;
@@ -170,7 +173,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 8px;
-    background: #000000;
+    background: var(--bg-primary);
 }
 
 .input-section {
@@ -187,6 +190,7 @@ body {
     align-items: center;
     justify-content: center;
     border-left: 1px solid var(--border-color);
+    background: var(--bg-primary);
 }
 
 .input-wrapper {
@@ -200,7 +204,7 @@ body {
 #chatInput {
     width: 100%;
     height: 60px;
-    background: #000000;
+    background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     color: #00ff00;
     padding: 8px;
@@ -220,7 +224,7 @@ body {
 .msn-window {
     position: absolute;
     width: 800px;
-    background: #000000;
+    background: var(--bg-primary);
     border: 3px solid var(--border-color);
     box-shadow: 4px 4px 10px rgba(207, 1, 173, 0.8);  /* Classic window shadow */
 }
@@ -259,7 +263,7 @@ body {
 .toolbar {
     width: 100%;
     /* padding: 4px; */
-    background: #000000;
+    background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     margin-bottom: 8px;
 }
@@ -322,7 +326,7 @@ body {
 }
 
 .popup-content {
-    background: #000000;
+    background: var(--bg-primary);
     padding: 20px;
     border: 2px solid #0f0;
     border-radius: 4px;
@@ -341,7 +345,7 @@ body {
 .login-content {
   padding: 20px;
   text-align: center;
-  background: #000000;
+  background: var(--bg-primary);
   color: #00ff00;
 }
 
