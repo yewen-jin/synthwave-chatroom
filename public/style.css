@@ -4,10 +4,10 @@
 }
 
 :root {
-    /* --border-color: #0f0; */
-    --border-color: rgb(255, 255, 255);
+    --border-color: #0f0;
+    /* --border-color: rgb(255, 255, 255); */
     --border-glow: rgb(151, 22, 168);
-    --bg-primary: #9b9b9b;    /* Darker warm grey */
+    --bg-primary: rgb(0, 0, 0);    /* Darker warm grey */
     --bg-secondary: #000000;  /* Lighter warm grey */
 }
 
