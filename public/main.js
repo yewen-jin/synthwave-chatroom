@@ -116,14 +116,14 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  background(0,12,24);
   // // Rotate a central cube
-  // push();
-  // rotateY(frameCount * 0.005);
-  // stroke(0, 255, 0);
-  // noFill();
-  // // box(200);
-  // pop();
+  push();
+  rotateY(frameCount * 0.005);
+  stroke(0, 255, 0);
+  noFill();
+  box(200);
+  pop();
 
   // Update and show particles
   for (let i = particles.length - 1; i >= 0; i--) {
