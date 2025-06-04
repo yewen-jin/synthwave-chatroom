@@ -77,82 +77,152 @@ socket.on('chat', (messageObj) => {
 // ------------------------------------------------------------------------
 // p5.js Visuals
 
-// Array to hold particles
-let particles = [];
+// Synthwave visualization settings
+let gridSize = 20;
+let horizon = 0;
+let speed = 0.5; // Speed of horizon movement
+let sunSize = 150;
 
-// Particle class
-class Particle {
-  constructor(position, velocity, color) {
-    this.pos = position.copy();
-    this.vel = velocity.copy();
-    this.color = color;
-    this.lifespan = 255;
-  }
-
-  update() {
-    this.pos.add(this.vel);
-    this.lifespan -= 5;
-  }
-
-  show() {
-    push();
-    translate(this.pos.x, this.pos.y, this.pos.z);
-    noStroke();
-    fill(red(this.color), green(this.color), blue(this.color), this.lifespan);
-    sphere(5);
-    pop();
-  }
-
-  isDead() {
-    return this.lifespan <= 0;
-  }
-}
+// Define synthwave colors
+const colors = {
+  background: [10, 0, 40],    // Deep purple background
+  sun: [255, 60, 180],       // Hot pink sun
+  grid: [80, 40, 255],       // Neon blue grid
+  fadeColor: [180, 40, 255]   // Purple fade
+};
 
 // p5.js setup
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight, WEBGL);
   canvas.position(0, 0);
-  canvas.style('z-index', '-1'); // ensure chat overlays the canvas
+  canvas.style('z-index', '-1');
 }
 
 function draw() {
-  background(10, 10, 10);
-  // // Rotate a central cube
+  background(colors.background); // Deep purple background
+  
+  // Create gradient sky effect
   push();
-  rotateY(frameCount * 0.005);
-  stroke(0, 255, 0);
-  noFill();
-  box(200);
+  translate(0, -200, -500);
+  noStroke();
+  for(let i = 0; i < height/2; i++) {
+    let inter = map(i, 0, height/2, 0, 1);
+    let c = lerpColor(
+      color(80, 0, 100),    // Deep purple
+      color(255, 60, 180),  // Pink
+      inter
+    );
+    fill(c);
+    rect(-width, i, width * 2, 1);
+  }
   pop();
-
-  // Update and show particles
-  for (let i = particles.length - 1; i >= 0; i--) {
-    particles[i].update();
-    particles[i].show();
-    if (particles[i].isDead()) {
-      particles.splice(i, 1);
-    }
+  
+  // Move camera
+  rotateX(PI/3);
+  translate(0, 100, 0);
+  
+  // Draw sun with glow effect
+  push();
+  translate(0, -500, -1000);
+  // Outer glow
+  noStroke();
+  fill(colors.sun[0], colors.sun[1], colors.sun[2], 50);
+  circle(0, 0, sunSize * 1.5);
+  // Inner sun
+  fill(colors.sun[0], colors.sun[1], colors.sun[2]);
+  circle(0, 0, sunSize);
+  pop();
+  
+  // Draw grid
+  strokeWeight(2);
+  
+  // Horizontal lines
+  for(let z = 0; z < 2000; z += gridSize) {
+    let alpha = map(z, 0, 2000, 255, 0);
+    stroke(
+      colors.grid[0],
+      colors.grid[1], 
+      colors.grid[2],
+      alpha
+    );
+    line(-800, 0, z + horizon, 800, 0, z + horizon);
+  }
+  
+  // Vertical lines
+  for(let x = -800; x <= 800; x += gridSize) {
+    let d = dist(x, 0, 0, 0);
+    let alpha = map(d, 0, 800, 255, 100);
+    stroke(
+      colors.fadeColor[0],
+      colors.fadeColor[1],
+      colors.fadeColor[2],
+      alpha
+    );
+    line(x, 0, 0 + horizon, x, 0, 2000 + horizon);
+  }
+  
+  // Move horizon for animation
+  horizon -= speed;
+  if(horizon <= -gridSize) {
+    horizon = 0;
   }
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
-
-// Visuals object with onMessage hook
+// Update visuals object
 const visuals = {
   onMessage(messageObj) {
-    // Spawn a burst of particles
-    for (let i = 0; i < 30; i++) {
-      const angle = random(TWO_PI);
-      const r = random(50, 150);
-      const x = r * cos(angle);
-      const y = random(-100, 100);
-      const z = r * sin(angle);
-      const pos = createVector(x, y, z);
-      const vel = p5.Vector.mult(pos.copy().normalize(), random(2, 5));
-      const col = color(0, 255, 0);
-      particles.push(new Particle(pos, vel, col));
-    }
+    // Flash effect when message is received
+    sunSize = 200;
+    setTimeout(() => {
+      sunSize = 150;
+    }, 200);
   }
 };
+
+// Add draggable functionality
+const msnWindow = document.querySelector('.msn-window');
+const titleBar = document.querySelector('.title-bar');
+let isDragging = false;
+let currentX;
+let currentY;
+let initialX;
+let initialY;
+let xOffset = 0;
+let yOffset = 0;
+
+titleBar.addEventListener('mousedown', dragStart);
+document.addEventListener('mousemove', drag);
+document.addEventListener('mouseup', dragEnd);
+
+function dragStart(e) {
+    initialX = e.clientX - xOffset;
+    initialY = e.clientY - yOffset;
+
+    if (e.target === titleBar) {
+        isDragging = true;
+    }
+}
+
+function drag(e) {
+    if (isDragging) {
+        e.preventDefault();
+        
+        currentX = e.clientX - initialX;
+        currentY = e.clientY - initialY;
+
+        xOffset = currentX;
+        yOffset = currentY;
+
+        setTranslate(currentX, currentY, msnWindow);
+    }
+}
+
+function dragEnd(e) {
+    initialX = currentX;
+    initialY = currentY;
+    isDragging = false;
+}
+
+function setTranslate(xPos, yPos, el) {
+    el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+}
