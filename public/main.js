@@ -41,6 +41,15 @@ socket.on('user joined', (username) => {
     chatBody.scrollTop = chatBody.scrollHeight;
 });
 
+// Add this socket listener for leave messages
+socket.on('user left', (username) => {
+    const leaveMessage = document.createElement('div');
+    leaveMessage.className = 'system-message';
+    leaveMessage.innerHTML = `<i><strong>${username}</strong> left the room</i>`;
+    chatBody.appendChild(leaveMessage);
+    chatBody.scrollTop = chatBody.scrollHeight;
+});
+
 // Function to send message
 function sendMessage() {
     const message = chatInput.value.trim();
@@ -189,6 +198,7 @@ const visuals = {
 };
 
 // Add draggable functionality
+const maximizeBtn = document.querySelector('.maximize');
 const msnWindow = document.querySelector('.msn-window');
 const titleBar = document.querySelector('.title-bar');
 let isDragging = false;
@@ -203,7 +213,24 @@ titleBar.addEventListener('mousedown', dragStart);
 document.addEventListener('mousemove', drag);
 document.addEventListener('mouseup', dragEnd);
 
+maximizeBtn.addEventListener('click', () => {
+    msnWindow.classList.toggle('maximized');
+    
+    // Disable dragging when maximized
+    if (msnWindow.classList.contains('maximized')) {
+        isDragging = false;
+        titleBar.style.cursor = 'default';
+    } else {
+        titleBar.style.cursor = 'grab';
+    }
+
+    // Update button text
+    maximizeBtn.textContent = msnWindow.classList.contains('maximized') ? '❐' : '□';
+});
+
 function dragStart(e) {
+    if (msnWindow.classList.contains('maximized')) return;
+    
     initialX = e.clientX - xOffset;
     initialY = e.clientY - yOffset;
 

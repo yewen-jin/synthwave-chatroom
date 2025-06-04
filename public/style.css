@@ -547,3 +547,23 @@ body {
     font-weight: bold;
     color: #00ff00;
 }
+
+.msn-window.maximized {
+    width: 100% !important;
+    height: 100vh !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    border: none;
+    border-radius: 0;
+}
+
+.msn-window.maximized .chat-area {
+    width: 100%;
+    height: calc(100vh - 30px); /* Adjust based on your title bar height */
+}
+
+.msn-window.maximized .chat-body {
+    margin: 0;
+    height: calc(100% - 120px); /* Adjust based on your input area height */
+}

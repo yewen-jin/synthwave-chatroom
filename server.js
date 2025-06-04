@@ -64,6 +64,9 @@ io.on('connection', (socket) => {
   // Handle client disconnection
   socket.on('disconnect', () => {
     console.log('A client disconnected:', socket.id);
+    if (socket.username) {
+      io.emit('user left', socket.username);
+    }
   });
 });
 
