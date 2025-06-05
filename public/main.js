@@ -66,7 +66,7 @@ function addMessageToChat(element) {
 socket.on('user joined', (username) => {
     const joinMessage = document.createElement('div');
     joinMessage.className = 'system-message';
-    joinMessage.innerHTML = `<i><strong>${username}</strong> entered the room</i>`;
+    joinMessage.innerHTML = `<i><strong>${username}</strong> entered the chat</i>`;
     addMessageToChat(joinMessage);
 });
 
@@ -74,7 +74,7 @@ socket.on('user joined', (username) => {
 socket.on('user left', (username) => {
     const leaveMessage = document.createElement('div');
     leaveMessage.className = 'system-message';
-    leaveMessage.innerHTML = `<i><strong>${username}</strong> left the room</i>`;
+    leaveMessage.innerHTML = `<i><strong>${username}</strong> left the chat</i>`;
     addMessageToChat(leaveMessage);
 });
 
