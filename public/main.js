@@ -227,7 +227,7 @@ function draw() {
   pop();
   
   // Grid system - NO ADDITIONAL TRANSFORMS NEEDED
-  strokeWeight(2);
+  strokeWeight(1);
   
   // Horizontal lines
   for(let z = 0; z < 2000; z += gridSize) {
