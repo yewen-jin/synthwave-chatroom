@@ -11,6 +11,11 @@ const io = socketIO(server);
 // Serve static files from 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Add route for control page
+app.get('/control', (req, res) => {
+    res.sendFile(__dirname + '/public/control.html');
+});
+
 // Add active users tracking at the top of file
 const activeUsers = new Map(); // stores socketId -> username
 const takenUsernames = new Set(); // stores all usernames in use
@@ -51,6 +56,12 @@ io.on('connection', (socket) => {
       console.log(`Message from ${messageObj.username}: ${messageObj.text}`);
       io.emit('chat', messageObj);
     }
+  });
+
+  // Add this with your other socket handlers
+  socket.on('glitch-control', (data) => {
+    // Broadcast the control change to all clients except sender
+    socket.broadcast.emit('glitch-control', data);
   });
 
   // Handle client disconnection

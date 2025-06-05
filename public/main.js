@@ -138,6 +138,13 @@ const colors = {
   fadeColor: [180, 40, 255]   // Purple fade
 };
 
+// Add these with your other P5.js settings
+let glitchProbability = 0.1;
+let glitchDecay = 0.9;
+let channelOffset = 10;
+let glitchIntensity = 1;
+let glitchActive = false;
+
 // p5.js setup
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight, WEBGL);
@@ -146,69 +153,117 @@ function setup() {
 }
 
 function draw() {
-  background(colors.background); // Deep purple background
+  background(colors.background);
   
-  // Create gradient sky effect
+  // Check for random glitch trigger based on probability
+  if (random(1) < glitchProbability) {
+    glitchActive = true;
+  }
+  
+  // Sky gradient
   push();
   translate(0, -200, -500);
   noStroke();
+  
+  // Draw gradient with channel splitting when glitching
   for(let i = 0; i < height/2; i++) {
     let inter = map(i, 0, height/2, 0, 1);
     let c = lerpColor(
-      color(80, 0, 100),    // Deep purple
-      color(255, 60, 180),  // Pink
+      color(80, 0, 100),
+      color(255, 60, 180),
       inter
     );
-    fill(c);
-    rect(-width, i, width * 2, 1);
+    
+    if (glitchActive) {
+      // RGB splitting
+      fill(color(255, 0, 0));
+      rect(-width + random(-channelOffset, channelOffset) * glitchIntensity, 
+           i + random(-2, 2), width * 2, 1);
+           
+      fill(color(0, 255, 0));
+      rect(-width + random(-channelOffset, channelOffset) * glitchIntensity, 
+           i + random(-2, 2), width * 2, 1);
+           
+      fill(color(0, 0, 255));
+      rect(-width + random(-channelOffset, channelOffset) * glitchIntensity, 
+           i + random(-2, 2), width * 2, 1);
+    } else {
+      fill(c);
+      rect(-width, i, width * 2, 1);
+    }
   }
   pop();
   
-  // Move camera
-  rotateX(PI/3);
-  translate(0, 100, 0);
+  // Camera setup
+  if (glitchActive) {
+    // Add camera shake during glitch
+    rotateX(PI/3 + random(-0.05, 0.05) * glitchIntensity);
+    translate(random(-5, 5) * glitchIntensity, 100, 0);
+  } else {
+    rotateX(PI/3);
+    translate(0, 100, 0);
+  }
   
-  // Draw sun with glow effect
+  // Sun
   push();
   translate(0, -500, -1000);
-  // Outer glow
   noStroke();
-  fill(colors.sun[0], colors.sun[1], colors.sun[2], 50);
-  circle(0, 0, sunSize * 1.5);
+  
+  if (glitchActive) {
+    // Glitched sun
+    fill(colors.sun[0], colors.sun[1], colors.sun[2], 50);
+    circle(random(-channelOffset, channelOffset) * glitchIntensity, 
+           random(-channelOffset, channelOffset) * glitchIntensity, 
+           sunSize * 1.5);
+  } else {
+    // Normal sun
+    fill(colors.sun[0], colors.sun[1], colors.sun[2], 50);
+    circle(0, 0, sunSize * 1.5);
+  }
+  
   // Inner sun
   fill(colors.sun[0], colors.sun[1], colors.sun[2]);
   circle(0, 0, sunSize);
   pop();
   
-  // Draw grid
+  // Grid system - NO ADDITIONAL TRANSFORMS NEEDED
   strokeWeight(2);
   
   // Horizontal lines
   for(let z = 0; z < 2000; z += gridSize) {
     let alpha = map(z, 0, 2000, 255, 0);
-    stroke(
-      colors.grid[0],
-      colors.grid[1], 
-      colors.grid[2],
-      alpha
-    );
-    line(-800, 0, z + horizon, 800, 0, z + horizon);
+    stroke(colors.grid[0], colors.grid[1], colors.grid[2], alpha);
+    
+    if (glitchActive) {
+      let offset = random(-channelOffset, channelOffset) * glitchIntensity;
+      line(-800 + offset, 0, z + horizon, 800 + offset, 0, z + horizon);
+    } else {
+      line(-800, 0, z + horizon, 800, 0, z + horizon);
+    }
   }
   
   // Vertical lines
   for(let x = -800; x <= 800; x += gridSize) {
     let d = dist(x, 0, 0, 0);
     let alpha = map(d, 0, 800, 255, 100);
-    stroke(
-      colors.fadeColor[0],
-      colors.fadeColor[1],
-      colors.fadeColor[2],
-      alpha
-    );
-    line(x, 0, 0 + horizon, x, 0, 2000 + horizon);
+    stroke(colors.fadeColor[0], colors.fadeColor[1], colors.fadeColor[2], alpha);
+    
+    if (glitchActive) {
+      let offset = random(-channelOffset, channelOffset) * glitchIntensity;
+      line(x + offset, 0, 0 + horizon, x + offset, 0, 2000 + horizon);
+    } else {
+      line(x, 0, 0 + horizon, x, 0, 2000 + horizon);
+    }
+  }
+
+  // Modify glitch decay
+  if (glitchActive) {
+    if (random(1) < glitchDecay) {
+      glitchActive = false;
+    }
   }
   
-  // Move horizon for animation
+  // Move horizon
   horizon -= speed;
   if(horizon <= -gridSize) {
     horizon = 0;
@@ -220,6 +275,7 @@ const visuals = {
   onMessage(messageObj) {
     // Flash effect when message is received
     sunSize = 200;
+    glitchActive = true;  // Trigger glitch on message
     setTimeout(() => {
       sunSize = 150;
     }, 200);
@@ -291,3 +347,27 @@ function dragEnd(e) {
 function setTranslate(xPos, yPos, el) {
     el.style.transform = `translate(${xPos}px, ${yPos}px)`;
 }
+
+// Socket listener for glitch controls
+socket.on('glitch-control', (data) => {
+    console.log('Received glitch control:', {
+        parameter: data.parameter,
+        value: data.value,
+        timestamp: new Date().toISOString()
+    });
+    
+    switch(data.parameter) {
+        case 'glitchProbability':
+            glitchProbability = data.value;
+            break;
+        case 'glitchDecay':
+            glitchDecay = data.value;
+            break;
+        case 'channelOffset':
+            channelOffset = data.value;
+            break;
+        case 'glitchIntensity':
+            glitchIntensity = data.value;
+            break;
+    }
+});
