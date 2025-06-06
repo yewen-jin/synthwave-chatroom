@@ -1,0 +1,84 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The B0dy_is_0bs0let3</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/images/icons/favicon.svg" />
+  <script type="module" crossorigin src="/assets/index-BQSfXkwl.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/vendor-BavZyeQ8.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-D9_6pAmC.css">
+</head>
+<body>
+  <!-- MSN-style Window Container -->
+  <div class="msn-window">
+    <!-- Title Bar -->
+    <div class="title-bar">
+      <img src="assets/images/icons/chat-room-icon.svg" alt="icon" class="msn-icon" />
+      <span class="window-title">The B0dy_is_0bs0let3</span>
+      <div class="window-controls">
+        <button class="minimize">_</button>
+        <button class="maximize">□</button>
+        <button class="close">×</button>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+      <!-- Contact Info Bar -->
+      <div class="contact-info">
+        <img src="assets/images/profile1.png" alt="Avatar" class="avatar" />
+        <div class="contact-details">
+          <span class="contact-name">User XYZ</span>
+          <span class="status">Online</span>
+        </div>
+      </div>
+
+      <!-- Messages Container -->
+      <div class="chat-body" id="chatBody"></div>
+
+      <!-- Message Input Area -->
+      <div class="input-section">
+        <div class="message-input-area">
+          <div class="toolbar">
+            <button class="emoticon-btn">☺</button>
+            <button class="nudge-btn">≫</button>
+          </div>
+          <div class="input-wrapper">
+            <div class="input-container">
+              <textarea id="chatInput" placeholder="Type a message…"></textarea>
+            </div>
+          </div>
+          <button class="send-btn">Send</button>
+        </div>
+        
+        <!-- User Avatar Side Panel -->
+        <div class="user-avatar-panel">
+          <img src="assets/images/profile1.png" alt="Your Avatar" class="avatar user-avatar" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Username Popup -->
+  <div id="username-popup" class="popup">
+    <div class="popup-content msn-style">
+      <div class="title-bar">
+        <img src="assets/images/icons/chat-room-icon.svg" alt="icon" class="msn-icon" />
+        <span>Sign In</span>
+      </div>
+      <div class="login-content">
+        <p>Please enter your display name to continue</p>
+        <input type="text" id="username-input" placeholder="Display name" maxlength="20">
+        <button id="username-submit">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <!-- <script src="/socket.io/socket.io.js"></script> -->
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script> -->
+</body>
+</html>

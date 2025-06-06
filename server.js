@@ -13,16 +13,29 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: ["http://localhost:5173", "http://localhost:3000"],
         methods: ["GET", "POST"],
         credentials: true
     }
 });
 
-// Only serve control.html and assets from Express
+// Serve the production build from dist directory
+app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
+
+// Serve control panel and assets separately
 app.get('/control', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/control.html'));
+});
+
+// Catch-all route to serve index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
+
+// Handle 404s
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
 // Add active users tracking

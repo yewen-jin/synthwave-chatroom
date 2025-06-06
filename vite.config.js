@@ -13,43 +13,42 @@ export default defineConfig({
       }
     }
   },
-    build: {
-        // output directory for production build
-        outDir: 'dist',
+  build: {
+    // output directory for production build
+    outDir: 'dist',
 
-        // Directory for Chunk files
-        assetsDir: 'assets',
+    // Directory for Chunk files
+    assetsDir: 'assets',
 
-        // Clean output directory before each build
-        emptyOutDir: true,
+    // Clean output directory before each build
+    emptyOutDir: true,
 
-        // Source map generation
-        sourcemap: true,
+    // Source map generation
+    sourcemap: false, // Disabled for production
 
-        // Add optimization settings
-        rollupOptions: {
-            output: {
-                //chunk splitting strategy
-                manualChunks: {
-                    'vendor':['p5', 'socket.io-client'],
-                    'styles':['./src/styles.css']
-                }
-            }
-        },
-
-        // Minification options
-        minify: 'terser',
-        terserOptions: {
-            compress: {
-                drop_console: false, // Keep console logs for debugging
-                drop_debugger: true, // Remove debugger statements in production
-                dead_code: true, // Remove unreachable code
-                booleans_as_integers: true, // Convert boolean literals to integers
-            },
-            mangle: {
-                // shorten variable names
-                toplevel: true, // Mangle top-level variable names
-            }
+    // Add optimization settings
+    rollupOptions: {
+      output: {
+        //chunk splitting strategy
+        manualChunks: {
+          'vendor': ['p5', 'socket.io-client']
         }
+      }
+    },
+
+    // Minification options
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console logs in production
+        drop_debugger: true, // Remove debugger statements in production
+        dead_code: true, // Remove unreachable code
+        booleans_as_integers: true, // Convert boolean literals to integers
+      },
+      mangle: {
+        // shorten variable names
+        toplevel: true, // Mangle top-level variable names
+      }
     }
+  }
 })
