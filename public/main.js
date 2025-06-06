@@ -134,7 +134,7 @@ let maxDistance = 2000;  // Add this to control how far the grid extends
 // Define synthwave colors
 const colors = {
   background: [10, 0, 40],    // Deep purple background
-  sun: [255, 60, 180],       // Hot pink sun
+  sun: [255, 75, 180],       // Hot pink sun
   grid: [80, 40, 255],       // Neon blue grid
   fadeColor: [180, 40, 255]   // Purple fade
 };
@@ -146,6 +146,9 @@ let channelOffset = 10;
 let glitchIntensity = 1;
 let glitchActive = false;
 let cameraAngle; 
+
+// Add this with other visualization settings
+let gridWidth = 1200;  // Controls how wide the grid extends horizontally
 
 // p5.js setup
 function setup() {
@@ -241,16 +244,16 @@ function draw() {
     
     if (glitchActive) {
       let offset = random(-channelOffset, channelOffset) * glitchIntensity;
-      line(-800 + offset, 0, z + horizon, 800 + offset, 0, z + horizon);
+      line(-gridWidth + offset, 0, z + horizon, gridWidth + offset, 0, z + horizon);
     } else {
-      line(-800, 0, z + horizon, 800, 0, z + horizon);
+      line(-gridWidth, 0, z + horizon, gridWidth, 0, z + horizon);
     }
   }
   
   // Vertical lines
-  for(let x = -800; x <= 800; x += gridSize) {
+  for(let x = -gridWidth; x <= gridWidth; x += gridSize) {
     let d = dist(x, 0, 0, 0);
-    let alpha = map(d, 0, 800, 255, 100);
+    let alpha = map(d, 0, gridWidth, 255, 100);
     stroke(colors.fadeColor[0], colors.fadeColor[1], colors.fadeColor[2], alpha);
     
     if (glitchActive) {
