@@ -26,12 +26,17 @@ export default defineConfig({
     // Source map generation
     sourcemap: false, // Disabled for production
 
+    // Increase warning limit to 1000kb
+    chunkSizeWarningLimit: 1000,
+
     // Add optimization settings
     rollupOptions: {
       output: {
         //chunk splitting strategy
         manualChunks: {
-          'vendor': ['p5', 'socket.io-client']
+          'vendor': ['p5'],
+          'socket': ['socket.io-client'],
+          'style': ['./src/style.css']
         }
       }
     },
