@@ -1,11 +1,11 @@
 import p5 from 'p5';
 import { io } from 'socket.io-client';
 
-// Connect to Socket.IO server
+// Connect to Socket.IO server using window.location
 const socket = io(
-    process.env.NODE_ENV === 'production'
-        ? 'https://void-space-chatroom.onrender.com'
-        : 'http://localhost:3000',
+    window.location.hostname === 'localhost'
+        ? 'http://localhost:3000'
+        : window.location.origin,
     {
         withCredentials: true,
         transports: ['websocket', 'polling']
