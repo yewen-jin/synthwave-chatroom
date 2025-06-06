@@ -1,2 +1,11 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Configuration files
+vite.config.js merge=ours
+server.js merge=ours
+render.yaml merge=ours
+
+# Environment files (if you have them)
+.env.production merge=ours
+.env merge=ours
