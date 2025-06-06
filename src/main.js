@@ -1,8 +1,16 @@
 import p5 from 'p5';
 import { io } from 'socket.io-client';
 
-// Connect to Socket.IO server
-const socket = io('http://localhost:3000');
+// Connect to Socket.IO server using window.location
+const socket = io(
+    window.location.hostname === 'localhost'
+        ? 'http://localhost:3000'
+        : window.location.origin,
+    {
+        withCredentials: true,
+        transports: ['websocket', 'polling']
+    }
+);
 const chatBody = document.getElementById('chatBody');
 const chatInput = document.getElementById('chatInput');
 const sendBtn = document.querySelector('.send-btn');
