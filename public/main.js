@@ -125,10 +125,11 @@ sendBtn.addEventListener('click', () => {
 // p5.js Visuals
 
 // Synthwave visualization settings
-let gridSize = 20;
+let gridSize = 30;  // Increased from 20 to 40 for wider spacing
 let horizon = 0;
 let speed = 0.5; // Speed of horizon movement
 let sunSize = 150;
+let maxDistance = 2000;  // Add this to control how far the grid extends
 
 // Define synthwave colors
 const colors = {
@@ -144,12 +145,16 @@ let glitchDecay = 0.9;
 let channelOffset = 10;
 let glitchIntensity = 1;
 let glitchActive = false;
+let cameraAngle; 
 
 // p5.js setup
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight, WEBGL);
   canvas.position(0, 0);
   canvas.style('z-index', '-1');
+
+//   cameraAngle = Math.PI/3;  // Default camera angle
+    cameraAngle = 0; // Adjusted for smoother camera movement
 }
 
 function draw() {
@@ -162,7 +167,7 @@ function draw() {
   
   // Sky gradient
   push();
-  translate(0, -200, -500);
+  translate(0, -280, -500);
   noStroke();
   
   // Draw gradient with channel splitting when glitching
@@ -197,10 +202,10 @@ function draw() {
   // Camera setup
   if (glitchActive) {
     // Add camera shake during glitch
-    rotateX(PI/3 + random(-0.05, 0.05) * glitchIntensity);
+    rotateX(cameraAngle + random(-0.05, 0.05) * glitchIntensity);
     translate(random(-5, 5) * glitchIntensity, 100, 0);
   } else {
-    rotateX(PI/3);
+    rotateX(cameraAngle);
     translate(0, 100, 0);
   }
   
@@ -230,8 +235,8 @@ function draw() {
   strokeWeight(1);
   
   // Horizontal lines
-  for(let z = 0; z < 2000; z += gridSize) {
-    let alpha = map(z, 0, 2000, 255, 0);
+  for(let z = 0; z < maxDistance; z += gridSize) {
+    let alpha = map(z, 0, maxDistance, 255, 0);
     stroke(colors.grid[0], colors.grid[1], colors.grid[2], alpha);
     
     if (glitchActive) {
@@ -368,6 +373,9 @@ socket.on('glitch-control', (data) => {
             break;
         case 'glitchIntensity':
             glitchIntensity = data.value;
+            break;
+        case 'cameraAngle':
+            cameraAngle = (PI/3) * data.value;  // Scale the input value
             break;
     }
 });

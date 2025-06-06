@@ -61,6 +61,12 @@
             <input type="range" id="glitchIntensity" min="0" max="2" step="0.1" value="1">
             <span class="value-display" id="glitchIntensityValue">1</span>
         </div>
+
+        <div class="control-group">
+            <label for="cameraAngle">Camera Angle</label>
+            <input type="range" id="cameraAngle" min="-2.0" max="2.0" step="0.1" value="0.0">
+            <span class="value-display" id="cameraAngleValue">0.0</span>
+        </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -72,7 +78,8 @@
             glitchProbability: document.getElementById('glitchProbability'),
             glitchDecay: document.getElementById('glitchDecay'),
             channelOffset: document.getElementById('channelOffset'),
-            glitchIntensity: document.getElementById('glitchIntensity')
+            glitchIntensity: document.getElementById('glitchIntensity'),
+            cameraAngle: document.getElementById('cameraAngle')
         };
 
         // Update value displays and emit changes
