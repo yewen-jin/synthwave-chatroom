@@ -2,7 +2,15 @@ import p5 from 'p5';
 import { io } from 'socket.io-client';
 
 // Connect to Socket.IO server
-const socket = io('http://localhost:3000');
+const socket = io(
+    process.env.NODE_ENV === 'production'
+        ? 'https://void-space-chatroom.onrender.com'
+        : 'http://localhost:3000',
+    {
+        withCredentials: true,
+        transports: ['websocket', 'polling']
+    }
+);
 const chatBody = document.getElementById('chatBody');
 const chatInput = document.getElementById('chatInput');
 const sendBtn = document.querySelector('.send-btn');
