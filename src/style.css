@@ -273,11 +273,13 @@ body {
 
 /* Adjust toolbar to full width */
 .toolbar {
-    width: 100%;
-    /* padding: 4px; */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
     background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+    height: 32px;
 }
 
 /* Clear float fixes */
@@ -604,4 +606,58 @@ body {
 .msn-window.maximized .chat-body {
     margin: 0;
     height: calc(100% - 120px); /* Adjust based on your input area height */
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    height: 32px;
+}
+
+.toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.toolbar-divider {
+    width: 1px;
+    height: 20px;
+    background-color: var(--border-color);
+    margin: 0 4px;
+}
+
+.toolbar-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--border-color);
+    padding: 2px 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 24px;
+}
+
+.toolbar-btn:hover {
+    border-color: var(--border-color);
+    box-shadow: 0 0 5px var(--border-glow);
+}
+
+.toolbar-btn:active {
+    transform: scale(0.95);
+}
+
+.toolbar-btn .icon {
+    font-style: normal;
+    font-size: 14px;
+    line-height: 1;
 }
