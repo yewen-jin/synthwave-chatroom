@@ -51,13 +51,5 @@ export default defineConfig({
                 toplevel: true, // Mangle top-level variable names
             }
         }
-    },
-  // Disable React plugin
-  esbuild: {
-    jsxInject: false
-  },
-  // Disable automatic React transforms
-  optimizeDeps: {
-    exclude: ['react', 'react-dom']
-  }
+    }
 })
