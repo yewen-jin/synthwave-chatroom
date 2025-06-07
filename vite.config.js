@@ -45,5 +45,8 @@ export default defineConfig({
         toplevel: true
       }
     }
+  },
+  optimizeDeps: {
+    include: ['p5', 'socket.io-client']  // Pre-bundle P5.js and Socket.IO client
   }
 })
