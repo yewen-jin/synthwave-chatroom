@@ -27,30 +27,34 @@ export default defineConfig({
         // Source map generation
         sourcemap: true,
 
-        // Add optimization settings
-        rollupOptions: {
-            output: {
-                //chunk splitting strategy
-                manualChunks: {
-                    'vendor':['p5', 'socket.io-client'],
-                    'styles':['./src/styles.css']
-                }
-            }
-        },
-
-        // Minification options
-        minify: 'terser',
-        terserOptions: {
-            compress: {
-                drop_console: false, // Keep console logs for debugging
-                drop_debugger: true, // Remove debugger statements in production
-                dead_code: true, // Remove unreachable code
-                booleans_as_integers: true, // Convert boolean literals to integers
-            },
-            mangle: {
-                // shorten variable names
-                toplevel: true, // Mangle top-level variable names
-            }
+    // Add optimization settings
+    rollupOptions: {
+      output: {
+        //chunk splitting strategy
+        manualChunks: {
+          'vendor':['p5', 'socket.io-client'],
+          'styles':['./src/styles.css'],
+          p5: ['p5']  // Separate chunk for P5.js
         }
+      }
+    },
+
+    // Minification options
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: false, // Keep console logs for debugging
+        drop_debugger: true, // Remove debugger statements in production
+        dead_code: true, // Remove unreachable code
+        booleans_as_integers: true, // Convert boolean literals to integers
+      },
+      mangle: {
+        // shorten variable names
+        toplevel: true, // Mangle top-level variable names
+      }
     }
+  },
+  optimizeDeps: {
+    include: ['p5']  // Pre-bundle P5.js
+  }
 })
