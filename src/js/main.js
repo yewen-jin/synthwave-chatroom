@@ -398,3 +398,16 @@ socket.on('glitch-control', (data) => {
             break;
     }
 });
+
+// Listen for theme change events from control panel
+socket.on('theme-change', (theme) => {
+    // Remove all existing palette classes
+    document.body.classList.remove('palette-purple', 'palette-blue');
+    
+    // Add the new theme class if specified
+    if (theme) {
+        document.body.classList.add(theme);
+    }
+    
+    console.log(`Theme changed to: ${theme || 'default'}`);
+});
