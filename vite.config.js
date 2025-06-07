@@ -11,12 +11,6 @@ export default defineConfig({
         target: 'ws://localhost:3000',  // WebSocket connection to your Socket.IO server
         ws: true,                       // Enable WebSocket proxying
         changeOrigin: true             // Changes the origin of the host header to the target URL
-      },
-      '/assets': {
-        target: 'http://localhost:3000'
-      },
-      '/control': {
-        target: 'http://localhost:3000'
       }
     }
   },
