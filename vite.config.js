@@ -54,6 +54,6 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['p5']  // Pre-bundle P5.js
+    include: ['p5', 'socket.io-client']  // Pre-bundle P5.js and Socket.IO client
   }
 })
