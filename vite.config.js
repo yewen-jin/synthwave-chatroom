@@ -33,8 +33,7 @@ export default defineConfig({
         //chunk splitting strategy
         manualChunks: {
           'vendor':['p5', 'socket.io-client'],
-          'styles':['./src/styles.css'],
-          p5: ['p5']  // Separate chunk for P5.js
+          'styles':['./src/styles.css']
         }
       }
     },
