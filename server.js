@@ -25,6 +25,9 @@ app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 app.get('/control', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/control.html'));
 });
+app.get('/room2', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/room2.html'));
+});
 
 // Add active users tracking
 const activeUsers = new Map();
