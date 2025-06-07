@@ -24,11 +24,11 @@ const io = new Server(server, {
 
 // Serve the production build from dist directory
 app.use(express.static(path.join(__dirname, 'dist')));
-app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
+app.use('/assets', express.static(path.join(__dirname, 'src/assets')));
 
 // Serve control panel and assets separately
 app.get('/control', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/control.html'));
+    res.sendFile(path.join(__dirname, 'src/control.html'));
 });
 
 // Catch-all route to serve index.html

@@ -1,20 +1,12 @@
 import { defineConfig } from 'vite'
+import path from 'path'
 
 export default defineConfig({
+  root: 'src',
   server: {
     port: 5173,
     host: true,
     open: false,
-    proxy: {
-      '/socket.io': {
-        target: 'ws://localhost:3000',  // WebSocket connection to your Socket.IO server
-        ws: true,                       // Enable WebSocket proxying
-        changeOrigin: true             // Changes the origin of the host header to the target URL
-      }
-    }
-  },
-  preview: {
-    port: 4173,
     proxy: {
       '/socket.io': {
         target: 'ws://localhost:3000',
@@ -24,25 +16,16 @@ export default defineConfig({
     }
   },
   build: {
-    // output directory for production build
-    outDir: 'dist',
-
-    // Directory for Chunk files
+    outDir: '../dist',  // Changed to relative path
     assetsDir: 'assets',
-
-    // Clean output directory before each build
     emptyOutDir: true,
-
-    // Source map generation
-    sourcemap: false, // Disabled for production
-
-    // Increase warning limit to 1000kb
+    sourcemap: false,
     chunkSizeWarningLimit: 1000,
-
-    // Add optimization settings
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'src/index.html')
+      },
       output: {
-        //chunk splitting strategy
         manualChunks: {
           'vendor': ['p5'],
           'socket': ['socket.io-client'],
@@ -50,19 +33,16 @@ export default defineConfig({
         }
       }
     },
-
-    // Minification options
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // Remove console logs in production
-        drop_debugger: true, // Remove debugger statements in production
-        dead_code: true, // Remove unreachable code
-        booleans_as_integers: true, // Convert boolean literals to integers
+        drop_console: true,
+        drop_debugger: true,
+        dead_code: true,
+        booleans_as_integers: true
       },
       mangle: {
-        // shorten variable names
-        toplevel: true, // Mangle top-level variable names
+        toplevel: true
       }
     }
   }
