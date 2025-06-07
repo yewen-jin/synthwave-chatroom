@@ -19,7 +19,8 @@ const io = new Server(server, {
     }
 });
 
-// Only serve control.html and assets from Express
+// Update static file serving
+app.use(express.static(path.join(__dirname, 'src')));
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 app.get('/control', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/control.html'));
