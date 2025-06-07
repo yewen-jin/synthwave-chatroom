@@ -118,3 +118,21 @@ export function initVisuals(onMessageCallback) {
     }
   };
 }
+
+// Add a function to react to theme changes
+
+export function updateVisualsForTheme(theme) {
+    // You could adjust visualization colors based on theme
+    // For example:
+    switch(theme) {
+        case 'palette-purple':
+            // Adjust purple-specific visual parameters
+            break;
+        case 'palette-blue':
+            // Adjust blue-specific visual parameters
+            break;
+        default:
+            // Default green theme
+            break;
+    }
+}

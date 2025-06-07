@@ -21,6 +21,19 @@ export function initSocket(onChat, onUserJoined, onUserLeft, onUsernameResponse,
   if (onUsernameTaken) socket.on('username taken', onUsernameTaken);
   if (onGlitchControl) socket.on('glitch-control', onGlitchControl);
 
+  // Listen for theme changes from control panel
+  socket.on('theme-change', (theme) => {
+    console.log('Theme change received:', theme);
+    
+    // Remove all existing palette classes
+    document.body.classList.remove('palette-purple', 'palette-blue');
+    
+    // Add the new theme class if specified
+    if (theme) {
+        document.body.classList.add(theme);
+    }
+});
+
   return socket;
 }
 
