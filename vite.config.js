@@ -13,6 +13,16 @@ export default defineConfig({
       }
     }
   },
+  preview: {
+    port: 4173,
+    proxy: {
+      '/socket.io': {
+        target: 'ws://localhost:3000',
+        ws: true,
+        changeOrigin: true
+      }
+    }
+  },
   build: {
     // output directory for production build
     outDir: 'dist',
