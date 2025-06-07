@@ -45,9 +45,16 @@ app.use((req, res) => {
 const activeUsers = new Map();
 const takenUsernames = new Set();
 
+// Track connected users
+let connectedUsers = 0;
+
 // Handle Socket.IO connections
 io.on('connection', (socket) => {
     console.log('A client connected:', socket.id);
+
+    // Increment user count on connection
+    connectedUsers++;
+    io.emit('user-count', connectedUsers);
 
     // Check if username is taken
     socket.on('check username', (username) => {
@@ -89,8 +96,18 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('glitch-control', data);
     });
 
+    // Handle theme control
+    socket.on('control-theme', (theme) => {
+        // Broadcast theme change to all clients except sender
+        socket.broadcast.emit('theme-change', theme);
+        console.log(`Theme changed to: ${theme || 'default'}`);
+    });
+
     // Handle client disconnection
     socket.on('disconnect', () => {
+        connectedUsers--;
+        io.emit('user-count', connectedUsers);
+
         const username = activeUsers.get(socket.id);
         if (username) {
             console.log(`User left: ${username}`);
