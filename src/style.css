@@ -8,12 +8,13 @@
 }
 
 :root {
-    --border-color: #0f0;
+    --border-color: rgb(255, 255, 255);
     --border-glow: rgb(151, 22, 168);
-    --bg-primary: rgb(0, 0, 0);
-    --bg-secondary: #000000;
-    --text-color: #0f0;  /* Default text color */
+    --bg-primary: rgb(199, 199, 199);
+    --bg-secondary: #9e9e9e;
+    --text-color: rgb(0, 0, 0);  /* Default text color */
     /* ...other variables... */
+    --secondary-text-color: rgb(175, 175, 175); /* Default secondary text color */
 }
 
 body.palette-purple {
@@ -22,6 +23,7 @@ body.palette-purple {
     --bg-primary: #1a0033;
     --bg-secondary: #2d004d;
     --text-color: #ff77ff;  /* Example purple text color */
+    --secondary-text-color: #ff77ff; /* Example secondary text color */
     /* ...other variables... */
 }
 
@@ -31,6 +33,7 @@ body.palette-blue {
     --bg-primary: #001f2f;
     --bg-secondary: #003049;
     --text-color: #00fff7;  /* Example blue text color */
+    --secondary-text-color: #00fff7; /* Example secondary text color */
     /* ...other variables... */
 }
 
@@ -40,6 +43,7 @@ body.palette-green {
     --bg-primary: rgb(0, 0, 0);
     --bg-secondary: #000000;
     --text-color: #0f0;  /* Default text color */
+    --secondary-text-color: #0f0; /* Default secondary text color */
     /* ...other variables... */
 }
 
@@ -63,7 +67,7 @@ body {
         rgb(35, 0, 43) 50%,
         rgb(0, 0, 0) 100%
     );
-    color: var(--text-color);  /* Updated to use the variable */
+    color: var(--secondary-text-color);  /* Updated to use the variable */
     padding: 4px 8px;
     display: flex;
     align-items: center;
@@ -189,6 +193,8 @@ body {
     width: 120px;
     padding: 8px;
     display: flex;
+    flex-direction: column;
+    padding: 0% 8px;
     align-items: center;
     justify-content: center;
     border-left: 1px solid var(--border-color);
@@ -294,8 +300,8 @@ body {
     max-width: 70%;
     clear: both;
     display: block;
-    background-color: rgba(0, 255, 0, 0.1);
-    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    background-color: rgba(var(--bg-primary), 0.3); /* Use theme variable for background */
+    box-shadow: 0 0 5px rgba(253, 255, 253, 0.3);
 }
 
 .message.mine {
@@ -435,6 +441,51 @@ body {
     cursor: pointer;
     font-family: 'Windows', 'VT323', monospace;
 }
+/* Apply primary background and text color to all inputs and buttons */
+input,
+button {
+    background: var(--bg-primary) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color);
+    font-family: inherit;
+}
+
+/* Overriding specific selectors for clarity */
+
+/* Chat input field */
+#chatInput {
+    background: var(--bg-secondary);  /* Use primary background */
+    color: var(--text-color);        /* Use theme text color */
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+/* Send button */
+.send-btn {
+    background: var(--bg-secondary);  /* Use primary background */
+    color: var(--text-color);        /* Use theme text color */
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    font-family: 'Windows', 'VT323', monospace;
+}
+
+/* Username input and submit button (if used) */
+#username-input {
+    background: var(--bg-secondary);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 8px;
+}
+
+#username-submit {
+    background: var(--bg-secondary);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    font-family: 'Windows', 'VT323', monospace;
+}
+
 
 /* Update scrollbar for chat body */
 .chat-body::-webkit-scrollbar {
@@ -486,6 +537,10 @@ body {
     }
 
     .user-avatar-panel {
+        flex-direction: row;
+        align-items: center;
+        justify-content: left;
+        padding: 8px;
         width: 100%;
         padding: 4px;
         border-left: none;
