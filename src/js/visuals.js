@@ -33,9 +33,9 @@ export function initVisuals(onMessageCallback) {
       p.background(colors.background);
       if (p.random(1) < glitchProbability) glitchActive = true;
       p.push();
-      p.translate(0, -280, -500);
+      p.translate(0, -185, -500);  // Change Y (-280) and Z (-500) position here
       p.noStroke();
-      for(let i = 0; i < p.height/2; i++) {
+      for(let i = 0; i < p.height/2; i++) {  // p.height/2 controls the height of gradient
         let inter = p.map(i, 0, p.height/2, 0, 1);
         let c = p.lerpColor(p.color(80, 0, 100), p.color(255, 60, 180), inter);
         if (glitchActive) {
@@ -47,7 +47,7 @@ export function initVisuals(onMessageCallback) {
           p.rect(-p.width + p.random(-channelOffset, channelOffset) * glitchIntensity, i + p.random(-2, 2), p.width * 2, 1);
         } else {
           p.fill(c);
-          p.rect(-p.width, i, p.width * 2, 1);
+          p.rect(-p.width, i, p.width * 2, 1);  // Width is controlled by p.width * 2
         }
       }
       p.pop();
