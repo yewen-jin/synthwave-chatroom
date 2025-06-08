@@ -32,9 +32,13 @@ app.get('/room2', (req, res) => {
     res.sendFile(path.join(__dirname, 'src/room2.html'));
 });
 
-// Add active users tracking
-const activeUsers = new Map();
-const takenUsernames = new Set();
+// Replace your user tracking with this:
+
+// Maps socket ID to {username, room}
+const activeUsers = new Map(); 
+
+// Maps room -> Set of usernames (for room-specific username validation)
+const roomUsernames = new Map();
 
 // Track connected users
 let connectedUsers = 0;
@@ -52,36 +56,63 @@ io.on('connection', (socket) => {
 
     // Check if username is taken
     socket.on('check username', (username) => {
-        const isTaken = takenUsernames.has(username);
+        // Get the set of usernames for the current room
+        const usernamesInRoom = roomUsernames.get(currentRoom) || new Set();
+        
+        // Check if username is taken in this specific room
+        const isTaken = usernamesInRoom.has(username);
+        
+        console.log(`Checking username "${username}" in room "${currentRoom}": ${isTaken ? 'taken' : 'available'}`);
         socket.emit('username response', isTaken);
     });
 
     // Handle user joining - Change this to be room-aware
     socket.on('user joined', (username) => {
-        if (takenUsernames.has(username)) {
+        // Get existing usernames for this room
+        if (!roomUsernames.has(currentRoom)) {
+            roomUsernames.set(currentRoom, new Set());
+        }
+        const usernamesInRoom = roomUsernames.get(currentRoom);
+        
+        // Check if username is taken IN THIS ROOM ONLY
+        if (usernamesInRoom.has(username)) {
             socket.emit('username taken');
             return;
         }
         
-        socket.username = username;
-        takenUsernames.add(username);
-        activeUsers.set(socket.id, username);
-        currentUsername = username;
-        console.log(`User joined: ${username} in room: ${currentRoom}`);
-        console.log('Active users:', Array.from(activeUsers.values()));
+        // If user had a previous username in this room, remove it
+        const previousData = activeUsers.get(socket.id);
+        if (previousData && previousData.room === currentRoom) {
+            usernamesInRoom.delete(previousData.username);
+        }
         
-        // Only emit to the current room instead of all clients
+        // Set new username for this room
+        socket.username = username;
+        usernamesInRoom.add(username);
+        activeUsers.set(socket.id, {username, room: currentRoom});
+        
+        console.log(`User joined: ${username} in room: ${currentRoom}`);
         io.to(currentRoom).emit('user joined', username);
     });
 
-    // Handle joining a specific room - Update the emission strategy
+    // Update room joining logic:
     socket.on('join-room', (roomName) => {
         // Leave previous room if any
         if (currentRoom) {
-            // Notify users in the old room that this user has left
-            if (currentUsername) {
-                socket.to(currentRoom).emit('user left', currentUsername);
+            // Get user data for current room
+            const userData = activeUsers.get(socket.id);
+            
+            if (userData && userData.room === currentRoom) {
+                // Notify users in the old room that this user has left
+                socket.to(currentRoom).emit('user left', userData.username);
+                
+                // Remove username from old room's set
+                const oldRoomUsers = roomUsernames.get(currentRoom);
+                if (oldRoomUsers) {
+                    oldRoomUsers.delete(userData.username);
+                }
             }
+            
             socket.leave(currentRoom);
         }
         
@@ -91,9 +122,23 @@ io.on('connection', (socket) => {
         
         console.log(`User ${socket.id} joined room: ${roomName}`);
         
-        // If user already has username, announce them in the new room only
-        if (currentUsername) {
-            socket.to(roomName).emit('user joined', currentUsername);
+        // Initialize room usernames if needed
+        if (!roomUsernames.has(roomName)) {
+            roomUsernames.set(roomName, new Set());
+        }
+        
+        // Check if user already has username for this room
+        const existingData = [...activeUsers.entries()]
+            .filter(([id, data]) => id === socket.id && data.room === roomName)
+            .map(([_, data]) => data)[0];
+        
+        if (existingData) {
+            // User already has username in this room
+            socket.emit('username exists', existingData.username);
+            socket.to(roomName).emit('user joined', existingData.username);
+        } else {
+            // User needs to set username for this room
+            socket.emit('need username');
         }
     });
     
@@ -109,21 +154,25 @@ io.on('connection', (socket) => {
     
     // Listen for chat messages from clients
     socket.on('chat', (data) => {
+        const userData = activeUsers.get(socket.id);
+        
         // Verify message structure and active user
         if (data && 
             data.username && 
             data.text && 
             data.timestamp &&
-            activeUsers.get(socket.id) === data.username) {
-            console.log(`Message from ${data.username}: ${data.text}`);
-            // Add room information to the message
-            const messageData = {
-                ...data,
-                room: currentRoom
-            };
+            userData && 
+            userData.username === data.username && 
+            userData.room === currentRoom) {
             
-            // Broadcast to current room only
-            io.to(currentRoom).emit('chat', messageData);
+            console.log(`Message from ${data.username} in ${currentRoom}: ${data.text}`);
+            io.to(currentRoom).emit('chat', data);
+        } else {
+            console.log('Message validation failed:', {
+                receivedData: data, 
+                storedData: userData,
+                currentRoom
+            });
         }
     });
 
@@ -143,17 +192,24 @@ io.on('connection', (socket) => {
     // Handle client disconnection - Make room-specific
     socket.on('disconnect', () => {
         connectedUsers--;
-        io.emit('user-count', connectedUsers); // This can stay global for admin purposes
+        io.emit('user-count', connectedUsers);
 
-        const username = activeUsers.get(socket.id);
-        if (username) {
-            console.log(`User left: ${username} from room: ${currentRoom}`);
-            takenUsernames.delete(username);
+        const userData = activeUsers.get(socket.id);
+        if (userData) {
+            const { username, room } = userData;
+            console.log(`User left: ${username} from room: ${room}`);
+            
+            // Remove username from room's set
+            const roomUsers = roomUsernames.get(room);
+            if (roomUsers) {
+                roomUsers.delete(username);
+            }
+            
             activeUsers.delete(socket.id);
             console.log('Remaining users:', Array.from(activeUsers.values()));
             
-            // Only emit to the current room instead of all clients
-            io.to(currentRoom).emit('user left', username);
+            // Emit to the user's room
+            io.to(room).emit('user left', username);
         }
     });
 });
