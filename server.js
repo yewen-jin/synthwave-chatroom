@@ -28,7 +28,7 @@ app.use('/assets', express.static(path.join(__dirname, 'src/assets')));
 
 // Serve control panel and assets separately
 app.get('/control', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src/control.html'));
+    res.sendFile(path.join(__dirname, 'dist/control.html'));
 });
 
 // Serve control panel and assets separately
