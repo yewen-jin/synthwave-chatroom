@@ -3,38 +3,48 @@ import { io } from 'socket.io-client';
 
 let socket;
 
-export function initSocket(onChat, onUserJoined, onUserLeft, onUsernameResponse, onUsernameTaken, onGlitchControl) {
-  socket = io(
-    window.location.hostname === 'localhost'
-      ? 'http://localhost:3000'
-      : window.location.origin,
-    {
-      withCredentials: true,
-      transports: ['websocket', 'polling']
-    }
-  );
-
-  if (onChat) socket.on('chat', onChat);
-  if (onUserJoined) socket.on('user joined', onUserJoined);
-  if (onUserLeft) socket.on('user left', onUserLeft);
-  if (onUsernameResponse) socket.on('username response', onUsernameResponse);
-  if (onUsernameTaken) socket.on('username taken', onUsernameTaken);
-  if (onGlitchControl) socket.on('glitch-control', onGlitchControl);
-
-  // Listen for theme changes from control panel
-  socket.on('theme-change', (theme) => {
-    console.log('Theme change received:', theme);
+export function initSocket(onChat, onUserJoined, onUserLeft, onUsernameResponse, onUsernameError, onGlitchControl) {
+    const socket = io(
+        window.location.hostname === 'localhost'
+            ? 'http://localhost:3000'
+            : window.location.origin,
+        {
+            withCredentials: true,
+            transports: ['websocket', 'polling']
+        }
+    );
     
-    // Remove all existing palette classes
-    document.body.classList.remove('palette-purple', 'palette-blue');
+    // Determine which room to join based on URL
+    const isRoom2 = window.location.pathname.includes('room2');
+    const roomName = isRoom2 ? 'room2' : 'default';
     
-    // Add the new theme class if specified
-    if (theme) {
-        document.body.classList.add(theme);
-    }
-});
+    // Join the appropriate room
+    socket.emit('join-room', roomName);
+    console.log(`Joining room: ${roomName}`);
+    
+    // Set up existing event handlers
+    socket.on('chat', onChat);
+    socket.on('user joined', onUserJoined);
+    socket.on('user left', onUserLeft);
+    socket.on('username response', onUsernameResponse);
+    socket.on('username taken', onUsernameError);
+    socket.on('glitch-control', onGlitchControl);
 
-  return socket;
+    // Listen for theme changes from control panel
+    socket.on('theme-change', (theme) => {
+      console.log('Theme change received:', theme);
+      
+      // Remove all existing palette classes
+      document.body.classList.remove('palette-purple', 'palette-blue' , 'palette-green');
+      
+      // Add the new theme class if specified
+      if (theme) {
+          document.body.classList.add(theme);
+      }
+  });
+
+    window._socket = socket;
+    return socket;
 }
 
 export function getSocket() {

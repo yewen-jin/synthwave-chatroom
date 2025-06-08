@@ -97,6 +97,9 @@
             <button class="theme-btn" id="theme-blue">
                 <span class="color-preview blue-preview"></span>Blue
             </button>
+            <button class="theme-btn" id="theme-green">
+                <span class="color-preview green-preview"></span>Green
+            </button>
         </div>
         
         <h3 class="section-header">Glitch Controls</h3>
@@ -131,8 +134,9 @@
         </div>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script type="module">
+        import { io } from 'socket.io-client';
         const socket = io(
             window.location.hostname === 'localhost'
                 ? 'http://localhost:3000'
@@ -178,7 +182,8 @@
         const themeButtons = {
             'theme-default': '',
             'theme-purple': 'palette-purple',
-            'theme-blue': 'palette-blue'
+            'theme-blue': 'palette-blue',
+            'theme-green': 'palette-green'
         };
         
         // Set up theme control
