@@ -30,13 +30,15 @@ app.use('/assets', express.static(path.join(__dirname, 'src/assets')));
 app.get('/control', (req, res) => {
     res.sendFile(path.join(__dirname, 'src/control.html'));
 });
+
 // Serve control panel and assets separately
 app.get('/room1', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src/room1.html'));
+    res.sendFile(path.join(__dirname, 'dist/room1.html'));
 });
+
 // Serve control panel and assets separately
 app.get('/room2', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src/room2.html'));
+    res.sendFile(path.join(__dirname, 'dist/room2.html'));
 });
 
 // Catch-all route to serve index.html

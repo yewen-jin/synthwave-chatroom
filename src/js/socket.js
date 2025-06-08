@@ -14,13 +14,6 @@ export function initSocket(onChat, onUserJoined, onUserLeft, onUsernameResponse,
         }
     );
     
-    // Determine which room to join based on URL
-    const isRoom2 = window.location.pathname.includes('room2');
-    const roomName = isRoom2 ? 'room2' : 'default';
-    
-    // Join the appropriate room
-    socket.emit('join-room', roomName);
-    console.log(`Joining room: ${roomName}`);
     
     // Set up existing event handlers
     socket.on('chat', onChat);
