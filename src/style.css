@@ -33,7 +33,7 @@ body.palette-blue {
 
 /* Update these elements to use the variable */
 .contact-info {
-    background: #000000;
+    background: var(--bg-primary); /* use your theme variable */
     padding: 8px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
@@ -142,7 +142,7 @@ body {
 }
 
 .contact-info {
-    background: #000000;
+    background: var(--bg-primary); /* use your theme variable */
     padding: 8px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
@@ -199,7 +199,7 @@ body {
 
 .input-section {
     display: flex;
-    gap: 10px;
+    /* gap: 10px; */
     background: #000000;
     border-top: 1px solid var(--border-color);
 }
@@ -418,11 +418,11 @@ body {
     width: 100%;
     margin-top: 8px;
     padding: 4px;
-    background: #000000;
+    background: var(--bg-primary); /* Use the theme's primary background color */
     border: 1px solid var(--border-color);
     color: #00ff00;
     cursor: pointer;
-    font-family: 'Windows', 'VT323', monospace;  /* Add this line */
+    font-family: 'Windows', 'VT323', monospace;
 }
 
 /* Update scrollbar for chat body */
@@ -462,7 +462,11 @@ body {
     /* Stack input area and avatar vertically on mobile */
     .input-section {
         flex-direction: column-reverse;
-        gap: 5px;
+        width: 100%;
+            box-sizing: border-box;  /* Ensure padding doesn't increase width */
+        overflow: hidden;        /* Prevent child content from overflowing */
+   
+        /* gap: 5px; */
     }
 
     .user-avatar-panel {
@@ -480,7 +484,7 @@ body {
     /* Adjust message bubbles for mobile */
     .message {
         max-width: 85%;
-        font-size: 14px;
+        font-size: 16px;
     }
 
     /* Make input area more compact */
@@ -503,6 +507,12 @@ body {
     .chat-body::-webkit-scrollbar {
         width: 3px;
     }
+
+    .system-message {
+    font-size: 16px !important;          /* Smaller font for mobile */
+    padding: 2px 0 !important;              /* Reduced vertical padding */
+    margin: 2px 0 !important;              /* Reduced margin */
+  }
 }
 
 /* Additional adjustments for very small screens */
