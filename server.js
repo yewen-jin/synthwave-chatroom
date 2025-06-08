@@ -21,12 +21,12 @@ const io = new Server(server, {
 
 // Update static file serving
 app.use(express.static(path.join(__dirname, 'src')));
-app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
+app.use('/assets', express.static(path.join(__dirname, 'src/assets')));
 app.get('/control', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/control.html'));
+    res.sendFile(path.join(__dirname, 'src/control.html'));
 });
 app.get('/room1', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/room1.html'));
+    res.sendFile(path.join(__dirname, 'src/room1.html'));
 });
 // Add this route to serve room2.html
 app.get('/room2', (req, res) => {
