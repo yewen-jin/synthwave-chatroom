@@ -21,7 +21,6 @@ const io = new Server(server, {
 
 // Update static file serving
 app.use(express.static(path.join(__dirname, 'src')));
-app.use('/assets', express.static(path.join(__dirname, 'src/assets')));
 app.get('/control', (req, res) => {
     res.sendFile(path.join(__dirname, 'src/control.html'));
 });
