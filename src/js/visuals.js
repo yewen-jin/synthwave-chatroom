@@ -33,7 +33,7 @@ export function initVisuals(onMessageCallback) {
       p.background(colors.background);
       if (p.random(1) < glitchProbability) glitchActive = true;
       p.push();
-      p.translate(0, -185, -500);
+      p.translate(0, -280, 280);
       p.noStroke();
       for(let i = 0; i < p.height/2; i++) {
         let inter = p.map(i, 0, p.height/2, 0, 1);
