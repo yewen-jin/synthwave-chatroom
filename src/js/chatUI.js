@@ -1,4 +1,8 @@
 // chatUI.js
+// Determine if we're in room2
+const isRoom2 = window.location.pathname.includes('room2');
+const roomName = isRoom2 ? 'room2' : 'default';
+
 let chatBody, chatInput, sendBtn, usernamePopup, usernameInput, usernameSubmit, errorMessage;
 
 export function initChatUI(onSend, onUsernameSubmit) {
@@ -24,6 +28,14 @@ export function initChatUI(onSend, onUsernameSubmit) {
     }
   });
   usernameSubmit.addEventListener('click', onUsernameSubmit);
+
+  // Apply room-specific styling if needed
+  if (isRoom2) {
+    document.querySelector('.msn-window')?.classList.add('room2-window');
+    document.querySelector('.title-bar')?.classList.add('room2-title');
+    document.querySelector('.chat-area')?.classList.add('room2-chat-area');
+    // Any other room2-specific UI modifications
+  }
 }
 
 export function getChatInput() {
