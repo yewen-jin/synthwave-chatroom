@@ -131,6 +131,9 @@ export function updateVisualsForTheme(theme) {
         case 'palette-blue':
             // Adjust blue-specific visual parameters
             break;
+        case 'palette-green':
+            // Adjust blue-specific visual parameters
+            break;
         default:
             // Default green theme
             break;

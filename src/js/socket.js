@@ -35,7 +35,7 @@ export function initSocket(onChat, onUserJoined, onUserLeft, onUsernameResponse,
       console.log('Theme change received:', theme);
       
       // Remove all existing palette classes
-      document.body.classList.remove('palette-purple', 'palette-blue');
+      document.body.classList.remove('palette-purple', 'palette-blue' , 'palette-green');
       
       // Add the new theme class if specified
       if (theme) {
