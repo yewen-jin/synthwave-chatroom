@@ -59,45 +59,68 @@ let connectedUsers = 0;
 io.on('connection', (socket) => {
     let currentRoom = 'default';
     let currentUsername = null;
-
+    
+    // Track room-specific usernames
+    const userRooms = new Map(); // Maps room -> username
+    
     console.log('A client connected:', socket.id);
-
+    
     // Increment user count on connection
     connectedUsers++;
     io.emit('user-count', connectedUsers);
-
-    // Check if username is taken
+    
+    // Check if username is taken (room-specific)
     socket.on('check username', (username) => {
-        const isTaken = takenUsernames.has(username);
+        // Check if username is taken in current room only
+        const roomUsers = Array.from(activeUsers.values())
+            .filter(user => user.room === currentRoom)
+            .map(user => user.username);
+            
+        const isTaken = roomUsers.includes(username);
         socket.emit('username response', isTaken);
     });
-
-    // Handle user joining - Change this to be room-aware
+    
+    // Handle user joined with new username
     socket.on('user joined', (username) => {
-        if (takenUsernames.has(username)) {
+        // Check if username is taken in current room only
+        const roomUsers = Array.from(activeUsers.values())
+            .filter(user => user.room === currentRoom)
+            .map(user => user.username);
+            
+        if (roomUsers.includes(username)) {
             socket.emit('username taken');
             return;
         }
         
-        socket.username = username;
-        takenUsernames.add(username);
-        activeUsers.set(socket.id, username);
+        // Store username for this room
+        userRooms.set(currentRoom, username);
         currentUsername = username;
+        
+        // Update global tracking with room info
+        activeUsers.set(socket.id, {
+            username: username,
+            room: currentRoom
+        });
+        
         console.log(`User joined: ${username} in room: ${currentRoom}`);
         console.log('Active users:', Array.from(activeUsers.values()));
         
-        // Only emit to the current room instead of all clients
+        // Announce only to the current room
         io.to(currentRoom).emit('user joined', username);
     });
-
-    // Handle joining a specific room - Update the emission strategy
+    
+    // Handle joining a specific room
     socket.on('join-room', (roomName) => {
         // Leave previous room if any
         if (currentRoom) {
+            // Get the username for the room being left
+            const oldRoomUsername = userRooms.get(currentRoom);
+            
             // Notify users in the old room that this user has left
-            if (currentUsername) {
-                socket.to(currentRoom).emit('user left', currentUsername);
+            if (oldRoomUsername) {
+                socket.to(currentRoom).emit('user left', oldRoomUsername);
             }
+            
             socket.leave(currentRoom);
         }
         
@@ -107,17 +130,33 @@ io.on('connection', (socket) => {
         
         console.log(`User ${socket.id} joined room: ${roomName}`);
         
-        // If user already has username, announce them in the new room only
-        if (currentUsername) {
-            socket.to(roomName).emit('user joined', currentUsername);
+        // If user already has a username for this room, announce them
+        if (userRooms.has(roomName)) {
+            currentUsername = userRooms.get(roomName);
+            socket.to(currentRoom).emit('user joined', currentUsername);
+            
+            // Let client know they have a username already
+            socket.emit('username exists', currentUsername);
+        } else {
+            // Reset current username to prompt for a new one
+            currentUsername = null;
+            
+            // Signal client that they need to set a username
+            socket.emit('need username');
         }
     });
     
     // Handle username setting
     socket.on('set username', (username) => {
-        // Update stored username
+        // Store username for this specific room
+        userRooms.set(currentRoom, username);
         currentUsername = username;
-        socket.username = username;
+        
+        // Update global tracking with room info
+        activeUsers.set(socket.id, {
+            username: username,
+            room: currentRoom
+        });
         
         // Only announce to the current room
         io.to(currentRoom).emit('user joined', username);
@@ -159,17 +198,17 @@ io.on('connection', (socket) => {
     // Handle client disconnection - Make room-specific
     socket.on('disconnect', () => {
         connectedUsers--;
-        io.emit('user-count', connectedUsers); // This can stay global for admin purposes
-
-        const username = activeUsers.get(socket.id);
-        if (username) {
-            console.log(`User left: ${username} from room: ${currentRoom}`);
-            takenUsernames.delete(username);
-            activeUsers.delete(socket.id);
-            console.log('Remaining users:', Array.from(activeUsers.values()));
+        io.emit('user-count', connectedUsers);
+        
+        const userData = activeUsers.get(socket.id);
+        if (userData) {
+            console.log(`User left: ${userData.username} from room: ${userData.room}`);
             
-            // Only emit to the current room instead of all clients
-            io.to(currentRoom).emit('user left', username);
+            // Only notify the specific room the user was in
+            io.to(userData.room).emit('user left', userData.username);
+            
+            // Clean up tracking data
+            activeUsers.delete(socket.id);
         }
     });
 });
