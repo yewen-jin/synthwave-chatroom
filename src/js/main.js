@@ -19,8 +19,7 @@ let visuals;
 function handleSend() {
   const message = getChatInput();
   if (message && username) {
-    const socket = window._socket;
-    socket.emit('chat', {
+    window._socket.emit('chat', {
       text: message,
       username,
       timestamp: Date.now()
@@ -65,7 +64,7 @@ function onUserLeft(name) {
 function onUsernameResponse(isTaken) {
   if (isTaken) {
     showErrorMessage();
-  } else {
+  } else { 
     localStorage.setItem('username', username);
     hideUsernamePopup();
     window._socket.emit('user joined', username);
@@ -100,6 +99,14 @@ window._socket = initSocket(
   onUsernameTaken,
   onGlitchControl
 );
+
+window._socket.on('reconnect', () => {
+  // Optionally re-join the room or re-send username
+  if (username) {
+    window._socket.emit('user joined', username);
+  }
+  // Optionally re-bind UI event handlers if needed
+});
 
 // Show username popup if needed
 if (!username) {
