@@ -19,8 +19,7 @@ let visuals;
 function handleSend() {
   const message = getChatInput();
   if (message && username) {
-    const socket = window._socket;
-    socket.emit('chat', {
+    window._socket.emit('chat', {
       text: message,
       username,
       timestamp: Date.now()
@@ -65,7 +64,7 @@ function onUserLeft(name) {
 function onUsernameResponse(isTaken) {
   if (isTaken) {
     showErrorMessage();
-  } else {
+  } else { 
     localStorage.setItem('username', username);
     hideUsernamePopup();
     window._socket.emit('user joined', username);
@@ -101,22 +100,17 @@ window._socket = initSocket(
   onGlitchControl
 );
 
+window._socket.on('reconnect', () => {
+  // Optionally re-join the room or re-send username
+  if (username) {
+    window._socket.emit('user joined', username);
+  }
+  // Optionally re-bind UI event handlers if needed
+});
+
 // Show username popup if needed
 if (!username) {
   showUsernamePopup();
 } else {
   window._socket.emit('set username', username);
 }
-
-// Listen for theme change events from control panel
-socket.on('theme-change', (theme) => {
-    console.log('Theme change received:', theme);
-    
-    // Remove all existing palette classes
-    document.body.classList.remove('palette-purple', 'palette-blue', 'palette-green');
-    
-    // Add the new theme class if specified
-    if (theme) {
-        document.body.classList.add(theme);
-    }
-});

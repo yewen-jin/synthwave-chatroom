@@ -23,7 +23,10 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, 'src/index.html')
+        main: path.resolve(__dirname, 'src/index.html'),
+        control: path.resolve(__dirname, 'src/control.html'),
+        room1: path.resolve(__dirname, 'src/room1.html'),
+        room2: path.resolve(__dirname, 'src/room2.html')
       },
       output: {
         manualChunks: {
