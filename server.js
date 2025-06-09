@@ -24,11 +24,18 @@ const io = new Server(server, {
 
 // Serve the production build from dist directory
 app.use(express.static(path.join(__dirname, 'dist')));
-app.use('/assets', express.static(path.join(__dirname, 'src/assets')));
+// Serve static assets (fonts, images) from built assets folder
+app.use('/assets', express.static(path.join(__dirname, 'dist/assets')));
 
-// Serve control panel and assets separately
+// Serve built HTML for control, room1, room2
 app.get('/control', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src/control.html'));
+    res.sendFile(path.join(__dirname, 'dist/control.html'));
+});
+app.get('/room1', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/room1.html'));
+});
+app.get('/room2', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/room2.html'));
 });
 
 // Catch-all route to serve index.html

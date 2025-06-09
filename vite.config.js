@@ -16,7 +16,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: '../dist',  // Changed to relative path
+    outDir: '../dist',
     assetsDir: 'assets',
     emptyOutDir: true,
     sourcemap: false,
@@ -29,11 +29,7 @@ export default defineConfig({
         room2: path.resolve(__dirname, 'src/room2.html')
       },
       output: {
-        manualChunks: {
-          'vendor': ['p5'],
-          'socket': ['socket.io-client'],
-          'style': ['./src/style.css']
-        }
+        manualChunks: undefined // Let Vite handle chunking for optimal caching
       }
     },
     minify: 'terser',
