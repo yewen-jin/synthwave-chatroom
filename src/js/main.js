@@ -114,16 +114,3 @@ if (!username) {
 } else {
   window._socket.emit('set username', username);
 }
-
-// Listen for theme change events from control panel
-socket.on('theme-change', (theme) => {
-    console.log('Theme change received:', theme);
-    
-    // Remove all existing palette classes
-    document.body.classList.remove('palette-purple', 'palette-blue', 'palette-green');
-    
-    // Add the new theme class if specified
-    if (theme) {
-        document.body.classList.add(theme);
-    }
-});
