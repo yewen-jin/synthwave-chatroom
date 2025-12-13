@@ -9,7 +9,8 @@ import {
   getUsernameInput,
   showErrorMessage,
   hideErrorMessage,
-  updateUserDisplayName
+  updateUserDisplayName,
+  updateLastJoinedUser
 } from './chatUI.js';
 import { initChatDrag } from './chatDrag.js';
 import { initVisuals } from './visuals.js';
@@ -53,6 +54,7 @@ function onUserJoined(name) {
   joinMessage.className = 'system-message';
   joinMessage.innerHTML = `<i><strong>${name}</strong> entered the chat</i>`;
   addMessageToChat(joinMessage);
+  updateLastJoinedUser(name);
 }
 
 function onUserLeft(name) {

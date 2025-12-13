@@ -77,3 +77,10 @@ export function updateUserDisplayName(name) {
     displayNameElement.textContent = name;
   }
 }
+
+export function updateLastJoinedUser(name) {
+  const lastJoinedElement = document.getElementById('last-joined-user');
+  if (lastJoinedElement) {
+    lastJoinedElement.textContent = name;
+  }
+}
