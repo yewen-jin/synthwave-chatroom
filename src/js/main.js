@@ -8,7 +8,8 @@ import {
   hideUsernamePopup,
   getUsernameInput,
   showErrorMessage,
-  hideErrorMessage
+  hideErrorMessage,
+  updateUserDisplayName
 } from './chatUI.js';
 import { initChatDrag } from './chatDrag.js';
 import { initVisuals } from './visuals.js';
@@ -66,6 +67,7 @@ function onUsernameResponse(isTaken) {
     showErrorMessage();
   } else { 
     localStorage.setItem('username', username);
+    updateUserDisplayName(username);
     hideUsernamePopup();
     window._socket.emit('user joined', username);
     hideErrorMessage();
@@ -112,5 +114,6 @@ window._socket.on('reconnect', () => {
 if (!username) {
   showUsernamePopup();
 } else {
+  updateUserDisplayName(username);
   window._socket.emit('set username', username);
 }

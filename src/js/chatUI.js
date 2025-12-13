@@ -70,3 +70,10 @@ export function showErrorMessage() {
 export function hideErrorMessage() {
   errorMessage.style.display = 'none';
 }
+
+export function updateUserDisplayName(name) {
+  const displayNameElement = document.getElementById('user-display-name');
+  if (displayNameElement) {
+    displayNameElement.textContent = name;
+  }
+}
