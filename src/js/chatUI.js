@@ -29,6 +29,24 @@ export function initChatUI(onSend, onUsernameSubmit) {
   });
   usernameSubmit.addEventListener('click', onUsernameSubmit);
 
+  // For visible inputs (room1, index), listen on the input field
+  usernameInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      onUsernameSubmit();
+    }
+  });
+
+  // For room2 (hidden input), listen on the document when popup is visible
+  if (isRoom2) {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && usernamePopup.style.display !== 'none') {
+        e.preventDefault();
+        onUsernameSubmit();
+      }
+    });
+  }
+
   // Apply room-specific styling if needed
   if (isRoom2) {
     document.querySelector('.msn-window')?.classList.add('room2-window');
