@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Circle for the face -->
+  <circle cx="50" cy="50" r="45" fill="#ccc" stroke="#000" stroke-width="2" />
+
+  <!-- Eyes -->
+  <ellipse cx="35" cy="40" rx="8" ry="10" fill="#000" />
+  <ellipse cx="65" cy="40" rx="8" ry="10" fill="#000" />
+
+  <!-- Mouth -->
+  <path d="M30,65 Q50,80 70,65" fill="none" stroke="#000" stroke-width="2" />
+
+  <!-- Mask outline -->
+  <!-- <path d="M20,30 Q50,10 80,30 Q50,90 20,30" fill="none" stroke="#000" stroke-width="2" /> -->
+</svg>

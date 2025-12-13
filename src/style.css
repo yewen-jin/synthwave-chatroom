@@ -1,47 +1,57 @@
 @font-face {
     font-family: 'Windows';
     /* src: url('https://fonts.cdnfonts.com/css/windows') format('woff2'); */
-    src: url('assets/fonts/Windows Regular.ttf') format('truetype');
+    src: url('/assets/fonts/Windows-Regular.ttf') format('truetype');
+    font-display: swap;
     font-weight: normal;
     font-style: normal;
 }
 
 :root {
-    --border-color: #0f0;
-    /* --border-color: rgb(255, 255, 255); */
+    --border-color: rgb(255, 255, 255);
     --border-glow: rgb(151, 22, 168);
-    --bg-primary: rgb(0, 0, 0);    /* Darker warm grey */
-    --bg-secondary: #000000;  /* Lighter warm grey */
+    --bg-primary: rgb(199, 199, 199);
+    --bg-secondary: #9e9e9e;
+    --text-color: rgb(0, 0, 0);  /* Default text color */
+    /* ...other variables... */
+    --secondary-text-color: rgb(175, 175, 175); /* Default secondary text color */
 }
 
-/* Update these elements to use the variable */
-.contact-info {
-    background: #000000;
-    padding: 8px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
+body.palette-purple {
+    --border-color: #a259ff;
+    --border-glow: #f72585;
+    --bg-primary: #1a0033;
+    --bg-secondary: #2d004d;
+    --text-color: #ff77ff;  /* Example purple text color */
+    --secondary-text-color: #ff77ff; /* Example secondary text color */
+    /* ...other variables... */
 }
 
-.avatar {
-    width: 48px;
-    height: 48px;
-    border: 1px solid var(--border-color);
-    margin-right: 10px;
+body.palette-blue {
+    --border-color: #00fff7;
+    --border-glow: #00b4d8;
+    --bg-primary: #001f2f;
+    --bg-secondary: #003049;
+    --text-color: #00fff7;  /* Example blue text color */
+    --secondary-text-color: #00fff7; /* Example secondary text color */
+    /* ...other variables... */
 }
 
-.user-avatar {
-    width: 100px;
-    height: 100px;
-    border: 1px solid var(--border-color);
-    border-radius: 10%;
-    object-fit: cover;
+body.palette-green {
+    --border-color: #0f0;
+    --border-glow: rgb(151, 22, 168);
+    --bg-primary: rgb(0, 0, 0);
+    --bg-secondary: #000000;
+    --text-color: #0f0;  /* Default text color */
+    --secondary-text-color: #0f0; /* Default secondary text color */
+    /* ...other variables... */
 }
 
+/* Global rules */
 body {
     font-family: 'Windows', 'VT323', monospace;
-    background-color: #000;
-    color: #0f0;
+    background-color: var(--bg-primary);
+    color: var(--text-color);  /* Use theme variable for text */
     margin: 0;
     padding: 20px;
     display: flex;
@@ -50,22 +60,14 @@ body {
     height: 100vh;
 }
 
-.chat-window {
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: rgba(0, 0, 0, 0.8);
-    border: 1px solid #0f0;
-    border-radius: 4px;
-    padding: 20px;
-}
-
+/* Title bar */
 .title-bar {
     background: linear-gradient(90deg, 
         rgb(40, 0, 60) 0%,
         rgb(35, 0, 43) 50%,
         rgb(0, 0, 0) 100%
     );
-    color: #00ff00;
+    color: var(--secondary-text-color);  /* Updated to use the variable */
     padding: 4px 8px;
     display: flex;
     align-items: center;
@@ -118,14 +120,14 @@ body {
 .window-controls button {
   background: none;
   border: none;
-  color: white;
+  color: var(--text-color);  /* Use theme text color */
   font-family: 'Segoe UI', Tahoma;
   padding: 0 6px;
   cursor: pointer;
 }
 
 .contact-info {
-    background: #000000;
+    background: var(--bg-primary);
     padding: 8px;
     border-bottom: 1px solid var(--border-color);
     display: flex;
@@ -146,12 +148,12 @@ body {
 
 .contact-name {
     font-weight: bold;
-    color: #00ff00;
+    color: var(--text-color);  /* Use theme text color */
 }
 
 .status {
     font-size: 0.9em;
-    color: #008800;
+    color: var(--text-color);  /* Use theme text color (or adjust if needed) */
 }
 
 .chat-area {
@@ -168,7 +170,7 @@ body {
     margin: 8px;
     padding: 15px;
     overflow-y: auto;
-    color: #00ff00;
+    color: var(--text-color);  /* Use theme text color */
     line-height: 1.5;
 }
 
@@ -182,7 +184,7 @@ body {
 
 .input-section {
     display: flex;
-    gap: 10px;
+    /* gap: 10px; */
     background: #000000;
     border-top: 1px solid var(--border-color);
 }
@@ -191,6 +193,8 @@ body {
     width: 120px;
     padding: 8px;
     display: flex;
+    flex-direction: column;
+    padding: 0% 8px;
     align-items: center;
     justify-content: center;
     border-left: 1px solid var(--border-color);
@@ -210,7 +214,7 @@ body {
     height: 60px;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    color: #00ff00;
+    color: var(--text-color);  /* Theme text color here */
     padding: 8px;
     resize: none;
     font-family: 'Windows', 'VT323', monospace;
@@ -272,11 +276,13 @@ body {
 
 /* Adjust toolbar to full width */
 .toolbar {
-    width: 100%;
-    /* padding: 4px; */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
     background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+    height: 32px;
 }
 
 /* Clear float fixes */
@@ -294,8 +300,8 @@ body {
     max-width: 70%;
     clear: both;
     display: block;
-    background-color: rgba(0, 255, 0, 0.1);
-    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    background-color: rgba(var(--bg-primary), 0.3); /* Use theme variable for background */
+    box-shadow: 0 0 5px rgba(253, 255, 253, 0.3);
 }
 
 .message.mine {
@@ -303,25 +309,25 @@ body {
     text-align: right;
     border-right: 3px solid var(--border-color);
     margin-left: auto;
-    color: #00ff00;
+    color: var(--text-color); /* Use the theme variable */
 }
 
 .message.others {
     float: left;
     text-align: left;
     border-left: 3px solid var(--border-color);
-    color: #00ff00;
+    color: var(--text-color); /* Use the theme variable */
 }
 
 .user-id {
     font-weight: bold;
-    color: #00ff00;
+    color: var(--text-color);  /* Use theme text color */
 }
 
 .timestamp {
     font-size: 0.8em;
-    color: #008800;
     margin-left: 8px;
+    color: var(--text-color);  /* Use theme text color */
 }
 
 .popup {
@@ -347,6 +353,35 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
 }
 
+/* Update chat messages to use the theme text color */
+.message.mine {
+    float: right;
+    text-align: right;
+    border-right: 3px solid var(--border-color);
+    margin-left: auto;
+    color: var(--text-color); /* Use the theme variable */
+}
+
+.message.others {
+    float: left;
+    text-align: left;
+    border-left: 3px solid var(--border-color);
+    color: var(--text-color); /* Use the theme variable */
+}
+
+/* Ensure the chat body uses the proper text color and background overlay */
+.chat-body {
+    background: var(--bg-secondary);
+    color: var(--text-color); /* All text within the chat area now uses this */
+}
+
+/* Update pop-up / overlay text styling */
+.popup-content {
+    background: var(--bg-primary); /* Overlay background per theme */
+    color: var(--text-color);       /* Overlay text matches the theme */
+    /* Other styling remains the same */
+}
+
 .msn-style {
   width: 300px;
   background: #000000;
@@ -358,11 +393,12 @@ body {
   padding: 20px;
   text-align: center;
   background: var(--bg-primary);
-  color: #00ff00;
+  color: var(--text-color);       /* Use the theme text color */;
 }
 
 .login-content p {
     margin: 10px 0;
+    color: var(--text-color);       /* Use the theme text color */
 }
 
 .login-content p:last-child {
@@ -374,7 +410,7 @@ body {
 #username-input {
     background: #000000;
     border: 1px solid var(--border-color);
-    color: #00ff00;
+    color: var(--text-color);       /* Use the theme text color */
     padding: 8px;
     margin: 10px 0;
     font-family: 'Windows', 'VT323', monospace;
@@ -385,7 +421,7 @@ body {
     padding: 6px 20px;
     background: #000000;
     border: 1px solid var(--border-color);
-    color: #00ff00;
+    color: var(--text-color);  /* Use the theme text color */
     cursor: pointer;
     font-family: 'Windows', 'VT323', monospace;
 }
@@ -399,12 +435,57 @@ body {
     width: 100%;
     margin-top: 8px;
     padding: 4px;
-    background: #000000;
+    background: var(--bg-primary); /* Use the theme's primary background color */
     border: 1px solid var(--border-color);
-    color: #00ff00;
+    color: var(--text-color);  /* Use variable instead of hardcoded color */
     cursor: pointer;
-    font-family: 'Windows', 'VT323', monospace;  /* Add this line */
+    font-family: 'Windows', 'VT323', monospace;
 }
+/* Apply primary background and text color to all inputs and buttons */
+input,
+button {
+    background: var(--bg-secondary) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color);
+    font-family: inherit;
+}
+
+/* Overriding specific selectors for clarity */
+
+/* Chat input field */
+#chatInput {
+    background: var(--bg-secondary);  /* Use primary background */
+    color: var(--text-color);        /* Use theme text color */
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+/* Send button */
+.send-btn {
+    background: var(--bg-secondary);  /* Use primary background */
+    color: var(--text-color);        /* Use theme text color */
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    font-family: 'Windows', 'VT323', monospace;
+}
+
+/* Username input and submit button (if used) */
+#username-input {
+    background: var(--bg-secondary);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 8px;
+}
+
+#username-submit {
+    background: var(--bg-secondary);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    font-family: 'Windows', 'VT323', monospace;
+}
+
 
 /* Update scrollbar for chat body */
 .chat-body::-webkit-scrollbar {
@@ -412,12 +493,17 @@ body {
 }
 
 .chat-body::-webkit-scrollbar-track {
-    background: #000000;
+    background: var(--text-color); /* Use the primary background color */
 }
 
 .chat-body::-webkit-scrollbar-thumb {
-    background: #0f0;
-    border: 1px solid #000000;
+    background: var(--bg-primary); /* Use the primary background color */
+    border: 1px solid var(--border-color);
+}
+
+/* Optional: Change thumb color on hover */
+.chat-body::-webkit-scrollbar-thumb:hover {
+    background: var(--border-color);
 }
 
 /* Mobile Optimization */
@@ -443,10 +529,18 @@ body {
     /* Stack input area and avatar vertically on mobile */
     .input-section {
         flex-direction: column-reverse;
-        gap: 5px;
+        width: 100%;
+            box-sizing: border-box;  /* Ensure padding doesn't increase width */
+        overflow: hidden;        /* Prevent child content from overflowing */
+   
+        /* gap: 5px; */
     }
 
     .user-avatar-panel {
+        flex-direction: row;
+        align-items: center;
+        justify-content: left;
+        padding: 8px;
         width: 100%;
         padding: 4px;
         border-left: none;
@@ -461,7 +555,7 @@ body {
     /* Adjust message bubbles for mobile */
     .message {
         max-width: 85%;
-        font-size: 14px;
+        font-size: 16px;
     }
 
     /* Make input area more compact */
@@ -484,6 +578,13 @@ body {
     .chat-body::-webkit-scrollbar {
         width: 3px;
     }
+
+    .system-message {
+    color: var(--text-color);
+    font-size: 16px !important;          /* Smaller font for mobile */
+    padding: 2px 0 !important;              /* Reduced vertical padding */
+    margin: 2px 0 !important;              /* Reduced margin */
+  }
 }
 
 /* Additional adjustments for very small screens */
@@ -567,7 +668,7 @@ body {
     clear: both;
     display: block;
     text-align: center;
-    color: #00ff00;
+    color: var(--text-color);  /* Use the theme variable */
     padding: 12px 0;
     margin: 16px 0;
     font-size: 18px;
@@ -577,11 +678,12 @@ body {
 
 .system-message i {
     font-style: italic;
+    color: var(--text-color);
 }
 
 .system-message strong {
+    color: var(--text-color);  /* Use the theme variable */
     font-weight: bold;
-    color: #00ff00;
     font-size: 20px;
 }
 
@@ -603,4 +705,58 @@ body {
 .msn-window.maximized .chat-body {
     margin: 0;
     height: calc(100% - 120px); /* Adjust based on your input area height */
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    height: 32px;
+}
+
+.toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.toolbar-divider {
+    width: 1px;
+    height: 20px;
+    background-color: var(--border-color);
+    margin: 0 4px;
+}
+
+.toolbar-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--border-color);
+    padding: 2px 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 24px;
+}
+
+.toolbar-btn:hover {
+    border-color: var(--border-color);
+    box-shadow: 0 0 5px var(--border-glow);
+}
+
+.toolbar-btn:active {
+    transform: scale(0.95);
+}
+
+.toolbar-btn .icon {
+    font-style: normal;
+    font-size: 14px;
+    line-height: 1;
 }

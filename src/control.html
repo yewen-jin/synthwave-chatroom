@@ -32,12 +32,77 @@
             color: #0f0;
             font-size: 0.9em;
         }
+        /* Theme Control Styles */
+        .theme-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .theme-btn {
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: 'Windows', 'VT323', monospace;
+            display: flex;
+            align-items: center;
+        }
+        .theme-btn:hover {
+            background: #002200;
+        }
+        .theme-btn.active {
+            background: #003300;
+        }
+        .color-preview {
+            width: 15px;
+            height: 15px;
+            display: inline-block;
+            margin-right: 8px;
+            border: 1px solid #333;
+        }
+        .green-preview {
+            background-color: #0f0;
+            box-shadow: 0 0 5px rgb(151, 22, 168);
+        }
+        .purple-preview {
+            background-color: #a259ff;
+            box-shadow: 0 0 5px #f72585;
+        }
+        .blue-preview {
+            background-color: #00fff7;
+            box-shadow: 0 0 5px #00b4d8;
+        }
+        .section-header {
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="control-panel">
         <h2>Glitch Control Panel</h2>
         
+        <!-- New Theme Control Section -->
+        <h3 class="section-header">Theme Control</h3>
+        <div class="theme-controls">
+            <button class="theme-btn" id="theme-default">
+                <span class="color-preview green-preview"></span>Default
+            </button>
+            <button class="theme-btn" id="theme-purple">
+                <span class="color-preview purple-preview"></span>Purple
+            </button>
+            <button class="theme-btn" id="theme-blue">
+                <span class="color-preview blue-preview"></span>Blue
+            </button>
+            <button class="theme-btn" id="theme-green">
+                <span class="color-preview green-preview"></span>Green
+            </button>
+        </div>
+        
+        <h3 class="section-header">Glitch Controls</h3>
         <div class="control-group">
             <label for="glitchProbability">Glitch Probability</label>
             <input type="range" id="glitchProbability" min="0" max="1" step="0.1" value="0.1">
@@ -69,9 +134,19 @@
         </div>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script type="module">
+        import { io } from 'socket.io-client';
+        
+        const socket = io(
+            window.location.hostname === 'localhost'
+                ? 'http://localhost:3000'
+                : window.location.origin,
+            {
+                withCredentials: true,
+                transports: ['websocket', 'polling']
+            }
+        );
         
         // Get all control elements
         const controls = {
@@ -101,6 +176,32 @@
                 
                 valueDisplay.textContent = control.value;
                 socket.emit('glitch-control', data);
+            });
+        });
+
+        // Theme control buttons
+        const themeButtons = {
+            'theme-default': '',
+            'theme-purple': 'palette-purple',
+            'theme-blue': 'palette-blue',
+            'theme-green': 'palette-green'
+        };
+        
+        // Set up theme control
+        Object.keys(themeButtons).forEach(buttonId => {
+            const button = document.getElementById(buttonId);
+            button.addEventListener('click', () => {
+                const themeClass = themeButtons[buttonId];
+                
+                // Update active button styles
+                document.querySelectorAll('.theme-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                button.classList.add('active');
+                
+                // Emit theme change event
+                socket.emit('control-theme', themeClass);
+                console.log(`Theme changed to: ${themeClass || 'default'}`);
             });
         });
 

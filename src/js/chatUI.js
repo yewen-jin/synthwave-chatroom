@@ -1,0 +1,72 @@
+// chatUI.js
+// Determine if we're in room2
+const isRoom2 = window.location.pathname.includes('room2');
+const roomName = isRoom2 ? 'room2' : 'default';
+
+let chatBody, chatInput, sendBtn, usernamePopup, usernameInput, usernameSubmit, errorMessage;
+
+export function initChatUI(onSend, onUsernameSubmit) {
+  chatBody = document.getElementById('chatBody');
+  chatInput = document.getElementById('chatInput');
+  sendBtn = document.querySelector('.send-btn');
+  usernamePopup = document.getElementById('username-popup');
+  usernameInput = document.getElementById('username-input');
+  usernameSubmit = document.getElementById('username-submit');
+
+  // Error message for username
+  errorMessage = document.createElement('p');
+  errorMessage.style.color = '#ff0000';
+  errorMessage.style.display = 'none';
+  errorMessage.textContent = 'This name has been taken, please use another one';
+  document.querySelector('.login-content').appendChild(errorMessage);
+
+  sendBtn.addEventListener('click', onSend);
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      onSend();
+    }
+  });
+  usernameSubmit.addEventListener('click', onUsernameSubmit);
+
+  // Apply room-specific styling if needed
+  if (isRoom2) {
+    document.querySelector('.msn-window')?.classList.add('room2-window');
+    document.querySelector('.title-bar')?.classList.add('room2-title');
+    document.querySelector('.chat-area')?.classList.add('room2-chat-area');
+    // Any other room2-specific UI modifications
+  }
+}
+
+export function getChatInput() {
+  return chatInput.value.trim();
+}
+
+export function clearChatInput() {
+  chatInput.value = '';
+}
+
+export function addMessageToChat(element) {
+  chatBody.appendChild(element);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+export function showUsernamePopup() {
+  usernamePopup.style.display = 'flex';
+}
+
+export function hideUsernamePopup() {
+  usernamePopup.style.display = 'none';
+}
+
+export function getUsernameInput() {
+  return usernameInput.value.trim();
+}
+
+export function showErrorMessage() {
+  errorMessage.style.display = 'block';
+}
+
+export function hideErrorMessage() {
+  errorMessage.style.display = 'none';
+}
