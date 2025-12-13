@@ -1,6 +1,6 @@
 // chatUI.js
 // Determine if we're in room2
-const isRoom2 = window.location.pathname.includes('room2');
+export const isRoom2 = window.location.pathname.includes('room2');
 const roomName = isRoom2 ? 'room2' : 'default';
 
 let chatBody, chatInput, sendBtn, usernamePopup, usernameInput, usernameSubmit, errorMessage;
@@ -79,6 +79,8 @@ export function updateUserDisplayName(name) {
 }
 
 export function updateLastJoinedUser(name) {
+  // Only update in room2
+  if (!isRoom2) return;
   const lastJoinedElement = document.getElementById('last-joined-user');
   if (lastJoinedElement) {
     lastJoinedElement.textContent = name;

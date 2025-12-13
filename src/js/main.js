@@ -10,12 +10,14 @@ import {
   showErrorMessage,
   hideErrorMessage,
   updateUserDisplayName,
-  updateLastJoinedUser
+  updateLastJoinedUser,
+  isRoom2
 } from './chatUI.js';
 import { initChatDrag } from './chatDrag.js';
 import { initVisuals } from './visuals.js';
 
-let username = localStorage.getItem('username');
+// In room1, always show popup. In room2, use localStorage.
+let username = isRoom2 ? localStorage.getItem('username') : null;
 let visuals;
 
 function handleSend() {
