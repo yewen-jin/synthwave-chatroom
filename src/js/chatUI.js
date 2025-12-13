@@ -79,8 +79,8 @@ export function updateUserDisplayName(name) {
 }
 
 export function updateLastJoinedUser(name) {
-  // Only update in room2
-  if (!isRoom2) return;
+  // Only update in room2, and skip if the name is "Symoné"
+  if (!isRoom2 || name === 'Symoné') return;
   const lastJoinedElement = document.getElementById('last-joined-user');
   if (lastJoinedElement) {
     lastJoinedElement.textContent = name;
