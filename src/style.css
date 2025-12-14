@@ -896,6 +896,24 @@ button {
     }
 }
 
+/* Inline Dialogue Choices (game-room) */
+.dialogue-choices-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+    min-height: 80px;
+}
+
+.dialogue-choices-inline .choice-btn {
+    margin: 0;
+    text-align: left;
+    justify-content: flex-start;
+}
+
 /* Narrator Response Popup (game-room2) */
 .narrator-actions {
     display: flex;

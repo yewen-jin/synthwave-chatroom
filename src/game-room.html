@@ -59,11 +59,13 @@
             </div>
           </div>
           <div class="input-wrapper">
-            <div class="input-container">
+            <div class="input-container" id="normal-input-container">
               <textarea id="chatInput" placeholder="Type a message…"></textarea>
             </div>
+            <!-- Dialogue choices container (replaces input during dialogue) -->
+            <div class="dialogue-choices-inline" id="dialogue-choices-inline" style="display: none;"></div>
           </div>
-          <button class="send-btn">Send</button>
+          <button class="send-btn" id="send-btn">Send</button>
         </div>
         
         <!-- User Avatar Side Panel -->
@@ -86,20 +88,6 @@
         <p>Please enter your display name to continue</p>
         <input type="text" id="username-input" placeholder="Display name" maxlength="20">
         <button id="username-submit">Sign In</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Dialogue Popup (Player choices) -->
-  <div id="dialogue-popup" class="popup" style="display: none;">
-    <div class="popup-content dialogue-style">
-      <div class="title-bar">
-        <img src="assets/images/icons/chat-room-icon.svg" alt="icon" class="msn-icon" />
-        <span>Void Transmission</span>
-      </div>
-      <div class="dialogue-content">
-        <div class="narrative-text" id="dialogue-narrative"></div>
-        <div class="dialogue-choices" id="dialogue-choices"></div>
       </div>
     </div>
   </div>

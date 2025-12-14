@@ -95,11 +95,11 @@ function initNarratorRoom() {
 
 // ========== PLAYER (game-room) ==========
 function initPlayerRoom() {
-    const dialoguePopup = document.getElementById('dialogue-popup');
-    const narrativeText = document.getElementById('dialogue-narrative');
-    const choicesContainer = document.getElementById('dialogue-choices');
+    const normalInputContainer = document.getElementById('normal-input-container');
+    const choicesInlineContainer = document.getElementById('dialogue-choices-inline');
+    const sendBtn = document.getElementById('send-btn');
 
-    if (!dialoguePopup || !narrativeText || !choicesContainer) {
+    if (!normalInputContainer || !choicesInlineContainer || !sendBtn) {
         console.warn('Player dialogue UI elements not found');
         return;
     }
@@ -119,14 +119,16 @@ function initPlayerRoom() {
         dialogueSystem.setCurrentNode(data.currentNode);
         dialogueSystem.setVariables(data.variables);
 
-        // Show popup with choices
-        const node = dialogueSystem.getCurrentNode();
+        // Get choices (don't show the narrative text)
         const choices = dialogueSystem.getAvailableChoices();
 
-        narrativeText.textContent = node.text;
+        // Hide normal input, show choices inline
+        normalInputContainer.style.display = 'none';
+        sendBtn.style.display = 'none';
+        choicesInlineContainer.style.display = 'flex';
 
         // Render choice buttons
-        choicesContainer.innerHTML = '';
+        choicesInlineContainer.innerHTML = '';
         choices.forEach(choice => {
             const btn = document.createElement('button');
             btn.className = 'choice-btn';
@@ -135,38 +137,46 @@ function initPlayerRoom() {
             btn.addEventListener('click', () => {
                 handlePlayerChoice(choice);
                 // Disable all buttons
-                choicesContainer.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+                choicesInlineContainer.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
             });
 
-            choicesContainer.appendChild(btn);
+            choicesInlineContainer.appendChild(btn);
         });
-
-        dialoguePopup.style.display = 'flex';
 
         // Flash visual effect
         if (flashCallback) flashCallback();
     });
 
-    // Listen for narrator response (close player popup and wait)
+    // Listen for narrator response (hide choices, show normal input)
     socket.on('narrator-response-sent', () => {
-        console.log('Player: Narrator sent response, hiding popup');
-        dialoguePopup.style.display = 'none';
+        console.log('Player: Narrator sent response, hiding choices');
+        choicesInlineContainer.style.display = 'none';
+        normalInputContainer.style.display = 'block';
+        sendBtn.style.display = 'block';
     });
 
     // Listen for dialogue end
     socket.on('dialogue-end', () => {
         console.log('Player: Dialogue ended');
         isActive = false;
-        dialoguePopup.style.display = 'none';
+        choicesInlineContainer.style.display = 'none';
+        normalInputContainer.style.display = 'block';
+        sendBtn.style.display = 'block';
     });
 }
 
 function handlePlayerChoice(choice) {
     console.log('Player: Choice selected:', choice.text);
 
-    // Hide popup immediately
-    const dialoguePopup = document.getElementById('dialogue-popup');
-    if (dialoguePopup) dialoguePopup.style.display = 'none';
+    // Hide choices immediately
+    const choicesInlineContainer = document.getElementById('dialogue-choices-inline');
+    if (choicesInlineContainer) choicesInlineContainer.style.display = 'none';
+
+    // Show normal input again
+    const normalInputContainer = document.getElementById('normal-input-container');
+    const sendBtn = document.getElementById('send-btn');
+    if (normalInputContainer) normalInputContainer.style.display = 'block';
+    if (sendBtn) sendBtn.style.display = 'block';
 
     // Send choice to server (will auto-post to chat and trigger narrator response)
     socket.emit('player-choice', {

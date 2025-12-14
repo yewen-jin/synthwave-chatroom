@@ -3,6 +3,7 @@ import path from 'path'
 
 export default defineConfig({
   root: 'src',
+  publicDir: '../public', // Copy files from public dir to dist
   server: {
     port: 5173,
     host: true,
