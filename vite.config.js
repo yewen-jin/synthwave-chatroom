@@ -26,7 +26,9 @@ export default defineConfig({
         main: path.resolve(__dirname, 'src/index.html'),
         control: path.resolve(__dirname, 'src/control.html'),
         room1: path.resolve(__dirname, 'src/room1.html'),
-        room2: path.resolve(__dirname, 'src/room2.html')
+        room2: path.resolve(__dirname, 'src/room2.html'),
+        'game-room': path.resolve(__dirname, 'src/game-room.html'),
+        'game-room2': path.resolve(__dirname, 'src/game-room2.html')
       },
       output: {
         manualChunks: undefined // Let Vite handle chunking for optimal caching

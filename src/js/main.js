@@ -15,6 +15,7 @@ import {
 } from './chatUI.js';
 import { initChatDrag } from './chatDrag.js';
 import { initVisuals } from './visuals.js';
+import { initDialogueController } from './dialogueController.js';
 
 // In room1, always show popup. In room2, use localStorage.
 let username = isRoom2 ? localStorage.getItem('username') : null;
@@ -69,12 +70,26 @@ function onUserLeft(name) {
 function onUsernameResponse(isTaken) {
   if (isTaken) {
     showErrorMessage();
-  } else { 
+  } else {
     localStorage.setItem('username', username);
     updateUserDisplayName(username);
     hideUsernamePopup();
     window._socket.emit('user joined', username);
     hideErrorMessage();
+
+    // Initialize dialogue controller for game-room or game-room2 after username is set
+    const isGameRoom2 = window.location.pathname.includes('game-room2');
+    const isGameRoom = window.location.pathname.includes('game-room.html') || window.location.pathname === '/game-room';
+    if (isGameRoom2 || isGameRoom) {
+      setTimeout(() => {
+        initDialogueController(
+          window._socket,
+          username,
+          onChat,
+          () => { if (visuals) visuals.flash(); }
+        );
+      }, 100);
+    }
   }
 }
 
@@ -114,10 +129,26 @@ window._socket.on('reconnect', () => {
   // Optionally re-bind UI event handlers if needed
 });
 
+// Detect if we're in game rooms
+const isGameRoom2 = window.location.pathname.includes('game-room2');
+const isGameRoom = window.location.pathname.includes('game-room.html') || window.location.pathname === '/game-room';
+
 // Show username popup if needed
 if (!username) {
   showUsernamePopup();
 } else {
   updateUserDisplayName(username);
   window._socket.emit('set username', username);
+
+  // Initialize dialogue controller for game-room or game-room2 if username already exists
+  if (isGameRoom2 || isGameRoom) {
+    setTimeout(() => {
+      initDialogueController(
+        window._socket,
+        username,
+        onChat,
+        () => { if (visuals) visuals.flash(); }
+      );
+    }, 100);
+  }
 }

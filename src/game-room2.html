@@ -1,0 +1,125 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The B0dy_is_0bs0let3</title>
+    <!-- Update paths to be relative to src folder -->
+    <link rel="icon" type="image/svg+xml" href="/assets/images/icons/favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- MSN-style Window Container -->
+  <div class="msn-window">
+    <!-- Title Bar -->
+    <div class="title-bar">
+      <img src="assets/images/icons/chat-room-icon.svg" alt="icon" class="msn-icon" />
+      <span class="window-title">The B0dy_is_0bs0let3</span>
+      <div class="window-controls">
+        <button class="minimize">_</button>
+        <button class="maximize">□</button>
+        <button class="close">×</button>
+      </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+      <!-- Contact Info Bar -->
+      <div class="contact-info">
+        <img src="assets/images/mask.svg" alt="Avatar" class="avatar" />
+        <div class="contact-details">
+          <span class="contact-name" id="last-joined-user">Waiting...</span>
+          <span class="status">Online</span>
+        </div>
+      </div>
+
+      <!-- Messages Container -->
+      <div class="chat-body" id="chatBody"></div>
+
+      <!-- Message Input Area -->
+      <div class="input-section">
+        <!-- Dialogue Trigger Button -->
+        <div class="dialogue-trigger-container">
+          <button class="dialogue-trigger-btn" id="dialogue-trigger-btn">
+            <span class="btn-icon">📡</span>
+            <span class="btn-text">Initiate Transmission</span>
+          </button>
+        </div>
+
+        <div class="message-input-area">
+          <div class="toolbar">
+            <div class="toolbar-section text-formatting">
+                <button class="toolbar-btn font-family" title="Font Family"><i class="icon">𝔸</i></button>
+                <button class="toolbar-btn font-size" title="Font Size"><i class="icon">𝟙𝟚</i></button>
+                <button class="toolbar-btn bold" title="Bold"><i class="icon">𝐁</i></button>
+                <button class="toolbar-btn italic" title="Italic"><i class="icon">𝑰</i></button>
+                <button class="toolbar-btn underline" title="Underline"><i class="icon">𝕌</i></button>
+                <button class="toolbar-btn text-color" title="Text Color"><i class="icon">🎨</i></button>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-section message-options">
+                <button class="toolbar-btn emoticon-btn" title="Insert Emoticon">☺</button>
+                <button class="toolbar-btn background" title="Change Background">🖼️</button>
+                <button class="toolbar-btn nudge-btn" title="Send Nudge">≫</button>
+                <button class="toolbar-btn draw" title="Draw Something">✎</button>
+                <button class="toolbar-btn voice" title="Voice Clip">🎤</button>
+            </div>
+          </div>
+          <div class="input-wrapper">
+            <div class="input-container">
+              <textarea id="chatInput" placeholder="Type a message…"></textarea>
+            </div>
+          </div>
+          <button class="send-btn">Send</button>
+        </div>
+        
+        <!-- User Avatar Side Panel -->
+        <div class="user-avatar-panel">
+          <img src="assets/images/avatar1.jpg" alt="Your Avatar" class="avatar user-avatar" />
+          <span class="contact-name">Symoné</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Username Popup -->
+  <div id="username-popup" class="popup">
+    <div class="popup-content msn-style">
+      <div class="title-bar">
+        <img src="assets/images/icons/chat-room-icon.svg" alt="icon" class="msn-icon" />
+        <span>Sign In</span>
+      </div>
+      <div class="login-content">
+        <p>Are you Symoné?</p>
+        <input type="hidden" id="username-input" value="Symoné">
+        <button id="username-submit">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Narrator Response Popup (Control room) -->
+  <div id="narrator-popup" class="popup" style="display: none;">
+    <div class="popup-content dialogue-style">
+      <div class="title-bar">
+        <img src="assets/images/icons/chat-room-icon.svg" alt="icon" class="msn-icon" />
+        <span>Narrator Response</span>
+      </div>
+      <div class="dialogue-content">
+        <div class="narrative-text" id="narrator-text"></div>
+        <div class="narrator-actions">
+          <button class="narrator-continue-btn" id="narrator-continue-btn">
+            <span class="btn-icon">→</span>
+            <span class="btn-text">Continue</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <!-- <script src="/socket.io/socket.io.js"></script> -->
+  <!-- <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

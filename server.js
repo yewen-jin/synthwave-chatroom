@@ -3,6 +3,7 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { readFile } from 'fs/promises';
 
 // Fix for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -27,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // Serve static assets (fonts, images) from built assets folder
 app.use('/assets', express.static(path.join(__dirname, 'dist/assets')));
 
-// Serve built HTML for control, room1, room2
+// Serve built HTML for control, room1, room2, game-room, game-room2
 app.get('/control', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/control.html'));
 });
@@ -36,6 +37,12 @@ app.get('/room1', (req, res) => {
 });
 app.get('/room2', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/room2.html'));
+});
+app.get('/game-room', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/game-room.html'));
+});
+app.get('/game-room2', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/game-room2.html'));
 });
 
 // Catch-all route to serve index.html
@@ -54,6 +61,95 @@ const takenUsernames = new Set();
 
 // Track connected users
 let connectedUsers = 0;
+
+// Track dialogue states per room
+const dialogueStates = new Map();
+
+// Helper: Load dialogue JSON
+async function loadDialogueData(dialogueId) {
+    const filePath = path.join(__dirname, 'dist', 'data', 'dialogues', `${dialogueId}.json`);
+    try {
+        const data = await readFile(filePath, 'utf-8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error(`Failed to load dialogue ${dialogueId}:`, error);
+        return null;
+    }
+}
+
+// Helper: Validate dialogue data structure
+function validateDialogueData(data) {
+    if (!data.metadata || !data.metadata.startNode) {
+        throw new Error('Missing startNode in metadata');
+    }
+
+    if (!data.nodes[data.metadata.startNode]) {
+        throw new Error('startNode does not exist in nodes');
+    }
+
+    for (let [nodeId, node] of Object.entries(data.nodes)) {
+        for (let choice of node.choices || []) {
+            if (!data.nodes[choice.nextNode]) {
+                throw new Error(`Invalid nextNode "${choice.nextNode}" in node "${nodeId}"`);
+            }
+        }
+    }
+
+    return true;
+}
+
+// Helper: Initialize dialogue for a room
+async function startDialogue(room, dialogueId) {
+    const dialogueData = await loadDialogueData(dialogueId);
+    if (!dialogueData) return null;
+
+    try {
+        validateDialogueData(dialogueData);
+    } catch (error) {
+        console.error('Dialogue validation failed:', error);
+        return null;
+    }
+
+    const state = {
+        active: true,
+        dialogueId,
+        currentNode: dialogueData.metadata.startNode,
+        variables: {...dialogueData.variables},
+        dialogueData
+    };
+
+    dialogueStates.set(room, state);
+    return state;
+}
+
+// Helper: Build sync payload for clients
+function buildSyncPayload(state) {
+    return {
+        active: state.active,
+        currentNode: state.currentNode,
+        variables: state.variables,
+        dialogueId: state.dialogueId,
+        dialogueData: state.dialogueData,
+        nodeData: state.dialogueData.nodes[state.currentNode]
+    };
+}
+
+// Helper: Apply effects to variables
+function applyEffects(effects, variables) {
+    if (!effects) return variables;
+
+    const newVars = {...variables};
+    for (let [key, value] of Object.entries(effects)) {
+        if (typeof value === 'string' && value.startsWith('+')) {
+            newVars[key] = (newVars[key] || 0) + parseFloat(value.substring(1));
+        } else if (typeof value === 'string' && value.startsWith('-')) {
+            newVars[key] = (newVars[key] || 0) - parseFloat(value.substring(1));
+        } else {
+            newVars[key] = value;
+        }
+    }
+    return newVars;
+}
 
 // Handle Socket.IO connections
 io.on('connection', (socket) => {
@@ -108,6 +204,124 @@ io.on('connection', (socket) => {
         // Broadcast theme change to all clients except sender
         socket.broadcast.emit('theme-change', theme);
         console.log(`Theme changed to: ${theme || 'default'}`);
+    });
+
+    // Handle dialogue start (from narrator in game-room2)
+    socket.on('dialogue-start', async (data) => {
+        const targetRoom = data.targetRoom || 'game-room';
+        console.log(`Starting dialogue ${data.dialogueId} in ${targetRoom}`);
+
+        const state = await startDialogue(targetRoom, data.dialogueId);
+
+        if (state) {
+            // Send dialogue to players in game-room
+            io.emit('dialogue-sync', buildSyncPayload(state));
+        } else {
+            socket.emit('dialogue-error', { message: 'Failed to load dialogue' });
+        }
+    });
+
+    // Handle player choice (from game-room)
+    socket.on('player-choice', (data) => {
+        const room = 'game-room';
+        const state = dialogueStates.get(room);
+
+        if (!state || !state.active) {
+            console.log('No active dialogue for player choice');
+            return;
+        }
+
+        // Validate choice exists in current node
+        const currentNode = state.dialogueData.nodes[state.currentNode];
+        const choice = currentNode.choices.find(c => c.id === data.choiceId);
+
+        if (!choice) {
+            console.log('Invalid choice');
+            return;
+        }
+
+        // Apply effects to variables
+        if (choice.effects) {
+            state.variables = applyEffects(choice.effects, state.variables);
+        }
+
+        // Navigate to next node
+        state.currentNode = choice.nextNode;
+
+        // Broadcast player's choice to chat
+        io.emit('chat', {
+            text: data.choiceText,
+            username: data.username,
+            timestamp: Date.now()
+        });
+
+        // Get narrator response from next node
+        const nextNode = state.dialogueData.nodes[state.currentNode];
+
+        // Check if ending node
+        if (nextNode.type === 'ending') {
+            // Send ending to players
+            io.emit('chat', {
+                text: nextNode.text,
+                username: 'Symoné',
+                timestamp: Date.now()
+            });
+
+            // End dialogue
+            setTimeout(() => {
+                state.active = false;
+                io.emit('dialogue-end', {
+                    reason: 'completed'
+                });
+
+                // Clean up state after 5 minutes
+                setTimeout(() => {
+                    if (!dialogueStates.get(room)?.active) {
+                        dialogueStates.delete(room);
+                        console.log(`Cleaned up dialogue state for room: ${room}`);
+                    }
+                }, 5 * 60 * 1000);
+            }, 3000);
+        } else {
+            // Show narrator response popup in game-room2
+            io.emit('player-choice-made', {
+                narratorResponse: nextNode.text,
+                playerChoice: data.choiceText
+            });
+        }
+    });
+
+    // Handle narrator continue (from game-room2)
+    socket.on('narrator-continue', (data) => {
+        const room = 'game-room';
+        const state = dialogueStates.get(room);
+
+        if (!state || !state.active) {
+            console.log('No active dialogue for narrator continue');
+            return;
+        }
+
+        // Broadcast narrator response to chat
+        io.emit('chat', {
+            text: data.text,
+            username: data.username,
+            timestamp: Date.now()
+        });
+
+        // Notify player that narrator sent response
+        io.emit('narrator-response-sent');
+
+        // Get current node and send next dialogue choice to player
+        const currentNode = state.dialogueData.nodes[state.currentNode];
+        const choices = currentNode.choices || [];
+
+        if (choices.length > 0) {
+            // Send next set of choices to player
+            io.emit('dialogue-sync', buildSyncPayload(state));
+        } else {
+            // No more choices, dialogue might be ending
+            console.log('No more choices available');
+        }
     });
 
     // Handle client disconnection
