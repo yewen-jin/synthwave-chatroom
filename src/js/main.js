@@ -20,6 +20,7 @@ import { initDialogueController } from './dialogueController.js';
 // In room1, always show popup. In room2, use localStorage.
 let username = isRoom2 ? localStorage.getItem('username') : null;
 let visuals;
+let dialogueControllerInitialized = false; // Track if dialogue controller has been initialized
 
 function handleSend() {
   const message = getChatInput();
@@ -80,7 +81,8 @@ function onUsernameResponse(isTaken) {
     // Initialize dialogue controller for game-room or game-room2 after username is set
     const isGameRoom2 = window.location.pathname.includes('game-room2');
     const isGameRoom = window.location.pathname.includes('game-room.html') || window.location.pathname === '/game-room';
-    if (isGameRoom2 || isGameRoom) {
+    if ((isGameRoom2 || isGameRoom) && !dialogueControllerInitialized) {
+      dialogueControllerInitialized = true;
       setTimeout(() => {
         initDialogueController(
           window._socket,
@@ -141,7 +143,8 @@ if (!username) {
   window._socket.emit('set username', username);
 
   // Initialize dialogue controller for game-room or game-room2 if username already exists
-  if (isGameRoom2 || isGameRoom) {
+  if ((isGameRoom2 || isGameRoom) && !dialogueControllerInitialized) {
+    dialogueControllerInitialized = true;
     setTimeout(() => {
       initDialogueController(
         window._socket,
