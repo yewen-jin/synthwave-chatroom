@@ -4,7 +4,7 @@ package-lock.json
 
 # Build directories
 dist/
-build/
+# build/
 
 # Environment files
 .env
