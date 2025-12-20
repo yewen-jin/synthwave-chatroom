@@ -3,6 +3,11 @@
 
 import { DialogueSystem } from './dialogueSystem.js';
 
+// ========== NARRATOR USERNAME CONFIG ==========
+// Change this value to update the narrator's display name in chat
+const NARRATOR_USERNAME = 'Liz';
+// ===============================================
+
 let dialogueSystem = null;
 let socket = null;
 let username = null;
@@ -64,7 +69,7 @@ function initNarratorRoom() {
 
         socket.emit('narrator-continue', {
             text: narratorText.textContent,
-            username: 'Symoné',
+            username: NARRATOR_USERNAME,
             isEnding: currentIsEnding
         });
 

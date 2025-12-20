@@ -260,10 +260,10 @@ io.on('connection', (socket) => {
 
         // Check if ending node
         if (nextNode.type === 'ending') {
-            // Send ending to players
+            // Send ending to players (using narrator username "Liz")
             io.emit('chat', {
                 text: nextNode.text,
-                username: 'Symoné',
+                username: 'Liz',
                 timestamp: Date.now()
             });
 
