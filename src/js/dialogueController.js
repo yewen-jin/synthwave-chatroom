@@ -8,7 +8,7 @@ let socket = null;
 let username = null;
 let flashCallback = null;
 let isActive = false;
-let currentIsEnding = false; // Add this line
+let currentIsEnding = false;
 
 // Detect which room we're in
 const isGameRoom = window.location.pathname.includes('game-room.html') || window.location.pathname === '/game-room';
@@ -18,12 +18,12 @@ export function initDialogueController(socketInstance, user, onMessageCallback, 
     socket = socketInstance;
     username = user;
     flashCallback = onFlashCallback;
-
-    dialogueSystem = new DialogueSystem();
+    // Note: onMessageCallback is not used - chat messages are handled via socket events
 
     if (isGameRoom2) {
         initNarratorRoom();
     } else if (isGameRoom) {
+        dialogueSystem = new DialogueSystem(); // Only needed for player room
         initPlayerRoom();
     }
 
@@ -44,8 +44,6 @@ function initNarratorRoom() {
 
     // Trigger button starts dialogue in game-room
     triggerBtn.addEventListener('click', () => {
-        if (isActive) return;
-
         console.log('Narrator: Starting dialogue in game-room');
         socket.emit('dialogue-start', {
             dialogueId: 'episode1',
@@ -66,7 +64,7 @@ function initNarratorRoom() {
 
         socket.emit('narrator-continue', {
             text: narratorText.textContent,
-            username: 'Symoné', // Always send as Symoné
+            username: 'Symoné',
             isEnding: currentIsEnding
         });
 
