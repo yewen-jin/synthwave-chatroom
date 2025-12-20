@@ -8,6 +8,7 @@ let socket = null;
 let username = null;
 let flashCallback = null;
 let isActive = false;
+let currentIsEnding = false; // Add this line
 
 // Detect which room we're in
 const isGameRoom = window.location.pathname.includes('game-room.html') || window.location.pathname === '/game-room';
@@ -56,36 +57,61 @@ function initNarratorRoom() {
         if (btnText) btnText.textContent = 'Transmission Active...';
     });
 
-    // Listen for player choices (to show narrator response)
-    socket.on('player-choice-made', (data) => {
-        console.log('Narrator: Player made choice, showing response');
-        isActive = true;
-
-        // Show the narrator response popup with the planned response
-        narratorText.textContent = data.narratorResponse;
-        narratorPopup.style.display = 'flex';
-        continueBtn.disabled = false;
-    });
-
-    // Continue button sends narrator response to chat
-    continueBtn.addEventListener('click', () => {
+    // Function to handle continue action
+    function handleContinue() {
+        if (continueBtn.disabled) return;
+        
         continueBtn.disabled = true;
+        console.log('Sending narrator-continue with isEnding:', currentIsEnding);
 
         socket.emit('narrator-continue', {
             text: narratorText.textContent,
-            username: username
+            username: 'Symoné', // Always send as Symoné
+            isEnding: currentIsEnding
         });
 
         // Hide popup after sending
         setTimeout(() => {
             narratorPopup.style.display = 'none';
         }, 500);
+    }
+
+    // Listen for player choices (to show narrator response)
+    socket.on('player-choice-made', (data) => {
+        console.log('Narrator: Player made choice, auto-sending response');
+        console.log('isEnding value received:', data.isEnding);
+        isActive = true;
+        currentIsEnding = data.isEnding === true;
+
+        // Store the narrator response text
+        narratorText.textContent = data.narratorResponse;
+        
+        // Show popup briefly so narrator can see what's being sent
+        narratorPopup.style.display = 'flex';
+        continueBtn.disabled = false;
+
+        // Auto-send after a short delay (1.5 seconds)
+        setTimeout(() => {
+            handleContinue();
+        }, 1500);
+    });
+
+    // Continue button still works for manual override if needed
+    continueBtn.addEventListener('click', handleContinue);
+
+    // Enter key also triggers continue when popup is visible
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && narratorPopup.style.display === 'flex') {
+            e.preventDefault();
+            handleContinue();
+        }
     });
 
     // Listen for dialogue end
     socket.on('dialogue-end', () => {
         console.log('Narrator: Dialogue ended');
         isActive = false;
+        currentIsEnding = false;
         narratorPopup.style.display = 'none';
         triggerBtn.disabled = false;
         const btnText = triggerBtn.querySelector('.btn-text');
