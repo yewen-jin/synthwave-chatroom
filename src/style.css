@@ -896,7 +896,7 @@ button {
     }
 }
 
-/* Inline Dialogue Choices (game-room) */
+/* Inline Dialogue Choices (player-room) */
 .dialogue-choices-inline {
     display: flex;
     flex-direction: column;
@@ -914,7 +914,7 @@ button {
     justify-content: flex-start;
 }
 
-/* Narrator Response Popup (game-room2) */
+/* Narrator Response Popup (narrator-room) */
 .narrator-actions {
     display: flex;
     justify-content: center;

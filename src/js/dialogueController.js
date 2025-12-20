@@ -1,5 +1,5 @@
 // dialogueController.js
-// Two-room dialogue system: Player (game-room) and Narrator (game-room2)
+// Two-room dialogue system: Player (player-room) and Narrator (narrator-room)
 
 import { DialogueSystem } from './dialogueSystem.js';
 
@@ -11,8 +11,8 @@ let isActive = false;
 let currentIsEnding = false;
 
 // Detect which room we're in
-const isGameRoom = window.location.pathname.includes('game-room.html') || window.location.pathname === '/game-room';
-const isGameRoom2 = window.location.pathname.includes('game-room2');
+const isPlayerRoom = window.location.pathname.includes('player-room.html') || window.location.pathname === '/player-room';
+const isNarratorRoom = window.location.pathname.includes('narrator-room');
 
 export function initDialogueController(socketInstance, user, onMessageCallback, onFlashCallback) {
     socket = socketInstance;
@@ -20,17 +20,17 @@ export function initDialogueController(socketInstance, user, onMessageCallback, 
     flashCallback = onFlashCallback;
     // Note: onMessageCallback is not used - chat messages are handled via socket events
 
-    if (isGameRoom2) {
+    if (isNarratorRoom) {
         initNarratorRoom();
-    } else if (isGameRoom) {
+    } else if (isPlayerRoom) {
         dialogueSystem = new DialogueSystem(); // Only needed for player room
         initPlayerRoom();
     }
 
-    console.log(`Dialogue controller initialized for ${isGameRoom2 ? 'narrator (game-room2)' : 'player (game-room)'}`);
+    console.log(`Dialogue controller initialized for ${isNarratorRoom ? 'narrator (narrator-room)' : 'player (player-room)'}`);
 }
 
-// ========== NARRATOR (game-room2) ==========
+// ========== NARRATOR (narrator-room) ==========
 function initNarratorRoom() {
     const triggerBtn = document.getElementById('dialogue-trigger-btn');
     const narratorPopup = document.getElementById('narrator-popup');
@@ -42,12 +42,12 @@ function initNarratorRoom() {
         return;
     }
 
-    // Trigger button starts dialogue in game-room
+    // Trigger button starts dialogue in player-room
     triggerBtn.addEventListener('click', () => {
-        console.log('Narrator: Starting dialogue in game-room');
+        console.log('Narrator: Starting dialogue in player-room');
         socket.emit('dialogue-start', {
             dialogueId: 'episode1',
-            targetRoom: 'game-room'
+            targetRoom: 'player-room'
         });
 
         triggerBtn.disabled = true;
@@ -117,7 +117,7 @@ function initNarratorRoom() {
     });
 }
 
-// ========== PLAYER (game-room) ==========
+// ========== PLAYER (player-room) ==========
 function initPlayerRoom() {
     const normalInputContainer = document.getElementById('normal-input-container');
     const choicesInlineContainer = document.getElementById('dialogue-choices-inline');

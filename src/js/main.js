@@ -78,10 +78,10 @@ function onUsernameResponse(isTaken) {
     window._socket.emit('user joined', username);
     hideErrorMessage();
 
-    // Initialize dialogue controller for game-room or game-room2 after username is set
-    const isGameRoom2 = window.location.pathname.includes('game-room2');
-    const isGameRoom = window.location.pathname.includes('game-room.html') || window.location.pathname === '/game-room';
-    if ((isGameRoom2 || isGameRoom) && !dialogueControllerInitialized) {
+    // Initialize dialogue controller for player-room or narrator-room after username is set
+    const isNarratorRoom = window.location.pathname.includes('narrator-room');
+    const isPlayerRoom = window.location.pathname.includes('player-room.html') || window.location.pathname === '/player-room';
+    if ((isNarratorRoom || isPlayerRoom) && !dialogueControllerInitialized) {
       dialogueControllerInitialized = true;
       setTimeout(() => {
         initDialogueController(
@@ -132,8 +132,8 @@ window._socket.on('reconnect', () => {
 });
 
 // Detect if we're in game rooms
-const isGameRoom2 = window.location.pathname.includes('game-room2');
-const isGameRoom = window.location.pathname.includes('game-room.html') || window.location.pathname === '/game-room';
+const isNarratorRoom = window.location.pathname.includes('narrator-room');
+const isPlayerRoom = window.location.pathname.includes('player-room.html') || window.location.pathname === '/player-room';
 
 // Show username popup if needed
 if (!username) {
@@ -142,8 +142,8 @@ if (!username) {
   updateUserDisplayName(username);
   window._socket.emit('set username', username);
 
-  // Initialize dialogue controller for game-room or game-room2 if username already exists
-  if ((isGameRoom2 || isGameRoom) && !dialogueControllerInitialized) {
+  // Initialize dialogue controller for player-room or narrator-room if username already exists
+  if ((isNarratorRoom || isPlayerRoom) && !dialogueControllerInitialized) {
     dialogueControllerInitialized = true;
     setTimeout(() => {
       initDialogueController(

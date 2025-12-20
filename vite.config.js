@@ -28,8 +28,8 @@ export default defineConfig({
         control: path.resolve(__dirname, 'src/control.html'),
         room1: path.resolve(__dirname, 'src/room1.html'),
         room2: path.resolve(__dirname, 'src/room2.html'),
-        'game-room': path.resolve(__dirname, 'src/game-room.html'),
-        'game-room2': path.resolve(__dirname, 'src/game-room2.html')
+        'player-room': path.resolve(__dirname, 'src/player-room.html'),
+        'narrator-room': path.resolve(__dirname, 'src/narrator-room.html')
       },
       output: {
         manualChunks: (id) => {

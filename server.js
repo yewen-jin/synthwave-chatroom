@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // Serve static assets (fonts, images) from built assets folder
 app.use('/assets', express.static(path.join(__dirname, 'dist/assets')));
 
-// Serve built HTML for control, room1, room2, game-room, game-room2
+// Serve built HTML for control, room1, room2, player-room, narrator-room
 app.get('/control', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/control.html'));
 });
@@ -38,11 +38,11 @@ app.get('/room1', (req, res) => {
 app.get('/room2', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/room2.html'));
 });
-app.get('/game-room', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/game-room.html'));
+app.get('/player-room', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/player-room.html'));
 });
-app.get('/game-room2', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/game-room2.html'));
+app.get('/narrator-room', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/narrator-room.html'));
 });
 
 // Catch-all route to serve index.html
@@ -206,24 +206,24 @@ io.on('connection', (socket) => {
         console.log(`Theme changed to: ${theme || 'default'}`);
     });
 
-    // Handle dialogue start (from narrator in game-room2)
+    // Handle dialogue start (from narrator in narrator-room)
     socket.on('dialogue-start', async (data) => {
-        const targetRoom = data.targetRoom || 'game-room';
+        const targetRoom = data.targetRoom || 'player-room';
         console.log(`Starting dialogue ${data.dialogueId} in ${targetRoom}`);
 
         const state = await startDialogue(targetRoom, data.dialogueId);
 
         if (state) {
-            // Send dialogue to players in game-room
+            // Send dialogue to players in player-room
             io.emit('dialogue-sync', buildSyncPayload(state));
         } else {
             socket.emit('dialogue-error', { message: 'Failed to load dialogue' });
         }
     });
 
-    // Handle player choice (from game-room)
+    // Handle player choice (from player-room)
     socket.on('player-choice', (data) => {
-        const room = 'game-room';
+        const room = 'player-room';
         const state = dialogueStates.get(room);
 
         if (!state || !state.active) {
@@ -283,7 +283,7 @@ io.on('connection', (socket) => {
                 }, 5 * 60 * 1000);
             }, 3000);
         } else {
-            // Show narrator response popup in game-room2
+            // Show narrator response popup in narrator-room
             io.emit('player-choice-made', {
                 narratorResponse: nextNode.text,
                 playerChoice: data.choiceText
@@ -291,9 +291,9 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Handle narrator continue (from game-room2)
+    // Handle narrator continue (from narrator-room)
     socket.on('narrator-continue', (data) => {
-        const room = 'game-room';
+        const room = 'player-room';
         const state = dialogueStates.get(room);
 
         if (!state || !state.active) {
