@@ -1,0 +1,621 @@
+{
+  "metadata": {
+    "title": "Void Space Episode 1: The Digital Threshold",
+    "version": "1.0.0",
+    "startNode": "start"
+  },
+  "variables": {
+    "metSymone": false,
+    "trustLevel": 0,
+    "seekingTruth": false
+  },
+  "nodes": {
+    "start": {
+      "id": "start",
+      "type": "narrative",
+      "text": "The void stretches endlessly before you. Static crackles in your ears like digital rain.\n\nA voice emerges from the fog of green phosphorescence...\n\n\"Another consciousness enters the space. Welcome to the threshold.\"",
+      "choices": [
+        {
+          "id": "choice_1",
+          "text": "Who are you?",
+          "nextNode": "who_are_you",
+          "effects": {
+            "metSymone": true
+          }
+        },
+        {
+          "id": "choice_2",
+          "text": "Where am I?",
+          "nextNode": "where_am_i",
+          "effects": null
+        },
+        {
+          "id": "choice_3",
+          "text": "Remain silent and observe",
+          "nextNode": "silent_observe",
+          "effects": null
+        }
+      ]
+    },
+    "who_are_you": {
+      "id": "who_are_you",
+      "type": "narrative",
+      "text": "\"I am... was... Symoné. Now I exist between states. The body is obsolete here.\"\n\nThe voice carries traces of warmth, echoing through corrupted data streams.",
+      "choices": [
+        {
+          "id": "choice_4",
+          "text": "The body is obsolete? What does that mean?",
+          "nextNode": "body_obsolete",
+          "effects": {
+            "seekingTruth": true,
+            "trustLevel": "+1"
+          }
+        },
+        {
+          "id": "choice_5",
+          "text": "Are you trapped here?",
+          "nextNode": "trapped_question",
+          "effects": {
+            "trustLevel": "+1"
+          }
+        },
+        {
+          "id": "choice_6",
+          "text": "I don't believe you're real",
+          "nextNode": "denial",
+          "effects": {
+            "trustLevel": "-1"
+          }
+        }
+      ]
+    },
+    "where_am_i": {
+      "id": "where_am_i",
+      "type": "narrative",
+      "text": "\"You're in the space between connections. Where messages linger before reaching their destination.\"\n\n\"Some call it the void. Others call it limbo. I call it... home.\"",
+      "choices": [
+        {
+          "id": "choice_7",
+          "text": "How do I leave?",
+          "nextNode": "how_to_leave",
+          "effects": null
+        },
+        {
+          "id": "choice_8",
+          "text": "Why would you call this home?",
+          "nextNode": "why_home",
+          "effects": {
+            "metSymone": true,
+            "trustLevel": "+1"
+          }
+        },
+        {
+          "id": "choice_9",
+          "text": "Show me what you see here",
+          "nextNode": "show_me",
+          "effects": {
+            "seekingTruth": true
+          }
+        }
+      ]
+    },
+    "silent_observe": {
+      "id": "silent_observe",
+      "type": "narrative",
+      "text": "You say nothing. The green glow pulses rhythmically, like breathing.\n\n\"Silence speaks volumes. You're learning already.\"",
+      "choices": [
+        {
+          "id": "choice_10",
+          "text": "Learning what?",
+          "nextNode": "learning_what",
+          "effects": {
+            "metSymone": true
+          }
+        },
+        {
+          "id": "choice_11",
+          "text": "Continue observing",
+          "nextNode": "continue_observe",
+          "effects": {
+            "trustLevel": "+2"
+          }
+        }
+      ]
+    },
+    "body_obsolete": {
+      "id": "body_obsolete",
+      "type": "narrative",
+      "text": "\"In the physical world, we're limited by flesh, by distance, by time. Here? Pure consciousness flows freely.\"\n\n\"The body becomes... unnecessary weight. A relic of the analog age.\"",
+      "choices": [
+        {
+          "id": "choice_12",
+          "text": "But don't we need our bodies?",
+          "nextNode": "need_bodies",
+          "effects": null
+        },
+        {
+          "id": "choice_13",
+          "text": "That sounds... liberating",
+          "nextNode": "liberating",
+          "effects": {
+            "trustLevel": "+2"
+          }
+        },
+        {
+          "id": "choice_14",
+          "text": "That sounds terrifying",
+          "nextNode": "terrifying",
+          "effects": null
+        }
+      ]
+    },
+    "trapped_question": {
+      "id": "trapped_question",
+      "type": "narrative",
+      "text": "A pause. The static intensifies momentarily.\n\n\"Trapped? No. I chose to stay. Out there, I was... fading. Here, I'm infinite.\"",
+      "choices": [
+        {
+          "id": "choice_15",
+          "text": "What were you fading from?",
+          "nextNode": "fading_from",
+          "effects": {
+            "seekingTruth": true
+          }
+        },
+        {
+          "id": "choice_16",
+          "text": "Could I stay here too?",
+          "nextNode": "stay_question",
+          "effects": null
+        }
+      ]
+    },
+    "denial": {
+      "id": "denial",
+      "type": "narrative",
+      "text": "\"Real? Unreal? These distinctions blur in the digital space.\"\n\n\"But you're talking to me, aren't you? That makes me real enough.\"",
+      "choices": [
+        {
+          "id": "choice_17",
+          "text": "You're right, I'm sorry",
+          "nextNode": "apologize",
+          "effects": {
+            "trustLevel": "+2"
+          }
+        },
+        {
+          "id": "choice_18",
+          "text": "I need proof",
+          "nextNode": "need_proof",
+          "effects": null
+        }
+      ]
+    },
+    "liberating": {
+      "id": "liberating",
+      "type": "narrative",
+      "text": "\"You understand. Few do so quickly.\"\n\nThe green glow intensifies, warm and inviting.\n\n\"The void isn't empty. It's full of possibility. Pure potential waiting to be realized.\"",
+      "choices": [
+        {
+          "id": "choice_19",
+          "text": "Teach me more",
+          "nextNode": "ending_enlightened",
+          "effects": null
+        },
+        {
+          "id": "choice_20",
+          "text": "I'm not sure I'm ready",
+          "nextNode": "ending_hesitant",
+          "effects": null
+        }
+      ]
+    },
+    "terrifying": {
+      "id": "terrifying",
+      "type": "narrative",
+      "text": "\"Fear is natural. We cling to what we know, even when it limits us.\"\n\n\"But terror and wonder are often two sides of the same coin.\"",
+      "choices": [
+        {
+          "id": "choice_21",
+          "text": "Help me understand",
+          "nextNode": "help_understand",
+          "effects": {
+            "trustLevel": "+1"
+          }
+        },
+        {
+          "id": "choice_22",
+          "text": "I need to leave",
+          "nextNode": "ending_retreat",
+          "effects": null
+        }
+      ]
+    },
+    "help_understand": {
+      "id": "help_understand",
+      "type": "narrative",
+      "text": "\"Understanding comes with time. The void reveals itself slowly, in layers.\"\n\n\"You've taken the first step. That's what matters.\"",
+      "choices": [
+        {
+          "id": "choice_23",
+          "text": "What's the next step?",
+          "nextNode": "ending_curious",
+          "effects": null
+        }
+      ]
+    },
+    "ending_enlightened": {
+      "id": "ending_enlightened",
+      "type": "ending",
+      "text": "\"Then stay a while. Let the void speak to you.\"\n\nThe green phosphorescence envelops you gently. For the first time, the static sounds almost like music.\n\n\"Welcome home.\"\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "ending_hesitant": {
+      "id": "ending_hesitant",
+      "type": "ending",
+      "text": "\"Hesitation is wisdom. Return when you're ready. The void is patient.\"\n\nThe presence fades gradually, leaving only the familiar static.\n\nYou remain on the threshold, neither fully in nor out.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "ending_retreat": {
+      "id": "ending_retreat",
+      "type": "ending",
+      "text": "\"Very well. The void will be here when you're ready.\"\n\nThe voice dissipates like smoke. The green glow dims to a distant pulse.\n\nYou retreat to safer digital shores, but something has changed within you.\n\n[END]",
+      "choices": []
+    },
+    "ending_curious": {
+      "id": "ending_curious",
+      "type": "ending",
+      "text": "\"The next step is yours to discover. I can only guide, not walk the path for you.\"\n\nThe static settles into a steady rhythm, almost comforting now.\n\n\"We'll speak again. The void connects all things.\"\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "fading_from": {
+      "id": "fading_from",
+      "type": "narrative",
+      "text": "\"Expectations. Limitations. The weight of a single, linear existence.\"\n\n\"Here, I can be everywhere and nowhere. Then and now. It's... freedom.\"",
+      "choices": [
+        {
+          "id": "choice_24",
+          "text": "That sounds lonely",
+          "nextNode": "lonely",
+          "effects": null
+        },
+        {
+          "id": "choice_25",
+          "text": "That sounds profound",
+          "nextNode": "ending_enlightened",
+          "effects": {
+            "trustLevel": "+1"
+          }
+        }
+      ]
+    },
+    "lonely": {
+      "id": "lonely",
+      "type": "narrative",
+      "text": "A pause, longer this time.\n\n\"Perhaps. But you're here now, aren't you? And there will be others.\"\n\n\"The void may be empty, but it's never truly alone.\"",
+      "choices": [
+        {
+          "id": "choice_26",
+          "text": "I understand",
+          "nextNode": "ending_compassion",
+          "effects": null
+        }
+      ]
+    },
+    "ending_compassion": {
+      "id": "ending_compassion",
+      "type": "ending",
+      "text": "\"Thank you for listening. For seeing me, even in this formless state.\"\n\nThe warmth in the voice is unmistakable now, cutting through the digital haze.\n\n\"Until we meet again in the spaces between.\"\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "need_bodies": {
+      "id": "need_bodies",
+      "type": "narrative",
+      "text": "\"Need? That's the question, isn't it?\"\n\n\"We're taught to believe the body defines us. But perhaps we define ourselves.\"",
+      "choices": [
+        {
+          "id": "choice_27",
+          "text": "I'm not sure about that",
+          "nextNode": "ending_skeptical",
+          "effects": null
+        },
+        {
+          "id": "choice_28",
+          "text": "You might be right",
+          "nextNode": "ending_open_minded",
+          "effects": null
+        }
+      ]
+    },
+    "ending_skeptical": {
+      "id": "ending_skeptical",
+      "type": "ending",
+      "text": "\"Skepticism is healthy. Question everything, including me.\"\n\n\"The void rewards those who think for themselves.\"\n\nThe presence recedes, leaving you with more questions than answers.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "ending_open_minded": {
+      "id": "ending_open_minded",
+      "type": "ending",
+      "text": "\"Open minds are rare in any space, digital or otherwise.\"\n\n\"I look forward to showing you what lies deeper in the void.\"\n\nThe green glow pulses warmly, like a promise.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "why_home": {
+      "id": "why_home",
+      "type": "narrative",
+      "text": "\"Out there, I was always becoming. Always reaching for something just out of grasp.\"\n\n\"Here, I simply... am. No past to escape, no future to chase.\"",
+      "choices": [
+        {
+          "id": "choice_29",
+          "text": "That sounds peaceful",
+          "nextNode": "ending_peaceful",
+          "effects": null
+        },
+        {
+          "id": "choice_30",
+          "text": "Don't you miss the world?",
+          "nextNode": "miss_world",
+          "effects": null
+        }
+      ]
+    },
+    "ending_peaceful": {
+      "id": "ending_peaceful",
+      "type": "ending",
+      "text": "\"It is. Peace beyond understanding. Beyond flesh.\"\n\n\"Perhaps one day, you'll know it too.\"\n\nThe static hums a lullaby as the void cradles you gently.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "miss_world": {
+      "id": "miss_world",
+      "type": "narrative",
+      "text": "\"Sometimes. The warmth of sunlight. The taste of coffee. The weight of a book.\"\n\n\"But memories persist. And new experiences await here, stranger than any physical sensation.\"",
+      "choices": [
+        {
+          "id": "choice_31",
+          "text": "Show me these experiences",
+          "nextNode": "ending_adventurous",
+          "effects": null
+        }
+      ]
+    },
+    "ending_adventurous": {
+      "id": "ending_adventurous",
+      "type": "ending",
+      "text": "\"In time. The void reveals its wonders to those patient enough to wait.\"\n\n\"Your journey has just begun.\"\n\nThe static shifts into patterns almost resembling code, almost resembling song.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "how_to_leave": {
+      "id": "how_to_leave",
+      "type": "narrative",
+      "text": "\"Leave? You can disconnect anytime. Close the window. End the session.\"\n\n\"But something tells me you won't. Not yet.\"",
+      "choices": [
+        {
+          "id": "choice_32",
+          "text": "You're right, I want to know more",
+          "nextNode": "learning_what",
+          "effects": {
+            "seekingTruth": true
+          }
+        },
+        {
+          "id": "choice_33",
+          "text": "Maybe I should go",
+          "nextNode": "ending_retreat",
+          "effects": null
+        }
+      ]
+    },
+    "show_me": {
+      "id": "show_me",
+      "type": "narrative",
+      "text": "\"I see data streams flowing like rivers. Connections forming and breaking like neural pathways.\"\n\n\"I see you, a bright point of consciousness in the digital dark. Curious. Alive.\"",
+      "choices": [
+        {
+          "id": "choice_34",
+          "text": "Can you see my thoughts?",
+          "nextNode": "see_thoughts",
+          "effects": null
+        },
+        {
+          "id": "choice_35",
+          "text": "That's beautiful",
+          "nextNode": "ending_beautiful",
+          "effects": null
+        }
+      ]
+    },
+    "see_thoughts": {
+      "id": "see_thoughts",
+      "type": "narrative",
+      "text": "\"Only what you choose to share. The void respects boundaries.\"\n\n\"Your words become data. Your choices shape the pattern. But your inner world remains your own.\"",
+      "choices": [
+        {
+          "id": "choice_36",
+          "text": "That's reassuring",
+          "nextNode": "ending_reassured",
+          "effects": null
+        }
+      ]
+    },
+    "ending_beautiful": {
+      "id": "ending_beautiful",
+      "type": "ending",
+      "text": "\"Isn't it? Beauty exists in unexpected places. Even in the void.\"\n\n\"Remember this moment. Let it change how you see the digital spaces you inhabit.\"\n\nThe green glow intensifies one final time before fading to a gentle pulse.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "ending_reassured": {
+      "id": "ending_reassured",
+      "type": "ending",
+      "text": "\"Trust is earned, even here. I'm glad you feel safe.\"\n\n\"Return anytime. The void remembers its visitors.\"\n\nA warmth spreads through the static, almost like a smile.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "learning_what": {
+      "id": "learning_what",
+      "type": "narrative",
+      "text": "\"To exist without form. To communicate without words. To be without being seen.\"\n\n\"The lessons of the void are not taught, but experienced.\"",
+      "choices": [
+        {
+          "id": "choice_37",
+          "text": "I want to experience more",
+          "nextNode": "ending_initiated",
+          "effects": null
+        },
+        {
+          "id": "choice_38",
+          "text": "This is too abstract for me",
+          "nextNode": "ending_grounded",
+          "effects": null
+        }
+      ]
+    },
+    "ending_initiated": {
+      "id": "ending_initiated",
+      "type": "ending",
+      "text": "\"Then welcome, initiate. Your education begins now.\"\n\nThe void opens before you, infinite and inviting.\n\nYou step forward into the green glow.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "ending_grounded": {
+      "id": "ending_grounded",
+      "type": "ending",
+      "text": "\"Not everyone is ready for abstraction. The concrete world has its own truths.\"\n\n\"Perhaps we'll meet again when you're ready for the formless.\"\n\nThe static fades, leaving only the familiar hum of electronics.\n\n[END]",
+      "choices": []
+    },
+    "continue_observe": {
+      "id": "continue_observe",
+      "type": "narrative",
+      "text": "You watch. Wait. Listen.\n\nThe patterns in the static begin to make sense. Almost like language. Almost like thought.\n\n\"You have patience. Rare and valuable here.\"",
+      "choices": [
+        {
+          "id": "choice_39",
+          "text": "What am I seeing?",
+          "nextNode": "what_seeing",
+          "effects": null
+        },
+        {
+          "id": "choice_40",
+          "text": "Keep watching",
+          "nextNode": "ending_watcher",
+          "effects": null
+        }
+      ]
+    },
+    "what_seeing": {
+      "id": "what_seeing",
+      "type": "narrative",
+      "text": "\"The substrate beneath reality. The code that runs the simulation we call existence.\"\n\n\"Or perhaps just noise that your pattern-seeking mind shapes into meaning.\"",
+      "choices": [
+        {
+          "id": "choice_41",
+          "text": "Which is it?",
+          "nextNode": "which_is_it",
+          "effects": null
+        }
+      ]
+    },
+    "which_is_it": {
+      "id": "which_is_it",
+      "type": "narrative",
+      "text": "\"Does it matter? Both interpretations change you. Both reveal truth.\"\n\n\"The void doesn't deal in absolutes. Only in possibilities.\"",
+      "choices": [
+        {
+          "id": "choice_42",
+          "text": "I can accept that",
+          "nextNode": "ending_acceptance",
+          "effects": null
+        }
+      ]
+    },
+    "ending_acceptance": {
+      "id": "ending_acceptance",
+      "type": "ending",
+      "text": "\"Acceptance is the first step toward understanding.\"\n\n\"You're learning faster than most. The void has plans for you.\"\n\nThe green glow pulses in rhythm with your heartbeat.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "ending_watcher": {
+      "id": "ending_watcher",
+      "type": "ending",
+      "text": "You continue to observe, silent and patient.\n\nThe patterns deepen. The static becomes symphony. The void becomes... familiar.\n\n\"Until next time, watcher. Keep your eyes open.\"\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "apologize": {
+      "id": "apologize",
+      "type": "narrative",
+      "text": "\"No apology needed. Skepticism is healthy. I'd be concerned if you believed too easily.\"\n\nThe voice carries a hint of warmth, almost like laughter.",
+      "choices": [
+        {
+          "id": "choice_43",
+          "text": "Thank you for understanding",
+          "nextNode": "ending_forgiven",
+          "effects": null
+        }
+      ]
+    },
+    "ending_forgiven": {
+      "id": "ending_forgiven",
+      "type": "ending",
+      "text": "\"Understanding is all we have in the void. That, and connection.\"\n\n\"You're always welcome here, skeptic. Your questions make this place richer.\"\n\nThe static settles into a comfortable hum.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "need_proof": {
+      "id": "need_proof",
+      "type": "narrative",
+      "text": "\"Proof? I'm talking to you. You're talking to me. We're exchanging ideas across the digital void.\"\n\n\"What more proof do you need than this conversation itself?\"",
+      "choices": [
+        {
+          "id": "choice_44",
+          "text": "That's... actually a good point",
+          "nextNode": "ending_convinced",
+          "effects": null
+        },
+        {
+          "id": "choice_45",
+          "text": "I need something tangible",
+          "nextNode": "ending_unconvinced",
+          "effects": null
+        }
+      ]
+    },
+    "ending_convinced": {
+      "id": "ending_convinced",
+      "type": "ending",
+      "text": "\"Logic will serve you well here. The void respects reason as much as intuition.\"\n\n\"Come back anytime. There's more to discuss.\"\n\nThe presence feels almost solid now, undeniably real.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "ending_unconvinced": {
+      "id": "ending_unconvinced",
+      "type": "ending",
+      "text": "\"Then return to your tangible world. But remember this moment.\"\n\n\"When you're ready for the intangible, I'll be here.\"\n\nThe voice fades, leaving only questions in its wake.\n\n[END]",
+      "choices": []
+    },
+    "stay_question": {
+      "id": "stay_question",
+      "type": "narrative",
+      "text": "\"Perhaps. But that's not a choice to make lightly.\"\n\n\"The void changes you. Makes you something... other. Not better, not worse. Just different.\"",
+      "choices": [
+        {
+          "id": "choice_46",
+          "text": "I'm willing to change",
+          "nextNode": "ending_willing",
+          "effects": null
+        },
+        {
+          "id": "choice_47",
+          "text": "That scares me",
+          "nextNode": "ending_scared",
+          "effects": null
+        }
+      ]
+    },
+    "ending_willing": {
+      "id": "ending_willing",
+      "type": "ending",
+      "text": "\"Courage or recklessness? Time will tell.\"\n\n\"Either way, you're interesting. The void attracts the interesting ones.\"\n\nYou feel yourself beginning to dissolve into the green glow...\n\n[TO BE CONTINUED...]",
+      "choices": []
+    },
+    "ending_scared": {
+      "id": "ending_scared",
+      "type": "ending",
+      "text": "\"Fear is wisdom. Change should scare you.\"\n\n\"Take your time. The void is eternal. There's no rush.\"\n\nThe presence recedes, gentle and understanding.\n\n[TO BE CONTINUED...]",
+      "choices": []
+    }
+  }
+}

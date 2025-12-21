@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitch Control Panel</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Windows', 'VT323', monospace;
+            padding: 20px;
+        }
+        .control-panel {
+            border: 1px solid #0f0;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .control-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .value-display {
+            color: #0f0;
+            font-size: 0.9em;
+        }
+        /* Theme Control Styles */
+        .theme-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .theme-btn {
+            background: #000;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: 'Windows', 'VT323', monospace;
+            display: flex;
+            align-items: center;
+        }
+        .theme-btn:hover {
+            background: #002200;
+        }
+        .theme-btn.active {
+            background: #003300;
+        }
+        .color-preview {
+            width: 15px;
+            height: 15px;
+            display: inline-block;
+            margin-right: 8px;
+            border: 1px solid #333;
+        }
+        .green-preview {
+            background-color: #0f0;
+            box-shadow: 0 0 5px rgb(151, 22, 168);
+        }
+        .purple-preview {
+            background-color: #a259ff;
+            box-shadow: 0 0 5px #f72585;
+        }
+        .blue-preview {
+            background-color: #00fff7;
+            box-shadow: 0 0 5px #00b4d8;
+        }
+        .section-header {
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+    </style>
+  <script type="module" crossorigin src="/assets/control-D8TMYaz4.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-Ca-8cqMb.js">
+  <link rel="modulepreload" crossorigin href="/assets/vendor-DdEgOPuo.js">
+  <link rel="modulepreload" crossorigin href="/assets/vendor-socket-DF7vOrqd.js">
+</head>
+<body>
+    <div class="control-panel">
+        <h2>Glitch Control Panel</h2>
+        
+        <!-- New Theme Control Section -->
+        <h3 class="section-header">Theme Control</h3>
+        <div class="theme-controls">
+            <button class="theme-btn" id="theme-default">
+                <span class="color-preview green-preview"></span>Default
+            </button>
+            <button class="theme-btn" id="theme-purple">
+                <span class="color-preview purple-preview"></span>Purple
+            </button>
+            <button class="theme-btn" id="theme-blue">
+                <span class="color-preview blue-preview"></span>Blue
+            </button>
+            <button class="theme-btn" id="theme-green">
+                <span class="color-preview green-preview"></span>Green
+            </button>
+        </div>
+        
+        <h3 class="section-header">Glitch Controls</h3>
+        <div class="control-group">
+            <label for="glitchProbability">Glitch Probability</label>
+            <input type="range" id="glitchProbability" min="0" max="1" step="0.1" value="0.1">
+            <span class="value-display" id="glitchProbabilityValue">0.1</span>
+        </div>
+
+        <div class="control-group">
+            <label for="glitchDecay">Glitch Decay Rate</label>
+            <input type="range" id="glitchDecay" min="0.1" max="0.99" step="0.01" value="0.9">
+            <span class="value-display" id="glitchDecayValue">0.9</span>
+        </div>
+
+        <div class="control-group">
+            <label for="channelOffset">Channel Offset Range</label>
+            <input type="range" id="channelOffset" min="1" max="50" step="1" value="10">
+            <span class="value-display" id="channelOffsetValue">10</span>
+        </div>
+
+        <div class="control-group">
+            <label for="glitchIntensity">Glitch Intensity</label>
+            <input type="range" id="glitchIntensity" min="0" max="2" step="0.1" value="1">
+            <span class="value-display" id="glitchIntensityValue">1</span>
+        </div>
+
+        <div class="control-group">
+            <label for="cameraAngle">Camera Angle</label>
+            <input type="range" id="cameraAngle" min="-2.0" max="2.0" step="0.1" value="0.0">
+            <span class="value-display" id="cameraAngleValue">0.0</span>
+        </div>
+    </div>
+
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+</body>
+</html>
