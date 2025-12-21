@@ -4,6 +4,7 @@ import { createServer } from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { readFile } from 'fs/promises';
+import { NARRATOR_USERNAME } from './shared/gameParameters.js';
 
 // Fix for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -64,6 +65,12 @@ let connectedUsers = 0;
 
 // Track dialogue states per room
 const dialogueStates = new Map();
+
+// Helper: Check if narrator is online and broadcast status
+function broadcastNarratorStatus() {
+    const isNarratorOnline = Array.from(activeUsers.values()).includes(NARRATOR_USERNAME);
+    io.emit('narrator-status', { online: isNarratorOnline });
+}
 
 // Helper: Load dialogue JSON
 async function loadDialogueData(dialogueId) {
@@ -178,6 +185,15 @@ io.on('connection', (socket) => {
         console.log(`User joined: ${username}`);
         console.log('Active users:', Array.from(activeUsers.values()));
         io.emit('user joined', username);
+        
+        // Broadcast narrator status to all clients
+        broadcastNarratorStatus();
+    });
+
+    // Send current narrator status to newly connected clients
+    socket.on('request-narrator-status', () => {
+        const isNarratorOnline = Array.from(activeUsers.values()).includes(NARRATOR_USERNAME);
+        socket.emit('narrator-status', { online: isNarratorOnline });
     });
 
     // Listen for chat messages from clients
@@ -336,6 +352,9 @@ io.on('connection', (socket) => {
             activeUsers.delete(socket.id);
             console.log('Remaining users:', Array.from(activeUsers.values()));
             io.emit('user left', username);
+            
+            // Broadcast narrator status to all clients
+            broadcastNarratorStatus();
         }
     });
 });

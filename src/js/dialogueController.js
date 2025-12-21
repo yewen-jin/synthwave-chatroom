@@ -2,11 +2,7 @@
 // Two-room dialogue system: Player (player-room) and Narrator (narrator-room)
 
 import { DialogueSystem } from './dialogueSystem.js';
-
-// ========== NARRATOR USERNAME CONFIG ==========
-// Change this value to update the narrator's display name in chat
-const NARRATOR_USERNAME = 'Liz';
-// ===============================================
+import { NARRATOR_USERNAME } from '../../shared/gameParameters.js';
 
 let dialogueSystem = null;
 let socket = null;
@@ -127,11 +123,23 @@ function initPlayerRoom() {
     const normalInputContainer = document.getElementById('normal-input-container');
     const choicesInlineContainer = document.getElementById('dialogue-choices-inline');
     const sendBtn = document.getElementById('send-btn');
+    const narratorStatusEl = document.getElementById('narrator-status');
 
     if (!normalInputContainer || !choicesInlineContainer || !sendBtn) {
         console.warn('Player dialogue UI elements not found');
         return;
     }
+
+    // Listen for narrator online/offline status
+    socket.on('narrator-status', (data) => {
+        if (narratorStatusEl) {
+            narratorStatusEl.textContent = data.online ? 'Online' : 'Offline';
+            narratorStatusEl.classList.toggle('offline', !data.online);
+        }
+    });
+
+    // Request current narrator status on init
+    socket.emit('request-narrator-status');
 
     // Listen for dialogue sync from narrator
     socket.on('dialogue-sync', (data) => {
