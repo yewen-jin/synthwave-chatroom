@@ -88,7 +88,6 @@ function initNarratorRoom() {
     socket.on('dialogue-end', () => {
         console.log('Narrator: Dialogue ended');
         isActive = false;
-        currentIsEnding = false;
         narratorPopup.style.display = 'none';
         triggerBtn.disabled = false;
         const btnText = triggerBtn.querySelector('.btn-text');
