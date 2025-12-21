@@ -2,14 +2,12 @@
 // Two-room dialogue system: Player (player-room) and Narrator (narrator-room)
 
 import { DialogueSystem } from './dialogueSystem.js';
-import { NARRATOR_USERNAME } from '../../shared/gameParameters.js';
 
 let dialogueSystem = null;
 let socket = null;
 let username = null;
 let flashCallback = null;
 let isActive = false;
-let currentIsEnding = false;
 
 // Detect which room we're in
 const isPlayerRoom = window.location.pathname.includes('player-room.html') || window.location.pathname === '/player-room';
@@ -56,54 +54,34 @@ function initNarratorRoom() {
         if (btnText) btnText.textContent = 'Transmission Active...';
     });
 
-    // Function to handle continue action
-    function handleContinue() {
-        if (continueBtn.disabled) return;
-        
-        continueBtn.disabled = true;
-        console.log('Sending narrator-continue with isEnding:', currentIsEnding);
+    // Listen for player choices (for monitoring only - server auto-sends responses)
+    socket.on('player-choice-made', (data) => {
+        console.log('Narrator: Player made choice (monitoring mode)');
+        console.log('Player choice:', data.playerChoice);
+        console.log('Narrator response:', data.narratorResponse);
+        console.log('Is ending:', data.isEnding);
 
-        socket.emit('narrator-continue', {
-            text: narratorText.textContent,
-            username: NARRATOR_USERNAME,
-            isEnding: currentIsEnding
-        });
+        isActive = true;
 
-        // Hide popup after sending
+        // Store the narrator response text for monitoring
+        narratorText.textContent = data.narratorResponse;
+
+        // Show popup briefly so narrator can see what's being sent by server
+        narratorPopup.style.display = 'flex';
+        continueBtn.disabled = true; // Disable button since server handles sending
+        continueBtn.textContent = 'Server Sending...';
+
+        // Auto-hide popup after showing the response (server handles actual sending)
         setTimeout(() => {
             narratorPopup.style.display = 'none';
-        }, 500);
-    }
-
-    // Listen for player choices (to show narrator response)
-    socket.on('player-choice-made', (data) => {
-        console.log('Narrator: Player made choice, auto-sending response');
-        console.log('isEnding value received:', data.isEnding);
-        isActive = true;
-        currentIsEnding = data.isEnding === true;
-
-        // Store the narrator response text
-        narratorText.textContent = data.narratorResponse;
-        
-        // Show popup briefly so narrator can see what's being sent
-        narratorPopup.style.display = 'flex';
-        continueBtn.disabled = false;
-
-        // Auto-send after a short delay (1.5 seconds)
-        setTimeout(() => {
-            handleContinue();
-        }, 1500);
+            continueBtn.disabled = false;
+            continueBtn.textContent = 'Continue';
+        }, 2000); // Show for 2 seconds for monitoring
     });
 
-    // Continue button still works for manual override if needed
-    continueBtn.addEventListener('click', handleContinue);
-
-    // Enter key also triggers continue when popup is visible
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && narratorPopup.style.display === 'flex') {
-            e.preventDefault();
-            handleContinue();
-        }
+    // Continue button is disabled during auto-send mode
+    continueBtn.addEventListener('click', () => {
+        console.log('Continue button clicked (currently in monitoring mode only)');
     });
 
     // Listen for dialogue end
@@ -132,7 +110,9 @@ function initPlayerRoom() {
 
     // Listen for narrator online/offline status
     socket.on('narrator-status', (data) => {
-        if (narratorStatusEl) {
+        // Only update status if dialogue is NOT active
+        // During active dialogue, server handles responses, so we show "Online"
+        if (narratorStatusEl && !isActive) {
             narratorStatusEl.textContent = data.online ? 'Online' : 'Offline';
             narratorStatusEl.classList.toggle('offline', !data.online);
         }
@@ -222,10 +202,11 @@ function initPlayerRoom() {
         normalInputContainer.style.display = 'block';
         sendBtn.style.display = 'block';
 
-        // Clear typing status and restore online status
+        // Clear typing status and request actual narrator status
         if (narratorStatusEl) {
-            narratorStatusEl.textContent = 'Online';
-            narratorStatusEl.classList.remove('typing', 'offline');
+            narratorStatusEl.classList.remove('typing');
+            // Request actual narrator status now that dialogue ended
+            socket.emit('request-narrator-status');
         }
     });
 }
