@@ -184,14 +184,24 @@ io.on('connection', (socket) => {
         activeUsers.set(socket.id, username);
         console.log(`User joined: ${username}`);
         console.log('Active users:', Array.from(activeUsers.values()));
-        io.emit('user joined', username);
+
+        // Check if dialogue is active and user is narrator
+        const playerRoomState = dialogueStates.get('player-room');
+        const isDialogueActive = playerRoomState && playerRoomState.active;
+        const isNarrator = username === NARRATOR_USERNAME;
+
+        // Only broadcast join message if NOT (narrator joining during active dialogue)
+        if (!(isDialogueActive && isNarrator)) {
+            io.emit('user joined', username);
+        } else {
+            console.log(`Suppressing join message for narrator during active dialogue`);
+        }
 
         // Broadcast narrator status to all clients
         broadcastNarratorStatus();
 
         // If there's an active dialogue in player-room, sync the new player
-        const playerRoomState = dialogueStates.get('player-room');
-        if (playerRoomState && playerRoomState.active) {
+        if (isDialogueActive) {
             console.log(`Syncing active dialogue to newly joined user: ${username}`);
             socket.emit('dialogue-sync', buildSyncPayload(playerRoomState));
         }
@@ -312,6 +322,16 @@ io.on('connection', (socket) => {
                         reason: 'completed'
                     });
 
+                    // Check if narrator left during dialogue and is still offline
+                    if (state.narratorLeftDuringDialogue) {
+                        const isNarratorOnline = Array.from(activeUsers.values()).includes(NARRATOR_USERNAME);
+                        if (!isNarratorOnline) {
+                            console.log(`Showing deferred narrator leave message after dialogue end`);
+                            io.emit('user left', NARRATOR_USERNAME);
+                        }
+                        state.narratorLeftDuringDialogue = false;
+                    }
+
                     // Clean up state after 5 minutes
                     setTimeout(() => {
                         if (!dialogueStates.get(room)?.active) {
@@ -350,8 +370,23 @@ io.on('connection', (socket) => {
             takenUsernames.delete(username);
             activeUsers.delete(socket.id);
             console.log('Remaining users:', Array.from(activeUsers.values()));
-            io.emit('user left', username);
-            
+
+            // Check if dialogue is active and user is narrator
+            const playerRoomState = dialogueStates.get('player-room');
+            const isDialogueActive = playerRoomState && playerRoomState.active;
+            const isNarrator = username === NARRATOR_USERNAME;
+
+            // Only broadcast leave message if NOT (narrator leaving during active dialogue)
+            if (!(isDialogueActive && isNarrator)) {
+                io.emit('user left', username);
+            } else {
+                console.log(`Suppressing leave message for narrator during active dialogue`);
+                // Store that narrator left during dialogue so we can notify after it ends
+                if (playerRoomState) {
+                    playerRoomState.narratorLeftDuringDialogue = true;
+                }
+            }
+
             // Broadcast narrator status to all clients
             broadcastNarratorStatus();
         }
