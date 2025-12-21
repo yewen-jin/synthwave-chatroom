@@ -141,6 +141,16 @@ function initPlayerRoom() {
     // Request current narrator status on init
     socket.emit('request-narrator-status');
 
+    // Listen for when dialogue starts (to show typing status immediately)
+    socket.on('dialogue-started', () => {
+        console.log('Player: Dialogue started, showing typing status');
+        if (narratorStatusEl) {
+            narratorStatusEl.textContent = 'typing...';
+            narratorStatusEl.classList.add('typing');
+            narratorStatusEl.classList.remove('offline');
+        }
+    });
+
     // Listen for dialogue sync from narrator
     socket.on('dialogue-sync', (data) => {
         if (!data.active) return;
@@ -180,6 +190,12 @@ function initPlayerRoom() {
             choicesInlineContainer.appendChild(btn);
         });
 
+        // Clear typing status when choices arrive
+        if (narratorStatusEl) {
+            narratorStatusEl.textContent = 'Online';
+            narratorStatusEl.classList.remove('typing', 'offline');
+        }
+
         // Flash visual effect
         if (flashCallback) flashCallback();
     });
@@ -204,6 +220,14 @@ function initPlayerRoom() {
 
 function handlePlayerChoice(choice) {
     console.log('Player: Choice selected:', choice.text);
+
+    // Show typing status
+    const narratorStatusEl = document.getElementById('narrator-status');
+    if (narratorStatusEl) {
+        narratorStatusEl.textContent = 'typing...';
+        narratorStatusEl.classList.add('typing');
+        narratorStatusEl.classList.remove('offline');
+    }
 
     // Hide choices immediately
     const choicesInlineContainer = document.getElementById('dialogue-choices-inline');

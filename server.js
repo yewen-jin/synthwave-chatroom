@@ -227,6 +227,9 @@ io.on('connection', (socket) => {
         const targetRoom = data.targetRoom || 'player-room';
         console.log(`Starting dialogue ${data.dialogueId} in ${targetRoom}`);
 
+        // Notify player that dialogue is starting (for typing indicator)
+        io.emit('dialogue-started');
+
         const state = await startDialogue(targetRoom, data.dialogueId);
 
         if (state) {

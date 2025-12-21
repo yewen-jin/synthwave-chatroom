@@ -162,6 +162,11 @@ body {
   color: #888; /* Gray for offline */
 }
 
+.status.typing {
+  font-style: italic;
+  color: #ffa500; /* Orange for typing */
+}
+
 .chat-area {
   display: flex;
   flex-direction: column;
