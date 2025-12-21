@@ -847,6 +847,7 @@ button {
 /* Dialogue Trigger Button */
 .dialogue-trigger-container {
     padding: 10px;
+    background: var(--bg-primary);
     border-bottom: 1px solid var(--border-color);
 }
 
