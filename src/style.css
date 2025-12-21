@@ -153,7 +153,11 @@ body {
 
 .status {
     font-size: 0.9em;
-    color: var(--text-color);  /* Use theme text color (or adjust if needed) */
+    color: #4caf50;  /* Green for online */
+}
+
+.status.offline {
+    color: #888;  /* Gray for offline */
 }
 
 .chat-area {
