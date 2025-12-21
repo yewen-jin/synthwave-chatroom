@@ -75,23 +75,23 @@ function onUsernameResponse(isTaken) {
     localStorage.setItem('username', username);
     updateUserDisplayName(username);
     hideUsernamePopup();
-    window._socket.emit('user joined', username);
     hideErrorMessage();
 
-    // Initialize dialogue controller for player-room or narrator-room after username is set
+    // Initialize dialogue controller for player-room or narrator-room BEFORE emitting user joined
     const isNarratorRoom = window.location.pathname.includes('narrator-room');
     const isPlayerRoom = window.location.pathname.includes('player-room.html') || window.location.pathname === '/player-room';
     if ((isNarratorRoom || isPlayerRoom) && !dialogueControllerInitialized) {
       dialogueControllerInitialized = true;
-      setTimeout(() => {
-        initDialogueController(
-          window._socket,
-          username,
-          onChat,
-          () => { if (visuals) visuals.flash(); }
-        );
-      }, 100);
+      initDialogueController(
+        window._socket,
+        username,
+        onChat,
+        () => { if (visuals) visuals.flash(); }
+      );
     }
+
+    // Emit user joined AFTER dialogue controller is set up
+    window._socket.emit('user joined', username);
   }
 }
 
@@ -140,18 +140,18 @@ if (!username) {
   showUsernamePopup();
 } else {
   updateUserDisplayName(username);
-  window._socket.emit('set username', username);
 
-  // Initialize dialogue controller for player-room or narrator-room if username already exists
+  // Initialize dialogue controller for player-room or narrator-room BEFORE emitting user joined
   if ((isNarratorRoom || isPlayerRoom) && !dialogueControllerInitialized) {
     dialogueControllerInitialized = true;
-    setTimeout(() => {
-      initDialogueController(
-        window._socket,
-        username,
-        onChat,
-        () => { if (visuals) visuals.flash(); }
-      );
-    }, 100);
+    initDialogueController(
+      window._socket,
+      username,
+      onChat,
+      () => { if (visuals) visuals.flash(); }
+    );
   }
+
+  // Emit user joined AFTER dialogue controller is set up
+  window._socket.emit('set username', username);
 }

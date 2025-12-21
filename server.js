@@ -178,16 +178,23 @@ io.on('connection', (socket) => {
             socket.emit('username taken');
             return;
         }
-        
+
         socket.username = username;
         takenUsernames.add(username);
         activeUsers.set(socket.id, username);
         console.log(`User joined: ${username}`);
         console.log('Active users:', Array.from(activeUsers.values()));
         io.emit('user joined', username);
-        
+
         // Broadcast narrator status to all clients
         broadcastNarratorStatus();
+
+        // If there's an active dialogue in player-room, sync the new player
+        const playerRoomState = dialogueStates.get('player-room');
+        if (playerRoomState && playerRoomState.active) {
+            console.log(`Syncing active dialogue to newly joined user: ${username}`);
+            socket.emit('dialogue-sync', buildSyncPayload(playerRoomState));
+        }
     });
 
     // Send current narrator status to newly connected clients
