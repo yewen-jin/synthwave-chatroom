@@ -182,6 +182,16 @@ body {
     background: var(--bg-primary);
 }
 
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    height: 32px;
+}
+
 .input-section {
     display: flex;
     /* gap: 10px; */
@@ -207,18 +217,6 @@ body {
 
 .input-container {
     width: 100%;
-}
-
-#chatInput {
-    width: 100%;
-    height: 60px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);  /* Theme text color here */
-    padding: 8px;
-    resize: none;
-    font-family: 'Windows', 'VT323', monospace;
-    box-sizing: border-box;
 }
 
 .user-avatar {
@@ -254,36 +252,6 @@ body {
     }
 }
 */
-
-/* Update message shadows */
-.message {
-    margin: 12px 0;
-    padding: 8px 12px;
-    font-size: 16px;
-    line-height: 1.4;
-    max-width: 70%;
-    clear: both;
-    display: block;
-    background-color: rgba(0, 255, 0, 0.1);
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);  /* Subtle message shadow */
-}
-
-/* Update popup shadow */
-.popup-content {
-    /* ...existing code... */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-}
-
-/* Adjust toolbar to full width */
-.toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 8px;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
-    height: 32px;
-}
 
 /* Clear float fixes */
 .chat-body::after {
@@ -345,42 +313,13 @@ body {
 
 .popup-content {
     background: var(--bg-primary);
-    /* padding: 20px; */
     border: 2px solid #0f0;
     border-radius: 4px;
     text-align: center;
-    color: #00ff00;
+    color: var(--text-color);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
 }
 
-/* Update chat messages to use the theme text color */
-.message.mine {
-    float: right;
-    text-align: right;
-    border-right: 3px solid var(--border-color);
-    margin-left: auto;
-    color: var(--text-color); /* Use the theme variable */
-}
-
-.message.others {
-    float: left;
-    text-align: left;
-    border-left: 3px solid var(--border-color);
-    color: var(--text-color); /* Use the theme variable */
-}
-
-/* Ensure the chat body uses the proper text color and background overlay */
-.chat-body {
-    background: var(--bg-secondary);
-    color: var(--text-color); /* All text within the chat area now uses this */
-}
-
-/* Update pop-up / overlay text styling */
-.popup-content {
-    background: var(--bg-primary); /* Overlay background per theme */
-    color: var(--text-color);       /* Overlay text matches the theme */
-    /* Other styling remains the same */
-}
 
 .msn-style {
   width: 300px;
@@ -390,15 +329,14 @@ body {
 }
 
 .login-content {
-  padding: 20px;
-  text-align: center;
-  background: var(--bg-primary);
-  color: var(--text-color);       /* Use the theme text color */;
+    padding: 20px;
+    text-align: center;
+    background: var(--bg-primary);
+    color: var(--text-color);
 }
 
 .login-content p {
     margin: 10px 0;
-    color: var(--text-color);       /* Use the theme text color */
 }
 
 .login-content p:last-child {
@@ -408,22 +346,12 @@ body {
 }
 
 #username-input {
-    background: #000000;
-    border: 1px solid var(--border-color);
-    color: var(--text-color);       /* Use the theme text color */
-    padding: 8px;
     margin: 10px 0;
-    font-family: 'Windows', 'VT323', monospace;
     width: 200px;
 }
 
 #username-submit {
     padding: 6px 20px;
-    background: #000000;
-    border: 1px solid var(--border-color);
-    color: var(--text-color);  /* Use the theme text color */
-    cursor: pointer;
-    font-family: 'Windows', 'VT323', monospace;
 }
 
 #username-submit:hover {
@@ -431,59 +359,36 @@ body {
     color: #00ff00;
 }
 
-.send-btn {
-    width: 100%;
-    margin-top: 8px;
-    padding: 4px;
-    background: var(--bg-primary); /* Use the theme's primary background color */
-    border: 1px solid var(--border-color);
-    color: var(--text-color);  /* Use variable instead of hardcoded color */
-    cursor: pointer;
-    font-family: 'Windows', 'VT323', monospace;
-}
-/* Apply primary background and text color to all inputs and buttons */
+/* Apply consistent styling to all inputs and buttons */
 input,
 button {
     background: var(--bg-secondary) !important;
     color: var(--text-color) !important;
     border: 1px solid var(--border-color);
-    font-family: inherit;
-}
-
-/* Overriding specific selectors for clarity */
-
-/* Chat input field */
-#chatInput {
-    background: var(--bg-secondary);  /* Use primary background */
-    color: var(--text-color);        /* Use theme text color */
-    border: 1px solid var(--border-color);
-    padding: 8px;
-    box-sizing: border-box;
-}
-
-/* Send button */
-.send-btn {
-    background: var(--bg-secondary);  /* Use primary background */
-    color: var(--text-color);        /* Use theme text color */
-    border: 1px solid var(--border-color);
-    cursor: pointer;
     font-family: 'Windows', 'VT323', monospace;
 }
 
-/* Username input and submit button (if used) */
+#chatInput {
+    width: 100%;
+    height: 60px;
+    padding: 8px;
+    resize: none;
+    box-sizing: border-box;
+}
+
+.send-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 4px;
+    cursor: pointer;
+}
+
 #username-input {
-    background: var(--bg-secondary);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
     padding: 8px;
 }
 
 #username-submit {
-    background: var(--bg-secondary);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
     cursor: pointer;
-    font-family: 'Windows', 'VT323', monospace;
 }
 
 
@@ -705,16 +610,6 @@ button {
 .msn-window.maximized .chat-body {
     margin: 0;
     height: calc(100% - 120px); /* Adjust based on your input area height */
-}
-
-.toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 8px;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
-    height: 32px;
 }
 
 .toolbar-section {
