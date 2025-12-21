@@ -277,35 +277,20 @@ io.on('connection', (socket) => {
         // Get narrator response from next node
         const nextNode = state.dialogueData.nodes[state.currentNode];
 
-        // Check if ending node
+        // Check if ending node - send through narrator room like other messages
         if (nextNode.type === 'ending') {
-            // Send ending to players (using narrator username "Liz")
-            io.emit('chat', {
-                text: nextNode.text,
-                username: 'Liz',
-                timestamp: Date.now()
+            // Show narrator response popup in narrator-room (marked as ending)
+            io.emit('player-choice-made', {
+                narratorResponse: nextNode.text,
+                playerChoice: data.choiceText,
+                isEnding: true
             });
-
-            // End dialogue
-            setTimeout(() => {
-                state.active = false;
-                io.emit('dialogue-end', {
-                    reason: 'completed'
-                });
-
-                // Clean up state after 5 minutes
-                setTimeout(() => {
-                    if (!dialogueStates.get(room)?.active) {
-                        dialogueStates.delete(room);
-                        console.log(`Cleaned up dialogue state for room: ${room}`);
-                    }
-                }, 5 * 60 * 1000);
-            }, 3000);
         } else {
             // Show narrator response popup in narrator-room
             io.emit('player-choice-made', {
                 narratorResponse: nextNode.text,
-                playerChoice: data.choiceText
+                playerChoice: data.choiceText,
+                isEnding: false
             });
         }
     });
@@ -330,16 +315,35 @@ io.on('connection', (socket) => {
         // Notify player that narrator sent response
         io.emit('narrator-response-sent');
 
-        // Get current node and send next dialogue choice to player
-        const currentNode = state.dialogueData.nodes[state.currentNode];
-        const choices = currentNode.choices || [];
+        // Check if this is an ending message
+        if (data.isEnding) {
+            // End dialogue after a short delay
+            setTimeout(() => {
+                state.active = false;
+                io.emit('dialogue-end', {
+                    reason: 'completed'
+                });
 
-        if (choices.length > 0) {
-            // Send next set of choices to player
-            io.emit('dialogue-sync', buildSyncPayload(state));
+                // Clean up state after 5 minutes
+                setTimeout(() => {
+                    if (!dialogueStates.get(room)?.active) {
+                        dialogueStates.delete(room);
+                        console.log(`Cleaned up dialogue state for room: ${room}`);
+                    }
+                }, 5 * 60 * 1000);
+            }, 3000);
         } else {
-            // No more choices, dialogue might be ending
-            console.log('No more choices available');
+            // Get current node and send next dialogue choice to player
+            const currentNode = state.dialogueData.nodes[state.currentNode];
+            const choices = currentNode.choices || [];
+
+            if (choices.length > 0) {
+                // Send next set of choices to player
+                io.emit('dialogue-sync', buildSyncPayload(state));
+            } else {
+                // No more choices, dialogue might be ending
+                console.log('No more choices available');
+            }
         }
     });
 

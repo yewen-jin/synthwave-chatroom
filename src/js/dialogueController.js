@@ -206,6 +206,12 @@ function initPlayerRoom() {
         choicesInlineContainer.style.display = 'none';
         normalInputContainer.style.display = 'block';
         sendBtn.style.display = 'block';
+
+        // Clear typing status when narrator response is sent
+        if (narratorStatusEl) {
+            narratorStatusEl.textContent = 'Online';
+            narratorStatusEl.classList.remove('typing', 'offline');
+        }
     });
 
     // Listen for dialogue end
@@ -215,6 +221,12 @@ function initPlayerRoom() {
         choicesInlineContainer.style.display = 'none';
         normalInputContainer.style.display = 'block';
         sendBtn.style.display = 'block';
+
+        // Clear typing status and restore online status
+        if (narratorStatusEl) {
+            narratorStatusEl.textContent = 'Online';
+            narratorStatusEl.classList.remove('typing', 'offline');
+        }
     });
 }
 
