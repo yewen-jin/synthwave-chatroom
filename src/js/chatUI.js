@@ -1,7 +1,8 @@
 // chatUI.js
-// Determine if we're in room2
+// Determine if we're in room2 or narrator-room
 export const isRoom2 = window.location.pathname.includes('room2');
-const roomName = isRoom2 ? 'room2' : 'default';
+export const isNarratorRoom = window.location.pathname.includes('narrator-room');
+const roomName = isRoom2 ? 'room2' : (isNarratorRoom ? 'narrator-room' : 'default');
 
 let chatBody, chatInput, sendBtn, usernamePopup, usernameInput, usernameSubmit, errorMessage;
 
@@ -97,8 +98,14 @@ export function updateUserDisplayName(name) {
 }
 
 export function updateLastJoinedUser(name) {
-  // Only update in room2, and skip if the name is "Symoné"
-  if (!isRoom2 || name === 'Symoné') return;
+  // Check room at runtime to ensure correct detection
+  const inRoom2 = window.location.pathname.includes('room2');
+  const inNarratorRoom = window.location.pathname.includes('narrator-room');
+  
+  // Only update in room2 or narrator-room, and skip narrator usernames
+  // Skip "Symoné" (room2 narrator) and "Liz" (narrator-room narrator)
+  if ((!inRoom2 && !inNarratorRoom) || name === 'Symoné' || name === 'Liz') return;
+  
   const lastJoinedElement = document.getElementById('last-joined-user');
   if (lastJoinedElement) {
     lastJoinedElement.textContent = name;

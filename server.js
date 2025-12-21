@@ -3,6 +3,8 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { readFile } from 'fs/promises';
+import { NARRATOR_USERNAME } from './shared/gameParameters.js';
 
 // Fix for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -27,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // Serve static assets (fonts, images) from built assets folder
 app.use('/assets', express.static(path.join(__dirname, 'dist/assets')));
 
-// Serve built HTML for control, room1, room2
+// Serve built HTML for control, room1, room2, player-room, narrator-room
 app.get('/control', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/control.html'));
 });
@@ -36,6 +38,12 @@ app.get('/room1', (req, res) => {
 });
 app.get('/room2', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/room2.html'));
+});
+app.get('/player-room', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/player-room.html'));
+});
+app.get('/narrator-room', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/narrator-room.html'));
 });
 
 // Catch-all route to serve index.html
@@ -54,6 +62,101 @@ const takenUsernames = new Set();
 
 // Track connected users
 let connectedUsers = 0;
+
+// Track dialogue states per room
+const dialogueStates = new Map();
+
+// Helper: Check if narrator is online and broadcast status
+function broadcastNarratorStatus() {
+    const isNarratorOnline = Array.from(activeUsers.values()).includes(NARRATOR_USERNAME);
+    io.emit('narrator-status', { online: isNarratorOnline });
+}
+
+// Helper: Load dialogue JSON
+async function loadDialogueData(dialogueId) {
+    const filePath = path.join(__dirname, 'dist', 'data', 'dialogues', `${dialogueId}.json`);
+    try {
+        const data = await readFile(filePath, 'utf-8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error(`Failed to load dialogue ${dialogueId}:`, error);
+        return null;
+    }
+}
+
+// Helper: Validate dialogue data structure
+function validateDialogueData(data) {
+    if (!data.metadata || !data.metadata.startNode) {
+        throw new Error('Missing startNode in metadata');
+    }
+
+    if (!data.nodes[data.metadata.startNode]) {
+        throw new Error('startNode does not exist in nodes');
+    }
+
+    for (let [nodeId, node] of Object.entries(data.nodes)) {
+        for (let choice of node.choices || []) {
+            if (!data.nodes[choice.nextNode]) {
+                throw new Error(`Invalid nextNode "${choice.nextNode}" in node "${nodeId}"`);
+            }
+        }
+    }
+
+    return true;
+}
+
+// Helper: Initialize dialogue for a room
+async function startDialogue(room, dialogueId) {
+    const dialogueData = await loadDialogueData(dialogueId);
+    if (!dialogueData) return null;
+
+    try {
+        validateDialogueData(dialogueData);
+    } catch (error) {
+        console.error('Dialogue validation failed:', error);
+        return null;
+    }
+
+    const state = {
+        active: true,
+        dialogueId,
+        currentNode: dialogueData.metadata.startNode,
+        variables: {...dialogueData.variables},
+        dialogueData
+    };
+
+    dialogueStates.set(room, state);
+    return state;
+}
+
+// Helper: Build sync payload for clients
+function buildSyncPayload(state) {
+    return {
+        active: state.active,
+        currentNode: state.currentNode,
+        variables: state.variables,
+        dialogueId: state.dialogueId,
+        dialogueData: state.dialogueData,
+        nodeData: state.dialogueData.nodes[state.currentNode]
+    };
+}
+
+// Helper: Apply effects to variables
+function applyEffects(effects, variables) {
+    if (!effects) return variables;
+
+    const newVars = {...variables};
+    for (let [key, value] of Object.entries(effects)) {
+        if (typeof value === 'string' && value.startsWith('+')) {
+            newVars[key] = (newVars[key] || 0) + parseFloat(value.substring(1));
+        } else if (typeof value === 'string' && value.startsWith('-')) {
+            newVars[key] = (newVars[key] || 0) - parseFloat(value.substring(1));
+        } else {
+            newVars[key] = value;
+        }
+    }
+    return newVars;
+}
 
 // Handle Socket.IO connections
 io.on('connection', (socket) => {
@@ -75,13 +178,39 @@ io.on('connection', (socket) => {
             socket.emit('username taken');
             return;
         }
-        
+
         socket.username = username;
         takenUsernames.add(username);
         activeUsers.set(socket.id, username);
         console.log(`User joined: ${username}`);
         console.log('Active users:', Array.from(activeUsers.values()));
-        io.emit('user joined', username);
+
+        // Check if dialogue is active and user is narrator
+        const playerRoomState = dialogueStates.get('player-room');
+        const isDialogueActive = playerRoomState && playerRoomState.active;
+        const isNarrator = username === NARRATOR_USERNAME;
+
+        // Only broadcast join message if NOT (narrator joining during active dialogue)
+        if (!(isDialogueActive && isNarrator)) {
+            io.emit('user joined', username);
+        } else {
+            console.log(`Suppressing join message for narrator during active dialogue`);
+        }
+
+        // Broadcast narrator status to all clients
+        broadcastNarratorStatus();
+
+        // If there's an active dialogue in player-room, sync the new player
+        if (isDialogueActive) {
+            console.log(`Syncing active dialogue to newly joined user: ${username}`);
+            socket.emit('dialogue-sync', buildSyncPayload(playerRoomState));
+        }
+    });
+
+    // Send current narrator status to newly connected clients
+    socket.on('request-narrator-status', () => {
+        const isNarratorOnline = Array.from(activeUsers.values()).includes(NARRATOR_USERNAME);
+        socket.emit('narrator-status', { online: isNarratorOnline });
     });
 
     // Listen for chat messages from clients
@@ -110,6 +239,126 @@ io.on('connection', (socket) => {
         console.log(`Theme changed to: ${theme || 'default'}`);
     });
 
+    // Handle dialogue start (from narrator in narrator-room)
+    socket.on('dialogue-start', async (data) => {
+        const targetRoom = data.targetRoom || 'player-room';
+        console.log(`Starting dialogue ${data.dialogueId} in ${targetRoom}`);
+
+        // Notify player that dialogue is starting (for typing indicator)
+        io.emit('dialogue-started');
+
+        const state = await startDialogue(targetRoom, data.dialogueId);
+
+        if (state) {
+            // Send dialogue to players in player-room
+            io.emit('dialogue-sync', buildSyncPayload(state));
+        } else {
+            socket.emit('dialogue-error', { message: 'Failed to load dialogue' });
+        }
+    });
+
+    // Handle player choice (from player-room)
+    socket.on('player-choice', (data) => {
+        const room = 'player-room';
+        const state = dialogueStates.get(room);
+
+        if (!state || !state.active) {
+            console.log('No active dialogue for player choice');
+            return;
+        }
+
+        // Validate choice exists in current node
+        const currentNode = state.dialogueData.nodes[state.currentNode];
+        const choice = currentNode.choices.find(c => c.id === data.choiceId);
+
+        if (!choice) {
+            console.log('Invalid choice');
+            return;
+        }
+
+        // Apply effects to variables
+        if (choice.effects) {
+            state.variables = applyEffects(choice.effects, state.variables);
+        }
+
+        // Navigate to next node
+        state.currentNode = choice.nextNode;
+
+        // Broadcast player's choice to chat
+        io.emit('chat', {
+            text: data.choiceText,
+            username: data.username,
+            timestamp: Date.now()
+        });
+
+        // Get narrator response from next node
+        const nextNode = state.dialogueData.nodes[state.currentNode];
+
+        // Send notification to narrator room for monitoring (optional)
+        io.emit('player-choice-made', {
+            narratorResponse: nextNode.text,
+            playerChoice: data.choiceText,
+            isEnding: nextNode.type === 'ending'
+        });
+
+        // Server automatically sends narrator response after delay
+        setTimeout(() => {
+            // Broadcast narrator response to chat
+            io.emit('chat', {
+                text: nextNode.text,
+                username: NARRATOR_USERNAME,
+                timestamp: Date.now()
+            });
+
+            // Notify player that narrator sent response
+            io.emit('narrator-response-sent');
+
+            // Check if this is an ending message
+            if (nextNode.type === 'ending') {
+                // End dialogue after a short delay
+                setTimeout(() => {
+                    state.active = false;
+                    io.emit('dialogue-end', {
+                        reason: 'completed'
+                    });
+
+                    // Check if narrator left during dialogue and is still offline
+                    if (state.narratorLeftDuringDialogue) {
+                        const isNarratorOnline = Array.from(activeUsers.values()).includes(NARRATOR_USERNAME);
+                        if (!isNarratorOnline) {
+                            console.log(`Showing deferred narrator leave message after dialogue end`);
+                            io.emit('user left', NARRATOR_USERNAME);
+                        }
+                        state.narratorLeftDuringDialogue = false;
+                    }
+
+                    // Clean up state after 5 minutes
+                    setTimeout(() => {
+                        if (!dialogueStates.get(room)?.active) {
+                            dialogueStates.delete(room);
+                            console.log(`Cleaned up dialogue state for room: ${room}`);
+                        }
+                    }, 5 * 60 * 1000);
+                }, 3000);
+            } else {
+                // Send next set of choices to player
+                const choices = nextNode.choices || [];
+                if (choices.length > 0) {
+                    io.emit('dialogue-sync', buildSyncPayload(state));
+                } else {
+                    console.log('No more choices available');
+                }
+            }
+        }, 1500); // 1.5 second delay to simulate narrator typing
+    });
+
+    // Handle narrator continue (DEPRECATED - kept for backward compatibility)
+    // The server now automatically sends responses, but this remains for monitoring
+    socket.on('narrator-continue', () => {
+        console.log('narrator-continue event received (deprecated - server handles responses automatically)');
+        // This handler is now a no-op since server automatically sends responses
+    });
+
     // Handle client disconnection
     socket.on('disconnect', () => {
         connectedUsers--;
@@ -121,7 +370,25 @@ io.on('connection', (socket) => {
             takenUsernames.delete(username);
             activeUsers.delete(socket.id);
             console.log('Remaining users:', Array.from(activeUsers.values()));
-            io.emit('user left', username);
+
+            // Check if dialogue is active and user is narrator
+            const playerRoomState = dialogueStates.get('player-room');
+            const isDialogueActive = playerRoomState && playerRoomState.active;
+            const isNarrator = username === NARRATOR_USERNAME;
+
+            // Only broadcast leave message if NOT (narrator leaving during active dialogue)
+            if (!(isDialogueActive && isNarrator)) {
+                io.emit('user left', username);
+            } else {
+                console.log(`Suppressing leave message for narrator during active dialogue`);
+                // Store that narrator left during dialogue so we can notify after it ends
+                if (playerRoomState) {
+                    playerRoomState.narratorLeftDuringDialogue = true;
+                }
+            }
+
+            // Broadcast narrator status to all clients
+            broadcastNarratorStatus();
         }
     });
 });
