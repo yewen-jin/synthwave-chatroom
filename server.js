@@ -250,12 +250,156 @@ io.on('connection', (socket) => {
         const state = await startDialogue(targetRoom, data.dialogueId);
 
         if (state) {
-            // Send dialogue to players in player-room
-            io.emit('dialogue-sync', buildSyncPayload(state));
+            // Process the starting node (this handles auto-advancing nodes)
+            processNode(targetRoom);
         } else {
             socket.emit('dialogue-error', { message: 'Failed to load dialogue' });
         }
     });
+
+    // Helper: Process a node and auto-advance if needed
+    function processNode(room, playerUsername = null, choiceText = null) {
+        const state = dialogueStates.get(room);
+        if (!state || !state.active) return;
+
+        const currentNode = state.dialogueData.nodes[state.currentNode];
+        console.log(`Processing node: ${state.currentNode}, type: ${currentNode.type}`);
+
+        // Send notification to narrator room for monitoring
+        io.emit('player-choice-made', {
+            currentNode: state.currentNode,
+            isEnding: currentNode.type === 'ending'
+        });
+
+        // If player made a choice, broadcast it to chat first
+        if (playerUsername && choiceText) {
+            io.emit('chat', {
+                text: choiceText,
+                username: playerUsername,
+                timestamp: Date.now()
+            });
+        }
+
+        // Determine node type and handle accordingly
+        const hasNarratorMessages = currentNode.narratorMessages && currentNode.narratorMessages.length > 0;
+        const hasChoices = currentNode.choices && currentNode.choices.length > 0;
+        const hasText = currentNode.text && currentNode.text.trim().length > 0;
+
+        // TYPE 1: NARRATOR MESSAGE NODE (has narratorMessages, may or may not have choices)
+        if (hasNarratorMessages) {
+            console.log(`Node type: Narrator message (${currentNode.narratorMessages.length} messages)`);
+
+            // Send each narrator message with delay
+            let delay = playerUsername ? 1500 : 0; // If player just chose, wait 1.5s
+            currentNode.narratorMessages.forEach((message, index) => {
+                setTimeout(() => {
+                    io.emit('chat', {
+                        text: message,
+                        username: NARRATOR_USERNAME,
+                        timestamp: Date.now()
+                    });
+
+                    // After last narrator message, check if we should auto-advance
+                    if (index === currentNode.narratorMessages.length - 1) {
+                        // If no choices, auto-advance to next node
+                        if (!hasChoices) {
+                            console.log('No choices, auto-advancing after narrator messages');
+                            setTimeout(() => {
+                                if (currentNode.type === 'ending') {
+                                    handleDialogueEnd(room, state);
+                                } else if (currentNode.nextNode) {
+                                    // Auto-advance to the specified next node
+                                    console.log(`Auto-advancing to next node: ${currentNode.nextNode}`);
+                                    state.currentNode = currentNode.nextNode;
+                                    processNode(room);
+                                } else {
+                                    console.log('Warning: No nextNode specified for auto-advancing node');
+                                }
+                            }, 1500);
+                        } else {
+                            // Has choices, send them to player
+                            io.emit('dialogue-sync', buildSyncPayload(state));
+                        }
+                    }
+                }, delay + (index * 1500)); // 1.5s between each message
+            });
+            return;
+        }
+
+        // TYPE 2: SYSTEM MESSAGE NODE (has text, no narratorMessages, no choices)
+        if (hasText && !hasNarratorMessages && !hasChoices) {
+            console.log('Node type: System message (auto-advancing)');
+
+            // System messages are just displayed in the text area (handled by client)
+            // Send sync first so client can display the text
+            io.emit('dialogue-sync', buildSyncPayload(state));
+
+            // Auto-advance after a delay
+            setTimeout(() => {
+                if (currentNode.type === 'ending') {
+                    handleDialogueEnd(room, state);
+                } else if (currentNode.nextNode) {
+                    console.log(`Auto-advancing to next node: ${currentNode.nextNode}`);
+                    state.currentNode = currentNode.nextNode;
+                    processNode(room);
+                } else {
+                    console.log('Warning: No nextNode specified for system message node');
+                }
+            }, 2000);
+            return;
+        }
+
+        // TYPE 3: PLAYER CHOICE NODE (has choices)
+        if (hasChoices) {
+            console.log(`Node type: Player choice (${currentNode.choices.length} choices)`);
+
+            // If there's text, it's displayed (handled by client)
+            // Send choices to player and wait for selection
+            io.emit('dialogue-sync', buildSyncPayload(state));
+            return;
+        }
+
+        // TYPE 4: ENDING NODE
+        if (currentNode.type === 'ending') {
+            console.log('Node type: Ending');
+
+            // If has text, display it (handled by client)
+            // End dialogue after delay
+            setTimeout(() => {
+                handleDialogueEnd(room, state);
+            }, 3000);
+            return;
+        }
+
+        // Fallback: just sync the node
+        io.emit('dialogue-sync', buildSyncPayload(state));
+    }
+
+    // Helper: Handle dialogue end
+    function handleDialogueEnd(room, state) {
+        state.active = false;
+        io.emit('dialogue-end', {
+            reason: 'completed'
+        });
+
+        // Check if narrator left during dialogue and is still offline
+        if (state.narratorLeftDuringDialogue) {
+            const isNarratorOnline = Array.from(activeUsers.values()).includes(NARRATOR_USERNAME);
+            if (!isNarratorOnline) {
+                console.log(`Showing deferred narrator leave message after dialogue end`);
+                io.emit('user left', NARRATOR_USERNAME);
+            }
+            state.narratorLeftDuringDialogue = false;
+        }
+
+        // Clean up state after 5 minutes
+        setTimeout(() => {
+            if (!dialogueStates.get(room)?.active) {
+                dialogueStates.delete(room);
+                console.log(`Cleaned up dialogue state for room: ${room}`);
+            }
+        }, 5 * 60 * 1000);
+    }
 
     // Handle player choice (from player-room)
     socket.on('player-choice', (data) => {
@@ -284,72 +428,8 @@ io.on('connection', (socket) => {
         // Navigate to next node
         state.currentNode = choice.nextNode;
 
-        // Broadcast player's choice to chat
-        io.emit('chat', {
-            text: data.choiceText,
-            username: data.username,
-            timestamp: Date.now()
-        });
-
-        // Get narrator response from next node
-        const nextNode = state.dialogueData.nodes[state.currentNode];
-
-        // Send notification to narrator room for monitoring (optional)
-        io.emit('player-choice-made', {
-            narratorResponse: nextNode.text,
-            playerChoice: data.choiceText,
-            isEnding: nextNode.type === 'ending'
-        });
-
-        // Server automatically sends narrator response after delay
-        setTimeout(() => {
-            // Broadcast narrator response to chat
-            io.emit('chat', {
-                text: nextNode.text,
-                username: NARRATOR_USERNAME,
-                timestamp: Date.now()
-            });
-
-            // Notify player that narrator sent response
-            io.emit('narrator-response-sent');
-
-            // Check if this is an ending message
-            if (nextNode.type === 'ending') {
-                // End dialogue after a short delay
-                setTimeout(() => {
-                    state.active = false;
-                    io.emit('dialogue-end', {
-                        reason: 'completed'
-                    });
-
-                    // Check if narrator left during dialogue and is still offline
-                    if (state.narratorLeftDuringDialogue) {
-                        const isNarratorOnline = Array.from(activeUsers.values()).includes(NARRATOR_USERNAME);
-                        if (!isNarratorOnline) {
-                            console.log(`Showing deferred narrator leave message after dialogue end`);
-                            io.emit('user left', NARRATOR_USERNAME);
-                        }
-                        state.narratorLeftDuringDialogue = false;
-                    }
-
-                    // Clean up state after 5 minutes
-                    setTimeout(() => {
-                        if (!dialogueStates.get(room)?.active) {
-                            dialogueStates.delete(room);
-                            console.log(`Cleaned up dialogue state for room: ${room}`);
-                        }
-                    }, 5 * 60 * 1000);
-                }, 3000);
-            } else {
-                // Send next set of choices to player
-                const choices = nextNode.choices || [];
-                if (choices.length > 0) {
-                    io.emit('dialogue-sync', buildSyncPayload(state));
-                } else {
-                    console.log('No more choices available');
-                }
-            }
-        }, 1500); // 1.5 second delay to simulate narrator typing
+        // Process the new node (this handles all node types)
+        processNode(room, data.username, data.choiceText);
     });
 
     // Handle narrator continue (DEPRECATED - kept for backward compatibility)

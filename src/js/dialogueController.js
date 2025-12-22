@@ -145,52 +145,90 @@ function initPlayerRoom() {
         dialogueSystem.setCurrentNode(data.currentNode);
         dialogueSystem.setVariables(data.variables);
 
-        // Get choices (don't show the narrative text)
+        // Get current node and choices
+        const currentNodeData = data.nodeData || dialogueSystem.getCurrentNodeData();
         const choices = dialogueSystem.getAvailableChoices();
 
-        // Hide normal input, show choices inline
-        normalInputContainer.style.display = 'none';
-        sendBtn.style.display = 'none';
-        choicesInlineContainer.style.display = 'flex';
+        // Determine node type
+        const hasChoices = choices && choices.length > 0;
+        const hasNarratorMessages = currentNodeData.narratorMessages && currentNodeData.narratorMessages.length > 0;
 
-        // Render choice buttons
-        choicesInlineContainer.innerHTML = '';
-        choices.forEach(choice => {
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn';
-            btn.textContent = choice.text;
+        // TYPE 1: Player choice node (has choices)
+        if (hasChoices) {
+            console.log('Player: Choice node - showing choice buttons');
 
-            btn.addEventListener('click', () => {
-                handlePlayerChoice(choice);
-                // Disable all buttons
-                choicesInlineContainer.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+            // Display system message text if present (before showing choices)
+            if (currentNodeData.text && currentNodeData.text.trim().length > 0) {
+                console.log('Player: Displaying system message before choices:', currentNodeData.text);
+                const chatBody = document.getElementById('chatBody');
+                if (chatBody) {
+                    const systemMsg = document.createElement('div');
+                    systemMsg.className = 'system-message';
+                    systemMsg.textContent = currentNodeData.text;
+                    chatBody.appendChild(systemMsg);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
+            }
+
+            // Hide normal input, show choices inline
+            normalInputContainer.style.display = 'none';
+            sendBtn.style.display = 'none';
+            choicesInlineContainer.style.display = 'flex';
+
+            // Render choice buttons
+            choicesInlineContainer.innerHTML = '';
+            choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.textContent = choice.text;
+
+                btn.addEventListener('click', () => {
+                    handlePlayerChoice(choice);
+                    // Disable all buttons
+                    choicesInlineContainer.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+                });
+
+                choicesInlineContainer.appendChild(btn);
             });
 
-            choicesInlineContainer.appendChild(btn);
-        });
+            // Clear typing status when choices arrive
+            if (narratorStatusEl) {
+                narratorStatusEl.textContent = 'Online';
+                narratorStatusEl.classList.remove('typing', 'offline');
+            }
+        }
+        // TYPE 2: Narrator message or system message node (no choices)
+        else {
+            console.log('Player: Auto-advancing node - hiding choices, keeping normal input hidden');
 
-        // Clear typing status when choices arrive
-        if (narratorStatusEl) {
-            narratorStatusEl.textContent = 'Online';
-            narratorStatusEl.classList.remove('typing', 'offline');
+            // Keep input hidden during auto-advancing nodes
+            choicesInlineContainer.style.display = 'none';
+            normalInputContainer.style.display = 'none';
+            sendBtn.style.display = 'none';
+
+            // Display system message text if present
+            if (currentNodeData.text && currentNodeData.text.trim().length > 0) {
+                console.log('Player: Displaying system message:', currentNodeData.text);
+                const chatBody = document.getElementById('chatBody');
+                if (chatBody) {
+                    const systemMsg = document.createElement('div');
+                    systemMsg.className = 'system-message';
+                    systemMsg.textContent = currentNodeData.text;
+                    chatBody.appendChild(systemMsg);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
+            }
+
+            // Show typing status if narrator will send messages
+            if (hasNarratorMessages && narratorStatusEl) {
+                narratorStatusEl.textContent = 'typing...';
+                narratorStatusEl.classList.add('typing');
+                narratorStatusEl.classList.remove('offline');
+            }
         }
 
         // Flash visual effect
         if (flashCallback) flashCallback();
-    });
-
-    // Listen for narrator response (hide choices, show normal input)
-    socket.on('narrator-response-sent', () => {
-        console.log('Player: Narrator sent response, hiding choices');
-        choicesInlineContainer.style.display = 'none';
-        normalInputContainer.style.display = 'block';
-        sendBtn.style.display = 'block';
-
-        // Clear typing status when narrator response is sent
-        if (narratorStatusEl) {
-            narratorStatusEl.textContent = 'Online';
-            narratorStatusEl.classList.remove('typing', 'offline');
-        }
     });
 
     // Listen for dialogue end
