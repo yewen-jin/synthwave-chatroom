@@ -43,6 +43,30 @@ function handleUsernameSubmit() {
 
 function onChat(messageObj) {
   const msgDiv = document.createElement("div");
+
+  // Handle system messages (new messageSequence format)
+  if (messageObj.isSystem) {
+    msgDiv.className = "message system-message-inline";
+    msgDiv.innerHTML = `<span class="text">${messageObj.text}</span>`;
+    addMessageToChat(msgDiv);
+    if (visuals) visuals.flash();
+    return;
+  }
+
+  // Handle image messages (new messageSequence format)
+  if (messageObj.isImage) {
+    msgDiv.className = "message image-message";
+    const img = document.createElement("img");
+    img.src = messageObj.imageUrl;
+    img.alt = messageObj.imageAlt || "";
+    img.loading = "lazy";
+    msgDiv.appendChild(img);
+    addMessageToChat(msgDiv);
+    if (visuals) visuals.flash();
+    return;
+  }
+
+  // Regular chat messages (player or narrator)
   msgDiv.className = `message ${
     messageObj.username === username ? "mine" : "others"
   }`;

@@ -604,6 +604,54 @@ button {
   font-size: 20px;
 }
 
+/* System messages from messageSequence (inline in chat) */
+.system-message-inline {
+  background: rgba(100, 255, 200, 0.08);
+  border-left: 3px solid var(--border-color);
+  padding: 12px 16px;
+  margin: 8px 0;
+  font-style: italic;
+  text-align: center;
+  color: var(--text-color);
+  opacity: 0.95;
+  border-radius: 4px;
+  line-height: 1.6;
+  width: 100%;
+  clear: both;
+  display: block;
+}
+
+.system-message-inline .text {
+  color: var(--text-color);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Image messages from messageSequence */
+.image-message {
+  text-align: center;
+  background: transparent;
+  padding: 16px 0;
+  margin: 12px 0;
+  width: 100%;
+  clear: both;
+  display: block;
+}
+
+.image-message img {
+  max-width: 90%;
+  max-height: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--border-color);
+  opacity: 0.95;
+  transition: opacity 0.3s ease;
+}
+
+.image-message img:hover {
+  opacity: 1;
+}
+
 .msn-window.maximized {
   width: 100% !important;
   height: 100vh !important;

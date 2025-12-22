@@ -257,6 +257,77 @@ io.on('connection', (socket) => {
         }
     });
 
+    // Helper: Handle new messageSequence format
+    function handleMessageSequence(room, node, playerUsername) {
+        const state = dialogueStates.get(room);
+        const sequence = node.messageSequence;
+
+        let delay = playerUsername ? 1500 : 0; // Wait 1.5s after player choice
+
+        sequence.forEach((message, index) => {
+            setTimeout(() => {
+                switch (message.type) {
+                    case 'system':
+                        io.emit('chat', {
+                            text: message.content,
+                            username: 'SYSTEM',
+                            timestamp: Date.now(),
+                            isSystem: true
+                        });
+                        break;
+
+                    case 'narrator':
+                        io.emit('chat', {
+                            text: message.content,
+                            username: NARRATOR_USERNAME,
+                            timestamp: Date.now()
+                        });
+                        break;
+
+                    case 'image':
+                        io.emit('chat', {
+                            imageUrl: message.url,
+                            imageAlt: message.alt || '',
+                            username: 'SYSTEM',
+                            timestamp: Date.now(),
+                            isImage: true
+                        });
+                        break;
+
+                    case 'pause':
+                        // Pause type - no action, just affects timing
+                        break;
+
+                    default:
+                        console.warn(`Unknown message type: ${message.type}`);
+                }
+
+                // After last message in sequence
+                if (index === sequence.length - 1) {
+                    const hasChoices = node.choices && node.choices.length > 0;
+
+                    if (!hasChoices) {
+                        // Auto-advance to next node
+                        setTimeout(() => {
+                            if (node.type === 'ending') {
+                                handleDialogueEnd(room, state);
+                            } else if (node.nextNode) {
+                                console.log(`Auto-advancing to next node: ${node.nextNode}`);
+                                state.currentNode = node.nextNode;
+                                processNode(room);
+                            } else {
+                                console.log('Warning: No nextNode specified for auto-advancing node');
+                            }
+                        }, 1500);
+                    } else {
+                        // Show choices to player
+                        io.emit('dialogue-sync', buildSyncPayload(state));
+                    }
+                }
+            }, delay + (index * 1500)); // 1.5s between each message
+        });
+    }
+
     // Helper: Process a node and auto-advance if needed
     function processNode(room, playerUsername = null, choiceText = null) {
         const state = dialogueStates.get(room);
@@ -279,6 +350,15 @@ io.on('connection', (socket) => {
                 timestamp: Date.now()
             });
         }
+
+        // NEW FORMAT: Check if node uses messageSequence
+        if (currentNode.messageSequence && currentNode.messageSequence.length > 0) {
+            console.log('Using new messageSequence format');
+            handleMessageSequence(room, currentNode, playerUsername);
+            return;
+        }
+
+        // OLD FORMAT: Legacy handling for nodes without messageSequence
 
         // Determine node type and handle accordingly
         const hasNarratorMessages = currentNode.narratorMessages && currentNode.narratorMessages.length > 0;

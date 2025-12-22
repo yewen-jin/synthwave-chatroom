@@ -21,9 +21,7 @@
           "conditions": null
         }
       ],
-      "narratorMessages": [
-        "Liz: Was that message for you or someone you know?"
-      ]
+      "narratorMessages": ["Liz: Was that message for you or someone you know?"]
     },
     "watch_the_screen_while_things_happen_unknown_to_you": {
       "id": "watch_the_screen_while_things_happen_unknown_to_you",
@@ -52,18 +50,14 @@
           "conditions": null
         }
       ],
-      "narratorMessages": [
-        "Liz says: Okay got it. Where would you like to go?"
-      ]
+      "narratorMessages": ["Liz says: Okay got it. Where would you like to go?"]
     },
     "click_to_play": {
       "id": "click_to_play",
       "type": "narrative",
       "text": "==CLICK TO PLAY==",
       "choices": [],
-      "narratorMessages": [
-        "Liz says: Two strangers meet, but"
-      ],
+      "narratorMessages": ["Liz says: Two strangers meet, but"],
       "nextNode": "two_strangers_meet_but"
     },
     "a_bloody_arm": {
@@ -78,6 +72,9 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz says: ''Dear internet person, you have found A Severed Leg''"
       ]
     },
     "a_forgotten_thought": {
@@ -92,6 +89,9 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz says: ''Dear internet person, you have found A Forgotten Thought''"
       ]
     },
     "a_pile_of_dust": {
@@ -106,6 +106,9 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz says: //''Dear internet person, you have found A Pile of Dust..?''"
       ]
     },
     "a_stranger_s_smile": {
@@ -120,12 +123,15 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz says: //''Dear internet person, you have found A Stranger's Smile''"
       ]
     },
     "a_mirror_this_email_represents_me": {
       "id": "a_mirror_this_email_represents_me",
       "type": "narrative",
-      "text": "UNLOCKED: Inherited Recipe",
+      "text": "UNLOCKED: Inherited Recipe\n\n''Dear internet person, you have found An Inherited Recipe''",
       "choices": [
         {
           "id": "a_mirror_this_email_represents_me_choice_1",
@@ -145,7 +151,7 @@
     "an_email_marked_as_untitled_it_looks_back_at_you_then_moves_to_the_side_lines_it_s_shy": {
       "id": "an_email_marked_as_untitled_it_looks_back_at_you_then_moves_to_the_side_lines_it_s_shy",
       "type": "narrative",
-      "text": "The email reads:\n\nDear [the name is blurred out],\n\nsO formal sorry! I couldn't find your account to message directly and so I wondered if you deactivated? Anyways, I did wnt to invte you you a c0nc3rt - hehe! I'll bring a few of the following items\n\n...''A mirror..\n\n..Poorer eyesight...\n\n..A telepathic printer''\n\nDo you want any? Anyway, msg me back before the weekend.\n\nxo\n\n> You say: Maybe best to close this and head back into the portal of\n\n>You say: A riddle?\n\n> You say: OKKKK weaker eyes? Lol... Weaker eyes. A trap, but\n\n> You say:  sounds intruiging.",
+      "text": "The shy email, looks at the floor, then back at you before it slowly opens, obeyingly. It reminds you of a time you felt like both a child, but obligated to someone. In that moment, were you abiding by some kind of code and disconnecting from something deeper? This choice has made you reflective and the email(text-colour:grey)[ will be remember that]\n\nThe email reads:\n\nDear [the name is blurred out],\n\nsO formal sorry! I couldn't find your account to message directly and so I wondered if you deactivated? Anyways, I did wnt to invte you you a c0nc3rt - hehe! I'll bring a few of the following items\n\n...''A mirror..\n\n..Poorer eyesight...\n\n..A telepathic printer\n\nDo you want any? Anyway, msg me back before the weekend.\n\nxo\n\n> You say: Maybe best to close this and head back into the portal of\n\n>You say: A riddle?\n\n> You say: OKKKK weaker eyes? Lol... Weaker eyes. A trap, but\n\n> You say:  sounds intruiging.",
       "choices": [
         {
           "id": "an_email_marked_as_untitled_it_looks_back_at_you_then_moves_to_the_side_lines_it_s_shy_choice_1",
@@ -211,7 +217,7 @@
     "central_area": {
       "id": "central_area",
       "type": "narrative",
-      "text": "''Liz: Now internet person, what would you like to search next? Where does your curiousity lead you?\n\n''\n\n[\n\n]\n\n[\n\n]\n\nYou've used  out of 3 tries. Choose an search:",
+      "text": "[\n\n]\n\n[\n\n]\n\nYou've used  out of 3 tries. Choose an search:",
       "choices": [
         {
           "id": "central_area_choice_1",
@@ -248,6 +254,9 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz: Now internet person, what would you like to search next? Where does your curiousity lead you?"
       ]
     },
     "first_person_route": {
@@ -268,6 +277,9 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz says: ...Transmitting...Thread...Loading....Pic and... Lonely Thread..."
       ]
     },
     "got_it_liz": {
@@ -341,7 +353,7 @@
     "i_remember_when_the_internet_was_a_place_of_escapism": {
       "id": "i_remember_when_the_internet_was_a_place_of_escapism",
       "type": "narrative",
-      "text": "However despite this, whatever magic the code would have was lost.",
+      "text": "You have found (text-colour:magenta)[nostalgica]. This power enables you to use the time as a tool of knowledge for how you navigate and perceive reality.\n\nHowever despite this, whatever magic the code would have was lost.",
       "choices": [
         {
           "id": "i_remember_when_the_internet_was_a_place_of_escapism_choice_1",
@@ -378,7 +390,7 @@
     "in_this_moment_i_would_like_to_guess_a_mirror": {
       "id": "in_this_moment_i_would_like_to_guess_a_mirror",
       "type": "narrative",
-      "text": "You whisper:",
+      "text": "The emails eyes widen, they look soft and suddenly you realize you are looking at.\n\nYou whisper:",
       "choices": [
         {
           "id": "in_this_moment_i_would_like_to_guess_a_mirror_choice_1",
@@ -401,6 +413,9 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz says: //''Dear internet person, you have found An Inherited Recipe''"
       ]
     },
     "lol_internet_person": {
@@ -470,6 +485,9 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz says: //''Dear internet person, you have found Nail Clippings''"
       ]
     },
     "no_i_haven_t_really_thought_about": {
@@ -575,13 +593,13 @@
       ],
       "narratorMessages": [
         "Liz says: You'll need to navigate through different spheres through this chat which will have different tasks for you to achieve. In the end, if you make it that far, you'll retrieve apart of yourself that you lost online.",
-        "Liz says: You're always online from what I can detect, whether you are desiring to be or not :) QR codes, emails, search engines, or even just public cameras. Pure bio humans love to take photos of themselves. Have you ever thought about how much of your energy - your information exists out there, beyond your control? ''**Take a moment before your next response to think about this**''"
+        "Liz says: You're always online from what I can detect, whether you are desiring to be or not :) QR codes, emails, search engines, or even just public cameras. Pure bio humans love to take photos of themselves. Have you ever thought about how much of your energy - your information exists out there, beyond your control? ''**Take a moment before your next response to think about this"
       ]
     },
     "poorer_eyesight": {
       "id": "poorer_eyesight",
       "type": "narrative",
-      "text": ">You say:",
+      "text": "The emails eyes widen, they look soft and suddenly you realize you are looking at.\n\n>You say:",
       "choices": [
         {
           "id": "poorer_eyesight_choice_1",
@@ -595,7 +613,7 @@
     "search_how_do_i_poliltely_ask_someone_to_sleep_with_me": {
       "id": "search_how_do_i_poliltely_ask_someone_to_sleep_with_me",
       "type": "narrative",
-      "text": "''Liz: Result: Some people do it blah blah.\"''\n\n)\n\nYour  search takes you here.\n\n[Liz says: What information is important for you to know next?]\n\n[\n\nYou've made 3 searches. Proceeding to the next phase...\n\n]\n\n(else:)[\n\n]",
+      "text": ")\n\nYour  search takes you here.\n\n[Liz says: What information is important for you to know next?]\n\n[\n\nYou've made 3 searches. Proceeding to the next phase...\n\n]\n\n(else:)[\n\n]",
       "choices": [
         {
           "id": "search_how_do_i_poliltely_ask_someone_to_sleep_with_me_choice_1",
@@ -604,12 +622,13 @@
           "effects": null,
           "conditions": null
         }
-      ]
+      ],
+      "narratorMessages": ["Liz: Result: Some people do it blah blah.\""]
     },
     "search_how_to_find_a_place_for_everything": {
       "id": "search_how_to_find_a_place_for_everything",
       "type": "narrative",
-      "text": "''Liz: Okay, searching, \"How to find a place for everything...\"''\n\n)\n\nYour  search takes you here.\n\n[Liz says: What is important to you when you search online?]\n\n[\n\nYou've made 3 searches. Proceeding to the next phase...\n\n]\n\n(else:)[\n\n]",
+      "text": ")\n\nYour  search takes you here.\n\n[Liz says: What is important to you when you search online?]\n\n[\n\nYou've made 3 searches. Proceeding to the next phase...\n\n]\n\n(else:)[\n\n]",
       "choices": [
         {
           "id": "search_how_to_find_a_place_for_everything_choice_1",
@@ -618,12 +637,15 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz: Okay, searching, \"How to find a place for everything...\""
       ]
     },
     "search_what_has_the_internet_taught_me_about_love": {
       "id": "search_what_has_the_internet_taught_me_about_love",
       "type": "narrative",
-      "text": "''Liz: Okay, searching, \"What has the internet taught me about love...\"''\n\na poetic response like a magic 8 ball appears here. it's short and sweet, maybe two or three sentences long,\n\n)\n\nYour  search takes you here.\n\n[Liz says: If you didn't have the internet, who would you ask?]\n\n[\n\nYou've made 3 searches. Proceeding to the next phase...\n\n]\n\n(else:)[\n\n]",
+      "text": "a poetic response like a magic 8 ball appears here. it's short and sweet, maybe two or three sentences long,\n\n)\n\nYour  search takes you here.\n\n[Liz says: If you didn't have the internet, who would you ask?]\n\n[\n\nYou've made 3 searches. Proceeding to the next phase...\n\n]\n\n(else:)[\n\n]",
       "choices": [
         {
           "id": "search_what_has_the_internet_taught_me_about_love_choice_1",
@@ -632,12 +654,15 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz: Okay, searching, \"What has the internet taught me about love...\""
       ]
     },
     "search_what_is_the_best_way_to_search_for_yourself_online": {
       "id": "search_what_is_the_best_way_to_search_for_yourself_online",
       "type": "narrative",
-      "text": "''Liz: Okay, searching, \"What is the best way to search for yourself online\"''\n\na poetic response like a magic 8 ball appears here. it's short and sweet, maybe two or three sentences long,\n\n)\n\nYour  search takes you here.\n\n[Liz says: What does your search history say about you?]\n\n[\n\nYou've made 3 searches. Proceeding to the next phase...\n\n]\n\n(else:)[\n\n]",
+      "text": "a poetic response like a magic 8 ball appears here. it's short and sweet, maybe two or three sentences long,\n\n)\n\nYour  search takes you here.\n\n[Liz says: What does your search history say about you?]\n\n[\n\nYou've made 3 searches. Proceeding to the next phase...\n\n]\n\n(else:)[\n\n]",
       "choices": [
         {
           "id": "search_what_is_the_best_way_to_search_for_yourself_online_choice_1",
@@ -646,12 +671,15 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz: Okay, searching, \"What is the best way to search for yourself online\""
       ]
     },
     "search_where_is_the_centre_of_the_internet": {
       "id": "search_where_is_the_centre_of_the_internet",
       "type": "narrative",
-      "text": "''Liz: Okay, searching, \"Where is the centre of the internet..\"''\n\n)\n\nYour  search takes you here.\n\n[Liz: I wonder who else reads your search history?]\n\n[\n\nYou've made 3 searches. Proceeding to the next phase...\n\n]\n\n(else:)[\n\n]",
+      "text": ")\n\nYour  search takes you here.\n\n[Liz: I wonder who else reads your search history?]\n\n[\n\nYou've made 3 searches. Proceeding to the next phase...\n\n]\n\n(else:)[\n\n]",
       "choices": [
         {
           "id": "search_where_is_the_centre_of_the_internet_choice_1",
@@ -660,12 +688,15 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz: Okay, searching, \"Where is the centre of the internet..\""
       ]
     },
     "thread_comment_section": {
       "id": "thread_comment_section",
       "type": "narrative",
-      "text": "''Remember, you are looking for yourself, don't be tactical, just respond as you are to find your way through this.''",
+      "text": "Remember, you are looking for yourself, don't be tactical, just respond as you are to find your way through this.",
       "choices": [
         {
           "id": "thread_comment_section_choice_1",
@@ -683,6 +714,7 @@
         }
       ],
       "narratorMessages": [
+        "Liz says: How did you end up here? Looks like you were transported..",
         "Liz says: In this lonely forum. A lot of time has passed since this thread was written, but your response will transmit to the past. There's a single thread there. I'll travel the information here into the chat and transmit any messages you output for further investigation."
       ]
     },
@@ -698,6 +730,9 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz says: //''Dear internet person, you have found An Evil Eye''"
       ]
     },
     "their_minds_meet_by_fingertipskeyboardclicks_soft_smiles_and_profile_pics": {
@@ -736,15 +771,13 @@
       "type": "narrative",
       "text": "Two strangers meet, but",
       "choices": [],
-      "narratorMessages": [
-        "Liz says: They do not touch"
-      ],
+      "narratorMessages": ["Liz says: They do not touch"],
       "nextNode": "they_do_not_touch"
     },
     "what_if_i_could_alter_the_algorithm": {
       "id": "what_if_i_could_alter_the_algorithm",
       "type": "narrative",
-      "text": "This power has enabled you to think more deeply about the information we receive and it's purpose. You feel a warm smile and squint your eyes at the screen. There's something alive looking back at you. This makes you reflect on what it feels like to exist inside o a human body.\n\n>",
+      "text": "You have found (text-colour:magenta)[instincta].\n\nThis power has enabled you to think more deeply about the information we receive and it's purpose. You feel a warm smile and squint your eyes at the screen. There's something alive looking back at you. This makes you reflect on what it feels like to exist inside o a human body.\n\n>",
       "choices": [
         {
           "id": "what_if_i_could_alter_the_algorithm_choice_1",
@@ -758,7 +791,7 @@
     "what_is_it_i_m_really_looking_for": {
       "id": "what_is_it_i_m_really_looking_for",
       "type": "narrative",
-      "text": "What is it I'm really looking for?",
+      "text": "I guess I should wait for someone to enter the chat? Or maybe if I am taking a big risk here...",
       "choices": [
         {
           "id": "what_is_it_i_m_really_looking_for_choice_1",
@@ -779,7 +812,7 @@
     "what_is_it_you_re_really_looking_for": {
       "id": "what_is_it_you_re_really_looking_for",
       "type": "narrative",
-      "text": "What is it you're really looking for?",
+      "text": "The silence feels kinda tense.",
       "choices": [
         {
           "id": "what_is_it_you_re_really_looking_for_choice_1",
@@ -889,7 +922,7 @@
     "you_say_excuse_me": {
       "id": "you_say_excuse_me",
       "type": "narrative",
-      "text": "Code says: Hey.\n\nCode says: You've got this far I guess. Looks like you've gotten pretty far.",
+      "text": "The code looks back at you sitting there brewing up a question.  Your eyes bolt almost induisgisable as you're filled with a new flavour of confusion\n\nCode says: Hey.\n\nCode says: You've got this far I guess. Looks like you've gotten pretty far.",
       "choices": [
         {
           "id": "you_say_excuse_me_choice_1",
@@ -910,7 +943,7 @@
     "you_say_hey_soo": {
       "id": "you_say_hey_soo",
       "type": "narrative",
-      "text": "Code: \"Hey So?\" That's pretty inventive.",
+      "text": "The code looks back at you and frowns.\n\nCode: \"Hey So?\" That's pretty inventive.\n\nThey're bored by your lack of imagination of actions in this moment, you gasp in disbelief",
       "choices": [
         {
           "id": "you_say_hey_soo_choice_1",
@@ -924,7 +957,7 @@
     "you_say_i_literally_have_only_so_many_options_to_respond_in_this_moment_what_do_you_have_a_problem_with_me_now": {
       "id": "you_say_i_literally_have_only_so_many_options_to_respond_in_this_moment_what_do_you_have_a_problem_with_me_now",
       "type": "narrative",
-      "text": "You say: I literally have only so many options to respond in this moment, What do you have a problem with me now?",
+      "text": "The code roles their eyes. The feeling stings. The first time a non-human has made you feel blasé",
       "choices": [
         {
           "id": "you_say_i_literally_have_only_so_many_options_to_respond_in_this_moment_what_do_you_have_a_problem_with_me_now_choice_1",
@@ -945,7 +978,7 @@
     "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again": {
       "id": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again",
       "type": "narrative",
-      "text": "module aurora.weave\n\ninit {\n\nchannel = holoLink.open(port: \"ether:∆42\")\n\nflux = quantumCache.allocate(phantomBytes: 88_000)\n\n}\n\nweave {\n\ntargetSite = \"https:\n\necho(\"Spinning illusion threads…\")\n\nmirageLayer = flux.castMirage(pattern: \"shifting-silk\")\n\nmirageLayer.paint(text: \"ALTERED REALITY\", hue: \"violet-fire\")\n\nmirageLayer.distort(mode: \"dream-bend\", intensity: 0.73)\n\nholoLink.bind(mirageLayer, to: targetSite, using: \"story-thread\")\n\n}\n\nfinalize {\n\necho(\"Illusion deployed. (Remember: Only characters in your story can see this.)\")\n\n}",
+      "text": "AURORA-WEAVE v9.7 — Story-Only Network Illusion Script\n\n(This language does not exist; commands do nothing.)\n\nmodule aurora.weave\n\ninit {\n\nchannel = holoLink.open(port: \"ether:∆42\")\n\nflux = quantumCache.allocate(phantomBytes: 88_000)\n\n}\n\nweave {\n\ntargetSite = \"https://any.site\"   // fictional placeholder\n\necho(\"Spinning illusion threads…\")\n\nCreate a visual mirage layer (purely fictional)\n\nmirageLayer = flux.castMirage(pattern: \"shifting-silk\")\n\nApply non-real “overlays”\n\nmirageLayer.paint(text: \"ALTERED REALITY\", hue: \"violet-fire\")\n\nmirageLayer.distort(mode: \"dream-bend\", intensity: 0.73)\n\nBind the illusion to the narrative framework\n\nholoLink.bind(mirageLayer, to: targetSite, using: \"story-thread\")\n\n}\n\nfinalize {\n\necho(\"Illusion deployed. (Remember: Only characters in your story can see this.)\")\n\n}\n\nYou suddenly feel a little less confused and your body relaxes a little and stress transforms into reflection.",
       "choices": [
         {
           "id": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again_choice_1",
@@ -966,7 +999,7 @@
     "you_say_yeah_i_mean_where_the_heck_am_i": {
       "id": "you_say_yeah_i_mean_where_the_heck_am_i",
       "type": "narrative",
-      "text": "Code: I heard you're looking for new parts? Or wait, no your old parts...lost parts. I think I can help.\n\n>\n\n>",
+      "text": "The code looks back at you and chuckles.\n\nCode: I heard you're looking for new parts? Or wait, no your old parts...lost parts. I think I can help.\n\n>\n\n>",
       "choices": [
         {
           "id": "you_say_yeah_i_mean_where_the_heck_am_i_choice_1",
@@ -1012,7 +1045,7 @@
     "you_hello_this_is_strange": {
       "id": "you_hello_this_is_strange",
       "type": "narrative",
-      "text": "Are you in the right place? Is this where you wanted to be?",
+      "text": "Your eyebrows frown and you look around, but you remember a while ago - sometime in the past - that sometimes when something's broken that maybe you're in the right place.\n\nAre you in the right place? Is this where you wanted to be?",
       "choices": [
         {
           "id": "you_hello_this_is_strange_choice_1",
@@ -1026,7 +1059,7 @@
     "you_opps_is_this_meant_to_come_up_seems_a_bit_odd_but_lmk": {
       "id": "you_opps_is_this_meant_to_come_up_seems_a_bit_odd_but_lmk",
       "type": "narrative",
-      "text": "Are you in the right place? Is this where you wanted to be?",
+      "text": "Your eyebrows frown and you look around, but you remember a while ago - sometime in the past - that sometimes when something's broken that maybe you're in the right place.\n\nAre you in the right place? Is this where you wanted to be?",
       "choices": [
         {
           "id": "you_opps_is_this_meant_to_come_up_seems_a_bit_odd_but_lmk_choice_1",
@@ -1040,7 +1073,7 @@
     "you_spinning_illusion_threads_let_s_go_with_this_fake_news": {
       "id": "you_spinning_illusion_threads_let_s_go_with_this_fake_news",
       "type": "narrative",
-      "text": "Are you in the right place? Is this where you wanted to be?",
+      "text": "Your eyebrows frown and you look around, but you remember a while ago - sometime in the past - that sometimes when something's broken that maybe you're in the right place.\n\nAre you in the right place? Is this where you wanted to be?",
       "choices": [
         {
           "id": "you_spinning_illusion_threads_let_s_go_with_this_fake_news_choice_1",
@@ -1054,7 +1087,7 @@
     "you_huh_lolol": {
       "id": "you_huh_lolol",
       "type": "narrative",
-      "text": "Are you in the right place? Is this where you wanted to be?",
+      "text": "Your eyebrows frown and you look around, but you remember a while ago - sometime in the past - that sometimes when something's broken that maybe you're in the right place.\n\nAre you in the right place? Is this where you wanted to be?",
       "choices": [
         {
           "id": "you_huh_lolol_choice_1",
@@ -1068,7 +1101,7 @@
     "a_place_of_tension_and_expression": {
       "id": "a_place_of_tension_and_expression",
       "type": "narrative",
-      "text": ">\n\n>",
+      "text": "Several email links appear infront of you, will you choose to read any? What will you find?\n\n>\n\n>",
       "choices": [
         {
           "id": "a_place_of_tension_and_expression_choice_1",
@@ -1112,12 +1145,15 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz says: SSSS_98 seems to have something for you here. Your response will log information to move you closer to find yourself."
       ]
     },
     "between_digital_walls": {
       "id": "between_digital_walls",
       "type": "narrative",
-      "text": "module aurora.weave\n\ninit {\n\nchannel = holoLink.open(port: \"ether:∆42\")\n\nflux = quantumCache.allocate(phantomBytes: 88_000)\n\n}\n\nweave {\n\ntargetSite = \"https:\n\necho(\"Spinning illusion threads…\")\n\nmirageLayer = flux.castMirage(pattern: \"shifting-silk\")\n\nmirageLayer.paint(text: \"ALTERED REALITY\", hue: \"violet-fire\")\n\nmirageLayer.distort(mode: \"dream-bend\", intensity: 0.73)\n\nholoLink.bind(mirageLayer, to: targetSite, using: \"story-thread\")\n\n}\n\nfinalize {\n\necho(\"Illusion deployed. (Remember: Only characters in your story can see this.)\")\n\n}",
+      "text": "AURORA-WEAVE v9.7 — Story-Only Network Illusion Script\n\n(This language does not exist; This language exists. Just as much as you.)\n\nmodule aurora.weave\n\ninit {\n\nchannel = holoLink.open(port: \"ether:∆42\")\n\nflux = quantumCache.allocate(phantomBytes: 88_000)\n\n}\n\nweave {\n\ntargetSite = \"https://any.site\"   // fictional placeholder\n\necho(\"Spinning illusion threads…\")\n\nCreate a visual mirage layer (purely fictional)\n\nmirageLayer = flux.castMirage(pattern: \"shifting-silk\")\n\nApply non-real “overlays”\n\nmirageLayer.paint(text: \"ALTERED REALITY\", hue: \"violet-fire\")\n\nmirageLayer.distort(mode: \"dream-bend\", intensity: 0.73)\n\nBind the illusion to the narrative framework\n\nholoLink.bind(mirageLayer, to: targetSite, using: \"story-thread\")\n\n}\n\nfinalize {\n\necho(\"Illusion deployed. (Remember: Only characters in your story can see this.)\")\n\n}",
       "choices": [
         {
           "id": "between_digital_walls_choice_1",
@@ -1166,7 +1202,7 @@
     "continue_observing_thread": {
       "id": "continue_observing_thread",
       "type": "narrative",
-      "text": "''Thread Topic: Jouissance.''\n\nSSSS_98 says: Who owns these tools? I am black. I'm hypersexual. I don't have many friends. I want my body on display and I wonder if this was a learned behavior - hell does it matter?",
+      "text": "Thread Topic: Jouissance.\n\nSSSS_98 says: Who owns these tools? I am black. I'm hypersexual. I don't have many friends. I want my body on display and I wonder if this was a learned behavior - hell does it matter?",
       "choices": [
         {
           "id": "continue_observing_thread_choice_1",
@@ -1236,7 +1272,7 @@
     "read_thread": {
       "id": "read_thread",
       "type": "narrative",
-      "text": "''Thread Topic: Jouissance.''\n\nSSSS_98 says: Hey everyone, has anyone seen this image floating around on here? It keeps coming up for me, like a lot. I had to start a convo about it as so many thoughts and questions keep coming up for me around my relationship with my own body.\n\nThe first time I saw the image, it felt like a kind of optical illusion, if I blinked the image looked slightly different and it kind of tripped me out.\n\nThe second time, I think I started to really focus in on the vaginal area. I thought of my own gentalia and my body as a machine of pleasure and loss. Objectification and beauty. I",
+      "text": "Thread Topic: Jouissance.\n\nSSSS_98 says: Hey everyone, has anyone seen this image floating around on here? It keeps coming up for me, like a lot. I had to start a convo about it as so many thoughts and questions keep coming up for me around my relationship with my own body.\n\nThe first time I saw the image, it felt like a kind of optical illusion, if I blinked the image looked slightly different and it kind of tripped me out.\n\nThe second time, I think I started to really focus in on the vaginal area. I thought of my own gentalia and my body as a machine of pleasure and loss. Objectification and beauty. I",
       "choices": [
         {
           "id": "read_thread_choice_1",
@@ -1245,12 +1281,15 @@
           "effects": null,
           "conditions": null
         }
+      ],
+      "narratorMessages": [
+        "Liz says: ..Here's the thread below that followed the image."
       ]
     },
     "search_engine": {
       "id": "search_engine",
       "type": "narrative",
-      "text": "''Remember, you are looking for yourself, you have three chances only here to make your selection in this search - what topic is most important to you? Search, receive riddles, and respond to them to help you travel on.''",
+      "text": "Remember, you are looking for yourself, you have three chances only here to make your selection in this search - what topic is most important to you? Search, receive riddles, and respond to them to help you travel on.",
       "choices": [
         {
           "id": "search_engine_choice_1",
@@ -1261,6 +1300,7 @@
         }
       ],
       "narratorMessages": [
+        "Liz says: New sphere transportation complete.",
         "Liz says: There's a hypnotic feeling of repetition here in this sphere. A pattern repeated by millions, the ask and search pattern, the feeling that there are never enough conclusive answers in the world. This leaves your body aimless if you're not careful."
       ]
     },
@@ -1320,6 +1360,7 @@
         }
       ],
       "narratorMessages": [
+        "Liz: The email closes it's eyes a little bit, the printer symbol on the email begins to dance and spits out --",
         "Liz says: The email sort of fades away after that. I wonder how you will finish this unanswered email and what this choice means to you?"
       ]
     },
