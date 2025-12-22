@@ -1,9 +1,20 @@
 import { defineConfig } from 'vite'
 import path from 'path'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 export default defineConfig({
   root: 'src',
   publicDir: '../public', // Copy files from public dir to dist
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'data',
+          dest: '.'
+        }
+      ]
+    })
+  ],
   server: {
     port: 5173,
     host: true,
