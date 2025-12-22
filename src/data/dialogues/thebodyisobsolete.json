@@ -34,7 +34,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Two strangers meet, but"
+          "content": "Two strangers meet, but"
         }
       ],
       "nextNode": "two_strangers_meet_but",
@@ -46,7 +46,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: They do not touch"
+          "content": "They do not touch"
         }
       ],
       "nextNode": "they_do_not_touch",
@@ -58,7 +58,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Their minds meet, by FingertipsKeyboardClicks Soft smiles and profile pics"
+          "content": "Their minds meet, by FingertipsKeyboardClicks Soft smiles and profile pics"
         }
       ],
       "nextNode": "their_minds_meet_by_fingertipskeyboardclicks_soft_smiles_and_profile_pics",
@@ -70,7 +70,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Two Strangers meet under a group gaze. How long until your eyes are satisfied?"
+          "content": "Two Strangers meet under a group gaze. How long until your eyes are satisfied?"
         }
       ],
       "nextNode": "two_strangers_meet_under_a_group_gaze_how_long_until_your_eyes_are_satisfied",
@@ -82,11 +82,11 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: What is it you're really looking for?"
+          "content": "What is it you're really looking for?"
         },
         {
           "type": "narrator",
-          "content": "Liz says: What is it I'm really looking for?"
+          "content": "What is it I'm really looking for?"
         }
       ],
       "nextNode": "what_is_it_you_re_really_looking_for",
@@ -125,7 +125,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Hello. I'm so glad you sat down to join me here."
+          "content": "Hello. I'm so glad you sat down to join me here."
         }
       ],
       "choices": [
@@ -147,7 +147,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: This chatroom is a central station in cyberspace. You can connect with different locations between the web, the inbetween spaces. When you put on a pair of glasses, you see clearer, but imagine this and you can see parts of the web that very few have. However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
+          "content": "This chatroom is a central station in cyberspace. You can connect with different locations between the web, the inbetween spaces. When you put on a pair of glasses, you see clearer, but imagine this and you can see parts of the web that very few have. However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
         }
       ],
       "choices": [
@@ -164,7 +164,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Through this screen and mouse you are connecting your physical body to this chatroom, a quiet central station in the unknown-cyberspace. You can connect with different locations between the web, the inbetween spaces. This is like, you put on a pair of glasses, you see clearer, but imagine you can see parts of the web that very few have. However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
+          "content": "Through this screen and mouse you are connecting your physical body to this chatroom, a quiet central station in the unknown-cyberspace. You can connect with different locations between the web, the inbetween spaces. This is like, you put on a pair of glasses, you see clearer, but imagine you can see parts of the web that very few have. However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
         }
       ],
       "choices": [
@@ -181,7 +181,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: My name is Liz...short from Eliza, my grandmother's name. I'm here to guide you through this chatroom to collect information about yourself. I used to be human, but now I'm a hybrid."
+          "content": "My name is Liz...short from Eliza, my grandmother's name. I'm here to guide you through this chatroom to collect information about yourself. I used to be human, but now I'm a hybrid."
         }
       ],
       "choices": [
@@ -198,11 +198,11 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: I exist here, guiding you through this chatroom system, and I exist physically in the space with you."
+          "content": "I exist here, guiding you through this chatroom system, and I exist physically in the space with you."
         },
         {
           "type": "narrator",
-          "content": "Liz says: Moving to remembering with you. Collecting data and analyzing other Internet People"
+          "content": "Moving to remembering with you. Collecting data and analyzing other Internet People"
         }
       ],
       "choices": [
@@ -219,7 +219,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Through this screen and mouse you are connecting your physical body to this chatroom, a quiet central station in cyberspace. You can connect with different locations between the web, the inbetween spaces. When you put on a pair of glasses, you see clearer, but imagine this and you can see parts of the web that very few have. However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
+          "content": "Through this screen and mouse you are connecting your physical body to this chatroom, a quiet central station in cyberspace. You can connect with different locations between the web, the inbetween spaces. When you put on a pair of glasses, you see clearer, but imagine this and you can see parts of the web that very few have. However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
         }
       ],
       "choices": [
@@ -236,11 +236,11 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: You'll need to navigate through different spheres through this chat which will have different tasks for you to achieve. In the end, if you make it that far, you'll retrieve apart of yourself that you lost online."
+          "content": "You'll need to navigate through different spheres through this chat which will have different tasks for you to achieve. In the end, if you make it that far, you'll retrieve apart of yourself that you lost online."
         },
         {
           "type": "narrator",
-          "content": "Liz says: You're always online from what I can detect, whether you are desiring to be or not :) QR codes, emails, search engines, or even just public cameras. Pure bio humans love to take photos of themselves. Have you ever thought about how much of your energy - your information exists out there, beyond your control? **Take a moment before your next response to think about this**"
+          "content": "You're always online from what I can detect, whether you are desiring to be or not :) QR codes, emails, search engines, or even just public cameras. Pure bio humans love to take photos of themselves. Have you ever thought about how much of your energy - your information exists out there, beyond your control? **Take a moment before your next response to think about this**"
         }
       ],
       "choices": [
@@ -262,7 +262,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: It's beyond control now. There will be a few endings for what you take. Remember, how you play the game says something about you, almost like a survey adventure. If I speak in bold letters like before, it changes quite dramatically the route, ok? And well tbh, sometimes there will be no bolding but dramatic changes ;)"
+          "content": "It's beyond control now. There will be a few endings for what you take. Remember, how you play the game says something about you, almost like a survey adventure. If I speak in bold letters like before, it changes quite dramatically the route, ok? And well tbh, sometimes there will be no bolding but dramatic changes ;)"
         }
       ],
       "choices": [
@@ -279,15 +279,15 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: *looks at your disappointed* I suppose I'm not surprised. However, I don't want to throw you off. In this new age, there is a necessity for vigilance...you may or may not agree, Internet Person!"
+          "content": "*looks at your disappointed* I suppose I'm not surprised. However, I don't want to throw you off. In this new age, there is a necessity for vigilance...you may or may not agree, Internet Person!"
         },
         {
           "type": "narrator",
-          "content": "Liz says: Regardless. Ur curiousity is valuable, it's a real strength."
+          "content": "Regardless. Ur curiousity is valuable, it's a real strength."
         },
         {
           "type": "narrator",
-          "content": "Liz says: So perhaps it's time to begin the growth of this thought now, no?"
+          "content": "So perhaps it's time to begin the growth of this thought now, no?"
         }
       ],
       "choices": [
@@ -309,7 +309,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Oh, There are a few outcomes of parts of yourself that you can find at the end. Remember, how you play the game says something about you, almost like an adventerous survey, or how the world around you response how you react to it. If I speak in bold letters like before, it changes quite dramatically the route, ok? And well tbh, sometimes there will be no bolding but dramatic changes ;)"
+          "content": "Oh, There are a few outcomes of parts of yourself that you can find at the end. Remember, how you play the game says something about you, almost like an adventerous survey, or how the world around you response how you react to it. If I speak in bold letters like before, it changes quite dramatically the route, ok? And well tbh, sometimes there will be no bolding but dramatic changes ;)"
         }
       ],
       "choices": [
@@ -326,7 +326,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Oh, There are a few outcomes of parts of yourself that you can find at the end. Remember, how you play the game says something about you, almost like an adventerous survey, or how the world around you response how you react to it. If I speak in bold letters like before, it changes quite dramatically the route, ok? And well tbh, sometimes there will be no bolding but dramatic changes ;)"
+          "content": "Oh, There are a few outcomes of parts of yourself that you can find at the end. Remember, how you play the game says something about you, almost like an adventerous survey, or how the world around you response how you react to it. If I speak in bold letters like before, it changes quite dramatically the route, ok? And well tbh, sometimes there will be no bolding but dramatic changes ;)"
         }
       ],
       "choices": [
@@ -343,7 +343,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Last thing. Use your imagination, your internal eye throughout, many different people play this but the spaces are always different, the text will trigger images for you to envision. Don't feel rushed to take a moment to close your eyes and imagine the space you're in. Take your time as you want."
+          "content": "Last thing. Use your imagination, your internal eye throughout, many different people play this but the spaces are always different, the text will trigger images for you to envision. Don't feel rushed to take a moment to close your eyes and imagine the space you're in. Take your time as you want."
         }
       ],
       "choices": [
@@ -360,7 +360,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: I won't really be able to help you take everything, but this will be a short (5 to 10 minute) symbolic experience. Relax, we'll find the parts of yourself, your body that you lost. Good luck."
+          "content": "I won't really be able to help you take everything, but this will be a short (5 to 10 minute) symbolic experience. Relax, we'll find the parts of yourself, your body that you lost. Good luck."
         }
       ],
       "choices": [
@@ -377,7 +377,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Give me a second to pull up the spheres for you..."
+          "content": "Give me a second to pull up the spheres for you..."
         }
       ],
       "choices": [
@@ -394,7 +394,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: Okay got it. Where would you like to go?"
+          "content": "Okay got it. Where would you like to go?"
         }
       ],
       "choices": [
@@ -421,11 +421,11 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: New sphere transportation complete."
+          "content": "New sphere transportation complete."
         },
         {
           "type": "narrator",
-          "content": "Liz says: There's a hypnotic feeling of repetition here in this sphere. A pattern repeated by millions, the ask and search pattern, the feeling that there are never enough conclusive answers in the world. This leaves your body aimless if you're not careful."
+          "content": "There's a hypnotic feeling of repetition here in this sphere. A pattern repeated by millions, the ask and search pattern, the feeling that there are never enough conclusive answers in the world. This leaves your body aimless if you're not careful."
         },
         {
           "type": "system",
@@ -446,7 +446,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz: Now internet person, what would you like to search next? Where does your curiousity lead you?"
+          "content": "Now internet person, what would you like to search next? Where does your curiousity lead you?"
         },
         {
           "type": "system",
@@ -461,7 +461,7 @@
         },
         {
           "id": "central_area_choice_2",
-          "text": "Search: How do I poliltely ask someone to sleep with me?",
+          "text": "Search: How do I politely ask someone to sleep with me?",
           "nextNode": "search_how_do_i_poliltely_ask_someone_to_sleep_with_me"
         },
         {
@@ -487,7 +487,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz: Okay, searching, \"What has the internet taught me about love...\""
+          "content": "Okay, searching, \"What has the internet taught me about love...\""
         },
         {
           "type": "system",
@@ -499,7 +499,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: If you didn't have the internet, who would you ask?"
+          "content": "If you didn't have the internet, who would you ask?"
         }
       ],
       "choices": [
@@ -516,11 +516,11 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz: Result: Some people do it blah blah."
+          "content": "Result: Some people do it blah blah."
         },
         {
           "type": "narrator",
-          "content": "Liz says: What information is important for you to know next?"
+          "content": "What information is important for you to know next?"
         }
       ],
       "choices": [
@@ -537,7 +537,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz: Okay, searching, \"What is the best way to search for yourself online\""
+          "content": "Okay, searching, \"What is the best way to search for yourself online\""
         },
         {
           "type": "system",
@@ -545,7 +545,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: What does your search history say about you?"
+          "content": "What does your search history say about you?"
         }
       ],
       "choices": [
@@ -562,11 +562,11 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz: Okay, searching, \"Where is the centre of the internet..\""
+          "content": "Okay, searching, \"Where is the centre of the internet..\""
         },
         {
           "type": "narrator",
-          "content": "Liz: I wonder who else reads your search history?"
+          "content": "I wonder who else reads your search history?"
         }
       ],
       "choices": [
@@ -583,11 +583,11 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz: Okay, searching, \"How to find a place for everything...\""
+          "content": "Okay, searching, \"How to find a place for everything...\""
         },
         {
           "type": "narrator",
-          "content": "Liz says: What is important to you when you search online?"
+          "content": "What is important to you when you search online?"
         }
       ],
       "choices": [
@@ -638,7 +638,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz: Was that message for you or someone you know?"
+          "content": "Was that message for you or someone you know?"
         }
       ],
       "choices": [
@@ -746,7 +746,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz: The email closes it's eyes a little bit, the printer symbol on the email begins to dance and spits out --"
+          "content": "The email closes it's eyes a little bit, the printer symbol on the email begins to dance and spits out --"
         },
         {
           "type": "system",
@@ -754,18 +754,18 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: The email sort of fades away after that. I wonder how you will finish this unanswered email and what this choice means to you?"
+          "content": "The email sort of fades away after that. I wonder how you will finish this unanswered email and what this choice means to you?"
         }
       ],
       "choices": [
         {
           "id": "telepathic_printer_choice_1",
-          "text": "...still a place place of sancutary, like it was in the past...",
+          "text": "...still a place of sanctuary, like it was in the past...",
           "nextNode": "a_stranger_s_smile"
         },
         {
           "id": "telepathic_printer_choice_2",
-          "text": "...an archieve, or perhaps a graveyard...a museum?",
+          "text": "...an archive, or perhaps a graveyard...a museum?",
           "nextNode": "the_evil_eye"
         },
         {
@@ -1002,7 +1002,7 @@
       "choices": [
         {
           "id": "you_say_i_literally_choice_1",
-          "text": "If perform how you would like me to, will you give me a clue of where to go next",
+          "text": "If I perform how you would like me to, will you give me a clue of where to go next",
           "nextNode": "thread_comment_section"
         },
         {
@@ -1049,11 +1049,11 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says: How did you end up here? Looks like you were transported.."
+          "content": "How did you end up here? Looks like you were transported.."
         },
         {
           "type": "narrator",
-          "content": "Liz says: In this lonely forum. A lot of time has passed since this thread was written, but your response will transmit to the past. There's a single thread there. I'll travel the information here into the chat and transmit any messages you output for further investigation."
+          "content": "In this lonely forum. A lot of time has passed since this thread was written, but your response will transmit to the past. There's a single thread there. I'll travel the information here into the chat and transmit any messages you output for further investigation."
         },
         {
           "type": "system",
@@ -1306,7 +1306,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: SSSS_98 seems to have something for you here. Your response will log information to move you closer to find yourself."
+          "content": "SSSS_98 seems to have something for you here. Your response will log information to move you closer to find yourself."
         }
       ],
       "choices": [
@@ -1381,7 +1381,7 @@
       "choices": [
         {
           "id": "as_you_were_reflecting_choice_1",
-          "text": "Yeah, it feels like a complete fascade to me, makes me itch.",
+          "text": "Yeah, it feels like a complete facade to me, makes me itch.",
           "nextNode": "a_stranger_s_smile"
         }
       ]
@@ -1396,7 +1396,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: Dear internet person, you have found A Severed Leg"
+          "content": "Dear internet person, you have found A Severed Leg"
         },
         {
           "type": "image",
@@ -1405,13 +1405,13 @@
         },
         {
           "type": "system",
-          "content": "Your body watches you\nAnd you peer back\nSilent drips of blood\nA wounded unwanted mind\n\nHow often do you allow your mind to think?\n\nThe body is so gragile,\nSo flight or fight, bby!\nInward or outward?"
+          "content": "Your body watches you\nAnd you peer back\nSilent drips of blood\nA wounded unwanted mind\n\nHow often do you allow your mind to think?\n\nThe body is so fragile,\nSo flight or fight, bby!\nInward or outward?"
         }
       ],
       "choices": [
         {
           "id": "a_bloody_arm_choice_1",
-          "text": "<< You say to youreself: Who am I really listening to? >>",
+          "text": "<< You say to yourself: Who am I really listening to? >>",
           "nextNode": "main_portal"
         }
       ]
@@ -1426,7 +1426,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: Dear internet person, you have found A Forgotten Thought"
+          "content": "Dear internet person, you have found A Forgotten Thought"
         },
         {
           "type": "image",
@@ -1435,7 +1435,7 @@
         },
         {
           "type": "system",
-          "content": "Focused in on this universe\nEverything breathes\nInto a single moment.\n\nAnd then you blink...\neternityevaporatesflipsreverses\ncrys out\nand then laughs\nhalf-eaten\ntip of the tongue,\na smothering darkness\n\nIt's just a feeling, but\nshe still has power\nTo sew broken images\nand tell you, \"this is your memory\"\nand these broken images love to play!\nthey're so mischevious.\n\nPerhaps because they believe between a moment ago and the past\nit was all a fascade."
+          "content": "Focused in on this universe\nEverything breathes\nInto a single moment.\n\nAnd then you blink...\neternityevaporatesflipsreverses\ncrys out\nand then laughs\nhalf-eaten\ntip of the tongue,\na smothering darkness\n\nIt's just a feeling, but\nshe still has power\nTo sew broken images\nand tell you, \"this is your memory\"\nand these broken images love to play!\nthey're so mischevious.\n\nPerhaps because they believe between a moment ago and the past\nit was all a facade."
         }
       ],
       "choices": [
@@ -1456,7 +1456,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: Dear internet person, you have found A Pile of Dust..?"
+          "content": "Dear internet person, you have found A Pile of Dust..?"
         },
         {
           "type": "image",
@@ -1486,7 +1486,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: Dear internet person, you have found A Stranger's Smile"
+          "content": "Dear internet person, you have found A Stranger's Smile"
         },
         {
           "type": "image",
@@ -1516,7 +1516,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: Dear internet person, you have found An Evil Eye"
+          "content": "Dear internet person, you have found An Evil Eye"
         },
         {
           "type": "image",
@@ -1546,7 +1546,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: Dear internet person, you have found An Inherited Recipe"
+          "content": "Dear internet person, you have found An Inherited Recipe"
         },
         {
           "type": "image",
@@ -1555,7 +1555,7 @@
         },
         {
           "type": "system",
-          "content": "Archieves inside flesh like a forgotten dream\nA torn photo, a floppy disk.\nA gift from your bloodline sending nourishment you can't smell\nBut you can feel.\nIt's telling you to 'slow down'\nand other words you can no longer decode.\n\nmaybe this isn't a meal at all,\nbut a message\nyou chew on this thought of what this bowl of soup and what your body are telling you."
+          "content": "Archives inside flesh like a forgotten dream\nA torn photo, a floppy disk.\nA gift from your bloodline sending nourishment you can't smell\nBut you can feel.\nIt's telling you to 'slow down'\nand other words you can no longer decode.\n\nmaybe this isn't a meal at all,\nbut a message\nyou chew on this thought of what this bowl of soup and what your body are telling you."
         }
       ],
       "choices": [
@@ -1576,7 +1576,7 @@
         },
         {
           "type": "narrator",
-          "content": "Liz says: Dear internet person, you have found Nail Clippings"
+          "content": "Dear internet person, you have found Nail Clippings"
         },
         {
           "type": "image",
@@ -1585,7 +1585,7 @@
         },
         {
           "type": "system",
-          "content": "Little forgotten pieces\nFrom your body\nThe parts the world deemed unworthy\nimperfect\na clause you were taught somewhere between\nyour queerness and spirituality\n\nClick-Click-Opps!\nWhat ifour body parts were alive?\nCan you imagine those little bones\ndancing-conciously-laughing on hills\nFree from the pain of being unwanted\n\nWhat did you accidentally believe in?"
+          "content": "Little forgotten pieces\nFrom your body\nThe parts the world deemed unworthy\nimperfect\na clause you were taught somewhere between\nyour queerness and spirituality\n\nClick-Click-Opps!\nWhat if our body parts were alive?\nCan you imagine those little bones\ndancing-consciously-laughing on hills\nFree from the pain of being unwanted\n\nWhat did you accidentally believe in?"
         }
       ],
       "choices": [
