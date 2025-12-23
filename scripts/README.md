@@ -1,6 +1,6 @@
 # Twee to JSON Converter
 
-This script converts Twee format files to the custom dialogue JSON format used in the Void Space Chatroom.
+This script converts Twee format files to the **messageSequence dialogue format** used in the Void Space Chatroom. The output is compatible with the server's dialogue system as documented in [interaction.md](../interaction.md).
 
 ## Quick Start
 
@@ -51,12 +51,14 @@ The converter works best with **Harlowe** or **SugarCube** format stories.
 
 **IMPORTANT:** The twee converter recognizes special dialogue formatting:
 
-**Narrator messages** (sent as chat messages from Liz):
+**Narrator messages** → `{ type: "narrator", content: "..." }`
 
 ```
 Liz: Hello there!
 Liz says: Welcome to the void.
 ```
+
+Note: The "Liz:" or "Liz says:" prefix is stripped - only the message content is kept.
 
 **Player dialogue** (removed from narrative, used in choices):
 
@@ -65,12 +67,14 @@ You: I don't understand
 You say: What's happening?
 ```
 
-**Stage directions** (displayed in text area, not sent as messages):
+**System messages / Stage directions** → `{ type: "system", content: "..." }`
+
+Everything else becomes a system message:
 
 ```
 //The lights flicker and dim//
->You feel a chill run down your spine<
 The room grows quiet...
+The Email says: Where are you?
 ```
 
 **Example passage:**
@@ -88,11 +92,12 @@ You say: Who are you?
 [[Who are you?->Identity]]
 ```
 
-This will create:
+This will create a `messageSequence` array with:
 
-- **Text**: "The void pulses with energy" (stage direction shown but not sent)
-- **Narrator messages**: Two messages from Liz sent to chat
-- **Choices**: Player dialogue is excluded, only link text shown
+- `{ type: "system", content: "The void pulses with energy" }`
+- `{ type: "narrator", content: "I've been waiting for you." }`
+- `{ type: "narrator", content: "Do you remember this place?" }`
+- Plus `choices` array (player dialogue lines are excluded)
 
 ### Advanced Features
 
@@ -261,11 +266,6 @@ The converter generates JSON using the **messageSequence format**:
 
 ## Troubleshooting
 
-**"Could not find Twine story data"**
-
-- Make sure you exported as HTML from Twine 2 (not Twine 1)
-- Use "Publish to File", not other export options
-
 **Missing choices:**
 
 - Check your link syntax in Twine
@@ -281,6 +281,11 @@ The converter generates JSON using the **messageSequence format**:
 - The converter handles basic links and simple syntax
 - Complex Harlowe/SugarCube macros may need manual conversion
 - Consider simplifying macros or editing the output JSON
+
+**Message order looks wrong:**
+
+- Messages appear in `messageSequence` in the same order as in the Twee file
+- Check that your Twee passage has content in the intended order
 
 ## Custom Syntax Reference
 
@@ -310,7 +315,7 @@ For very large Twine stories (100+ passages):
 
 If you encounter issues with the conversion:
 
-1. Check the Twine export is valid HTML
-2. Verify link syntax in problematic passages
-3. Look at the generated JSON to see what was produced
+1. Verify link syntax in problematic passages
+2. Look at the generated JSON to see what was produced
+3. Compare with examples in [interaction.md](../interaction.md) for expected format
 4. Manually edit the JSON if needed (it's just text!)
