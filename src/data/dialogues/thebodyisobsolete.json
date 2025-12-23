@@ -450,34 +450,47 @@
         },
         {
           "type": "system",
-          "content": "You've used 0 out of 3 tries. Choose a search:"
+          "content": "You've used ${clicks} out of 3 tries. Choose a search:"
+        }
+      ],
+      "conditions": [
+        {
+          "variable": "clicks",
+          "operator": ">=",
+          "value": 3,
+          "nextNode": "a_place_of_tension_and_expression"
         }
       ],
       "choices": [
         {
           "id": "central_area_choice_1",
           "text": "Search: What has the internet taught me about love?",
-          "nextNode": "search_what_has_the_internet_taught_me_about_love"
+          "nextNode": "search_what_has_the_internet_taught_me_about_love",
+          "effects": { "clicks": "+1" }
         },
         {
           "id": "central_area_choice_2",
           "text": "Search: How do I politely ask someone to sleep with me?",
-          "nextNode": "search_how_do_i_poliltely_ask_someone_to_sleep_with_me"
+          "nextNode": "search_how_do_i_poliltely_ask_someone_to_sleep_with_me",
+          "effects": { "clicks": "+1" }
         },
         {
           "id": "central_area_choice_3",
           "text": "Search: What is the best way to search for yourself online?",
-          "nextNode": "search_what_is_the_best_way_to_search_for_yourself_online"
+          "nextNode": "search_what_is_the_best_way_to_search_for_yourself_online",
+          "effects": { "clicks": "+1" }
         },
         {
           "id": "central_area_choice_4",
           "text": "Search: Where is the centre of the internet?",
-          "nextNode": "search_where_is_the_centre_of_the_internet"
+          "nextNode": "search_where_is_the_centre_of_the_internet",
+          "effects": { "clicks": "+1" }
         },
         {
           "id": "central_area_choice_5",
           "text": "Search: How to find a place for everything",
-          "nextNode": "search_how_to_find_a_place_for_everything"
+          "nextNode": "search_how_to_find_a_place_for_everything",
+          "effects": { "clicks": "+1" }
         }
       ]
     },
@@ -787,22 +800,22 @@
       "choices": [
         {
           "id": "between_digital_walls_choice_1",
-          "text": "You: hUh? lolol",
+          "text": "hUh? lolol",
           "nextNode": "you_huh_lolol"
         },
         {
           "id": "between_digital_walls_choice_2",
-          "text": "You: Opps, is this meant to come up? Seems a bit odd, but lmk :)",
+          "text": "Opps, is this meant to come up? Seems a bit odd, but lmk :)",
           "nextNode": "you_opps_is_this_meant_to_come_up_seems_a_bit_odd_but_lmk"
         },
         {
           "id": "between_digital_walls_choice_3",
-          "text": "You: Hello. This is strange.",
+          "text": "Hello. This is strange.",
           "nextNode": "you_hello_this_is_strange"
         },
         {
           "id": "between_digital_walls_choice_4",
-          "text": "You: Spinning illusion threads? Let's go with this fake news",
+          "text": "Spinning illusion threads? Let's go with this fake news",
           "nextNode": "you_spinning_illusion_threads_let_s_go_with_this_fake_news"
         }
       ]
@@ -819,7 +832,7 @@
       "choices": [
         {
           "id": "you_huh_lolol_choice_1",
-          "text": "You say: Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
+          "text": "Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
           "nextNode": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again"
         }
       ]
@@ -836,7 +849,7 @@
       "choices": [
         {
           "id": "you_opps_choice_1",
-          "text": "You say: Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
+          "text": "Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
           "nextNode": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again"
         }
       ]
@@ -853,7 +866,7 @@
       "choices": [
         {
           "id": "you_hello_choice_1",
-          "text": "You say: Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
+          "text": "Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
           "nextNode": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again"
         }
       ]
@@ -870,7 +883,7 @@
       "choices": [
         {
           "id": "you_spinning_choice_1",
-          "text": "You say: Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
+          "text": "Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
           "nextNode": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again"
         }
       ]
@@ -913,7 +926,7 @@
       "choices": [
         {
           "id": "what_if_i_could_alter_the_algorithm_choice_1",
-          "text": "You say: Excuse me?",
+          "text": "Excuse me?",
           "nextNode": "you_say_excuse_me"
         }
       ]
@@ -955,12 +968,12 @@
       "choices": [
         {
           "id": "you_say_excuse_me_choice_1",
-          "text": "You say: Hey. SoO",
+          "text": "Hey. SoO",
           "nextNode": "you_say_hey_soo"
         },
         {
           "id": "you_say_excuse_me_choice_2",
-          "text": "You say: Yeah, I mean, Where the heck am I?",
+          "text": "Yeah, I mean, Where the heck am I?",
           "nextNode": "you_say_yeah_i_mean_where_the_heck_am_i"
         }
       ]
@@ -985,7 +998,7 @@
       "choices": [
         {
           "id": "you_say_hey_soo_choice_1",
-          "text": "You say: I literally have only so many options to respond in this moment, What do you have a problem with me now?",
+          "text": "I literally have only so many options to respond in this moment, What do you have a problem with me now?",
           "nextNode": "you_say_i_literally_have_only_so_many_options_to_respond_in_this_moment_what_do_you_have_a_problem_with_me_now"
         }
       ]
@@ -1028,17 +1041,17 @@
       "choices": [
         {
           "id": "you_say_yeah_i_mean_choice_1",
-          "text": "You say: That's great. When I got here I found insticata, so I guess I'm looking for advice where to go from here",
+          "text": "That's great. When I got here I found insticata, so I guess I'm looking for advice where to go from here",
           "nextNode": "thread_comment_section"
         },
         {
           "id": "you_say_yeah_i_mean_choice_2",
-          "text": "You say: Hehe, yes for sure ;) I've been traveling through this chatroom portal. How long have you been concious? If it's okay to ask :) :)",
+          "text": "Hehe, yes for sure ;) I've been traveling through this chatroom portal. How long have you been concious? If it's okay to ask :) :)",
           "nextNode": "thread_comment_section"
         },
         {
           "id": "you_say_yeah_i_mean_choice_3",
-          "text": "You: Hello. Well, I'm happy just chatting to you, I would love for this to never end",
+          "text": "Hello. Well, I'm happy just chatting to you, I would love for this to never end",
           "nextNode": "a_bloody_arm"
         }
       ]
@@ -1471,7 +1484,7 @@
       "choices": [
         {
           "id": "a_pile_of_dust_choice_1",
-          "text": "<< You say: Is this a reward or a warning? What is my body telling me? >>",
+          "text": "<< Is this a reward or a warning? What is my body telling me? >>",
           "nextNode": "main_portal"
         }
       ]

@@ -158,6 +158,30 @@ function applyEffects(effects, variables) {
     return newVars;
 }
 
+// Helper: Interpolate variables in text
+function interpolateText(text, variables) {
+    if (!text || typeof text !== 'string') return text;
+    return text.replace(/\${(\w+)}/g, (match, variable) => {
+        return variables.hasOwnProperty(variable) ? variables[variable] : match;
+    });
+}
+
+// Helper: Evaluate condition
+function evaluateCondition(condition, variables) {
+    const val = variables[condition.variable];
+    const target = condition.value;
+    switch (condition.operator) {
+        case '==': return val == target;
+        case '===': return val === target;
+        case '>': return val > target;
+        case '>=': return val >= target;
+        case '<': return val < target;
+        case '<=': return val <= target;
+        case '!=': return val != target;
+        default: return false;
+    }
+}
+
 // Handle Socket.IO connections
 io.on('connection', (socket) => {
     console.log('A client connected:', socket.id);
@@ -266,10 +290,12 @@ io.on('connection', (socket) => {
 
         sequence.forEach((message, index) => {
             setTimeout(() => {
+                const content = interpolateText(message.content, state.variables);
+                
                 switch (message.type) {
                     case 'system':
                         io.emit('chat', {
-                            text: message.content,
+                            text: content,
                             username: 'SYSTEM',
                             timestamp: Date.now(),
                             isSystem: true
@@ -278,7 +304,7 @@ io.on('connection', (socket) => {
 
                     case 'narrator':
                         io.emit('chat', {
-                            text: message.content,
+                            text: content,
                             username: NARRATOR_USERNAME,
                             timestamp: Date.now()
                         });
@@ -336,6 +362,17 @@ io.on('connection', (socket) => {
         const currentNode = state.dialogueData.nodes[state.currentNode];
         console.log(`Processing node: ${state.currentNode}, type: ${currentNode.type}`);
 
+        // Check for node-level conditions/redirects
+        if (currentNode.conditions) {
+            for (const condition of currentNode.conditions) {
+                if (evaluateCondition(condition, state.variables)) {
+                    state.currentNode = condition.nextNode;
+                    processNode(room);
+                    return;
+                }
+            }
+        }
+
         // Send notification to narrator room for monitoring
         io.emit('player-choice-made', {
             currentNode: state.currentNode,
@@ -373,8 +410,9 @@ io.on('connection', (socket) => {
             let delay = playerUsername ? 1500 : 0; // If player just chose, wait 1.5s
             currentNode.narratorMessages.forEach((message, index) => {
                 setTimeout(() => {
+                    const msgText = interpolateText(message, state.variables);
                     io.emit('chat', {
-                        text: message,
+                        text: msgText,
                         username: NARRATOR_USERNAME,
                         timestamp: Date.now()
                     });
@@ -410,9 +448,12 @@ io.on('connection', (socket) => {
         if (hasText && !hasNarratorMessages && !hasChoices) {
             console.log('Node type: System message (auto-advancing)');
 
+            // Interpolate text for system message
+            const nodeData = { ...currentNode, text: interpolateText(currentNode.text, state.variables) };
+
             // System messages are just displayed in the text area (handled by client)
             // Send sync first so client can display the text
-            io.emit('dialogue-sync', buildSyncPayload(state));
+            io.emit('dialogue-sync', { ...buildSyncPayload(state), nodeData });
 
             // Auto-advance after a delay
             setTimeout(() => {
@@ -433,9 +474,12 @@ io.on('connection', (socket) => {
         if (hasChoices) {
             console.log(`Node type: Player choice (${currentNode.choices.length} choices)`);
 
+            // Interpolate text if present
+            const nodeData = { ...currentNode, text: interpolateText(currentNode.text, state.variables) };
+
             // If there's text, it's displayed (handled by client)
             // Send choices to player and wait for selection
-            io.emit('dialogue-sync', buildSyncPayload(state));
+            io.emit('dialogue-sync', { ...buildSyncPayload(state), nodeData });
             return;
         }
 
@@ -443,6 +487,9 @@ io.on('connection', (socket) => {
         if (currentNode.type === 'ending') {
             console.log('Node type: Ending');
 
+            // Interpolate text
+            const nodeData = { ...currentNode, text: interpolateText(currentNode.text, state.variables) };
+            io.emit('dialogue-sync', { ...buildSyncPayload(state), nodeData });
             // If has text, display it (handled by client)
             // End dialogue after delay
             setTimeout(() => {
