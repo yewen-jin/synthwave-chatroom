@@ -63,7 +63,25 @@
     "a_bloody_arm": {
       "id": "a_bloody_arm",
       "type": "narrative",
-      "text": "UNLOCKED: A Bloody Severed Leg\n\nYour body watches you\n\nAnd you peer back\n\nSilent drips of blood\n\nA wounded unwanted mind\n\nHow often do you allow your mind to think?\n\nThe body is so gragile,\n\nSo flight or fight, bby!\n\nInward or outward?",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: A Bloody Severed Leg"
+        },
+        {
+          "type": "narrator",
+          "content": "Liz says: Dear internet person, you have found A Severed Leg"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/NjsxX8nP/Leg.gif",
+          "alt": "A Bloody Severed Leg"
+        },
+        {
+          "type": "system",
+          "content": "Your body watches you\n\nAnd you peer back\n\nSilent drips of blood\n\nA wounded unwanted mind\n\nHow often do you allow your mind to think?\n\nThe body is so gragile,\n\nSo flight or fight, bby!\n\nInward or outward?"
+        }
+      ],
       "choices": [
         {
           "id": "a_bloody_arm_choice_1",
@@ -72,15 +90,30 @@
           "effects": null,
           "conditions": null
         }
-      ],
-      "narratorMessages": [
-        "Liz says: ''Dear internet person, you have found A Severed Leg''"
       ]
     },
     "a_forgotten_thought": {
       "id": "a_forgotten_thought",
       "type": "narrative",
-      "text": "UNLOCKED: A Forgotten Thought\n\nFocused in on this universe\n\nEverything breathes\n\nInto a single moment.\n\nAnd then you blink...\n\neternityevaporatesflipsreverses\n\ncrys out\n\nand then laughs\n\nhalf-eaten\n\ntip of the tongue,\n\na smothering darkness\n\nIt's just a feeling, but\n\nshe still has power\n\nTo sew broken images\n\nand tell you, \"this is your memory\"\n\nand these broken images love to play!\n\nthey're so mischevious.\n\nPerhaps because they believe between a moment ago and the past\n\nit was all a fascade.",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: A Forgotten Thought"
+        },
+        {
+          "type": "narrator",
+          "content": "Liz says: Dear internet person, you have found A Forgotten Thought"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/zX9hkC3s/Bubble.gif",
+          "alt": "A Forgotten Thought"
+        },
+        {
+          "type": "system",
+          "content": "Focused in on this universe\n\nEverything breathes\n\nInto a single moment.\n\nAnd then you blink...\n\neternityevaporatesflipsreverses\n\ncrys out\n\nand then laughs\n\nhalf-eaten\n\ntip of the tongue,\n\na smothering darkness\n\nIt's just a feeling, but\n\nshe still has power\n\nTo sew broken images\n\nand tell you, \"this is your memory\"\n\nand these broken images love to play!\n\nthey're so mischevious.\n\nPerhaps because they believe between a moment ago and the past\n\nit was all a fascade."
+        }
+      ],
       "choices": [
         {
           "id": "a_forgotten_thought_choice_1",
@@ -89,15 +122,30 @@
           "effects": null,
           "conditions": null
         }
-      ],
-      "narratorMessages": [
-        "Liz says: ''Dear internet person, you have found A Forgotten Thought''"
       ]
     },
     "a_pile_of_dust": {
       "id": "a_pile_of_dust",
       "type": "narrative",
-      "text": "UNLOCKED: Dust?\n\nThe Body\n\nYour body\n\nleft without touch\n\nWhat is it asking for?\n\nThe dust gathers around your feet,\n\nAnd (uh) she's winking now.\n\nWhat have you not embraced?\n\nSometimes the silliest things add distraction.",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: Dust?"
+        },
+        {
+          "type": "narrator",
+          "content": "Liz says: Dear internet person, you have found A Pile of Dust..?"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/50S08zTT/Dust.gif",
+          "alt": "A Pile of Dust"
+        },
+        {
+          "type": "system",
+          "content": "The Body\n\nYour body\n\nleft without touch\n\nWhat is it asking for?\n\nThe dust gathers around your feet,\n\nAnd (uh) she's winking now.\n\nWhat have you not embraced?\n\nSometimes the silliest things add distraction."
+        }
+      ],
       "choices": [
         {
           "id": "a_pile_of_dust_choice_1",
@@ -106,15 +154,30 @@
           "effects": null,
           "conditions": null
         }
-      ],
-      "narratorMessages": [
-        "Liz says: //''Dear internet person, you have found A Pile of Dust..?''"
       ]
     },
     "a_stranger_s_smile": {
       "id": "a_stranger_s_smile",
       "type": "narrative",
-      "text": "UNLOCKED: A Stranger's Smile\n\nA flirtatious smile\n\nA curious glance\n\nA cryptic message\n\nA non physical embrace\n\nA crowd of curious bodies\n\nWatching\n\nYou\n\nRight Now.\n\nYour body perks\n\nAnd pockets this stranger’s smile\n\nFor a grim day.",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: A Stranger's Smile"
+        },
+        {
+          "type": "narrator",
+          "content": "Liz says: Dear internet person, you have found A Stranger's Smile"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/JzFBhbCS/Blush.gif",
+          "alt": "A Stranger's Smile"
+        },
+        {
+          "type": "system",
+          "content": "A flirtatious smile\n\nA curious glance\n\nA cryptic message\n\nA non physical embrace\n\nA crowd of curious bodies\n\nWatching\n\nYou\n\nRight Now.\n\nYour body perks\n\nAnd pockets this stranger’s smile\n\nFor a grim day."
+        }
+      ],
       "choices": [
         {
           "id": "a_stranger_s_smile_choice_1",
@@ -123,9 +186,6 @@
           "effects": null,
           "conditions": null
         }
-      ],
-      "narratorMessages": [
-        "Liz says: //''Dear internet person, you have found A Stranger's Smile''"
       ]
     },
     "a_mirror_this_email_represents_me": {
@@ -217,7 +277,16 @@
     "central_area": {
       "id": "central_area",
       "type": "narrative",
-      "text": "[\n\n]\n\n[\n\n]\n\nYou've used  out of 3 tries. Choose an search:",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Liz: Now internet person, what would you like to search next? Where does your curiousity lead you?"
+        },
+        {
+          "type": "system",
+          "content": "[\n\n]\n\n[\n\n]\n\nYou've used  out of 3 tries. Choose an search:"
+        }
+      ],
       "choices": [
         {
           "id": "central_area_choice_1",
@@ -254,9 +323,6 @@
           "effects": null,
           "conditions": null
         }
-      ],
-      "narratorMessages": [
-        "Liz: Now internet person, what would you like to search next? Where does your curiousity lead you?"
       ]
     },
     "first_person_route": {
@@ -404,7 +470,25 @@
     "inherited_recipe": {
       "id": "inherited_recipe",
       "type": "narrative",
-      "text": "UNLOCKED: Inherited Recipe\n\nArchieves inside flesh like a forgotten dream\n\nA torn photo, a floppy disk.\n\nA gift from your bloodline sending nourishment you can't smell\n\nBut you can feel.\n\nIt's telling you to 'slow down'\n\nand other words you can no longer decode.\n\nmaybe this isn't a meal at all,\n\nbut a message\n\nyou chew on this thought of what this bowl of soup and what your body are telling you.",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: Inherited Recipe"
+        },
+        {
+          "type": "narrator",
+          "content": "Liz says: Dear internet person, you have found An Inherited Recipe"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/xjPJmrSm/Soup.gif",
+          "alt": "Inherited Recipe"
+        },
+        {
+          "type": "system",
+          "content": "Archieves inside flesh like a forgotten dream\n\nA torn photo, a floppy disk.\n\nA gift from your bloodline sending nourishment you can't smell\n\nBut you can feel.\n\nIt's telling you to 'slow down'\n\nand other words you can no longer decode.\n\nmaybe this isn't a meal at all,\n\nbut a message\n\nyou chew on this thought of what this bowl of soup and what your body are telling you."
+        }
+      ],
       "choices": [
         {
           "id": "inherited_recipe_choice_1",
@@ -413,9 +497,6 @@
           "effects": null,
           "conditions": null
         }
-      ],
-      "narratorMessages": [
-        "Liz says: //''Dear internet person, you have found An Inherited Recipe''"
       ]
     },
     "lol_internet_person": {
@@ -476,7 +557,25 @@
     "nail_clippings": {
       "id": "nail_clippings",
       "type": "narrative",
-      "text": "UNLOCKED: Nail Clippings!\n\nLittle forgotten pieces\n\nFrom your body\n\nThe parts the world deemed unworthy\n\nimperfect\n\na clause you were taught somewhere between\n\nyour queerness and spirituality\n\nClick-Click-Opps!\n\nWhat ifour body parts were alive?\n\nCan you imagine those little bones\n\ndancing-conciously-laughing on hills\n\nFree from the pain of being unwanted\n\nWhat did you accidentally believe in?",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: Nail Clippings!"
+        },
+        {
+          "type": "narrator",
+          "content": "Liz says: Dear internet person, you have found Nail Clippings"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/nL6Vy2fC/Hand.gif",
+          "alt": "Nail Clippings"
+        },
+        {
+          "type": "system",
+          "content": "Little forgotten pieces\n\nFrom your body\n\nThe parts the world deemed unworthy\n\nimperfect\n\na clause you were taught somewhere between\n\nyour queerness and spirituality\n\nClick-Click-Opps!\n\nWhat ifour body parts were alive?\n\nCan you imagine those little bones\n\ndancing-conciously-laughing on hills\n\nFree from the pain of being unwanted\n\nWhat did you accidentally believe in?"
+        }
+      ],
       "choices": [
         {
           "id": "nail_clippings_choice_1",
@@ -485,9 +584,6 @@
           "effects": null,
           "conditions": null
         }
-      ],
-      "narratorMessages": [
-        "Liz says: //''Dear internet person, you have found Nail Clippings''"
       ]
     },
     "no_i_haven_t_really_thought_about": {
@@ -721,7 +817,25 @@
     "the_evil_eye": {
       "id": "the_evil_eye",
       "type": "narrative",
-      "text": "UNLOCKED: An Evil Eye\n\nA side eye, an echoed chuckle\n\nan eye for extraction\n\nYour eyes turn inward\n\nReminding itself,\n\n\"you have not moved your body the same since --\"\n\nDid you invite this gaze?\n\nUndetected for so long 'til now,\n\na painful thought, transformed",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: An Evil Eye"
+        },
+        {
+          "type": "narrator",
+          "content": "Liz says: Dear internet person, you have found An Evil Eye"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/ZnmNS4zY/Eye.gif",
+          "alt": "An Evil Eye"
+        },
+        {
+          "type": "system",
+          "content": "A side eye, an echoed chuckle\n\nan eye for extraction\n\nYour eyes turn inward\n\nReminding itself,\n\n\"you have not moved your body the same since --\"\n\nDid you invite this gaze?\n\nUndetected for so long 'til now,\n\na painful thought, transformed"
+        }
+      ],
       "choices": [
         {
           "id": "the_evil_eye_choice_1",
@@ -730,9 +844,6 @@
           "effects": null,
           "conditions": null
         }
-      ],
-      "narratorMessages": [
-        "Liz says: //''Dear internet person, you have found An Evil Eye''"
       ]
     },
     "their_minds_meet_by_fingertipskeyboardclicks_soft_smiles_and_profile_pics": {
@@ -1188,7 +1299,13 @@
     "continue": {
       "id": "continue",
       "type": "narrative",
-      "text": "continue",
+      "messageSequence": [
+        {
+          "type": "image",
+          "url": "https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg",
+          "alt": "Thread Image"
+        }
+      ],
       "choices": [
         {
           "id": "continue_choice_1",
@@ -1216,7 +1333,21 @@
     "main_portal": {
       "id": "main_portal",
       "type": "narrative",
-      "text": "main portal",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "==CLICK TO PLAY=="
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/fLSrt7Pq/IMG-1949.jpg",
+          "alt": "Main Portal"
+        },
+        {
+          "type": "system",
+          "content": "==CLICK TO PLAY=="
+        }
+      ],
       "choices": [
         {
           "id": "main_portal_choice_1",
@@ -1289,7 +1420,20 @@
     "search_engine": {
       "id": "search_engine",
       "type": "narrative",
-      "text": "Remember, you are looking for yourself, you have three chances only here to make your selection in this search - what topic is most important to you? Search, receive riddles, and respond to them to help you travel on.",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Liz says: New sphere transportation complete."
+        },
+        {
+          "type": "narrator",
+          "content": "Liz says: There's a hypnotic feeling of repetition here in this sphere. A pattern repeated by millions, the ask and search pattern, the feeling that there are never enough conclusive answers in the world. This leaves your body aimless if you're not careful."
+        },
+        {
+          "type": "system",
+          "content": "Remember, you are looking for yourself, you have three chances only here to make your selection in this search - what topic is most important to you? Search, receive riddles, and respond to them to help you travel on."
+        }
+      ],
       "choices": [
         {
           "id": "search_engine_choice_1",
@@ -1298,16 +1442,18 @@
           "effects": null,
           "conditions": null
         }
-      ],
-      "narratorMessages": [
-        "Liz says: New sphere transportation complete.",
-        "Liz says: There's a hypnotic feeling of repetition here in this sphere. A pattern repeated by millions, the ask and search pattern, the feeling that there are never enough conclusive answers in the world. This leaves your body aimless if you're not careful."
       ]
     },
     "see_photo_again": {
       "id": "see_photo_again",
       "type": "narrative",
-      "text": "see photo again",
+      "messageSequence": [
+        {
+          "type": "image",
+          "url": "https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg",
+          "alt": "Thread Image"
+        }
+      ],
       "choices": [
         {
           "id": "see_photo_again_choice_1",
@@ -1321,7 +1467,13 @@
     "see_the_photo_again": {
       "id": "see_the_photo_again",
       "type": "narrative",
-      "text": "see the photo again",
+      "messageSequence": [
+        {
+          "type": "image",
+          "url": "https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg",
+          "alt": "Thread Image"
+        }
+      ],
       "choices": [
         {
           "id": "see_the_photo_again_choice_1",

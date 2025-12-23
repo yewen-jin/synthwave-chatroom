@@ -1091,8 +1091,8 @@
       "type": "narrative",
       "messageSequence": [
         {
-          "type": "system",
-          "content": "Liz...Transmitting...Thread...Loading....Lonely...Thread..."
+          "type": "narrator",
+          "content": "Transmitting...Thread...Loading....Lonely...Thread..."
         }
       ],
       "choices": [
@@ -1109,7 +1109,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says:...Transmitting...Thread...Loading....Pic and... Lonely Thread..."
+          "content": "...Transmitting...Thread...Loading....Pic and... Lonely Thread..."
         }
       ],
       "choices": [
@@ -1144,7 +1144,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "Liz says:..Here's the thread below that followed the image."
+          "content": "..Here's the thread below that followed the image."
         },
         {
           "type": "system",
