@@ -163,7 +163,7 @@ function initPlayerRoom() {
 
     // Get current node and choices
     const currentNodeData =
-      data.nodeData || dialogueSystem.getCurrentNodeData();
+      data.nodeData || dialogueSystem.getCurrentNode();
     const choices = dialogueSystem.getAvailableChoices();
 
     // Determine node type
