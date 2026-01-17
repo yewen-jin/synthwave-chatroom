@@ -1,4 +1,4 @@
-import { initSocket } from "./socket.js";
+import { initSocket } from "./socket.js"; // for communication
 import {
   initChatUI,
   getChatInput,
@@ -12,9 +12,10 @@ import {
   updateUserDisplayName,
   updateLastJoinedUser,
   isRoom2,
-} from "./chatUI.js";
-import { initChatDrag } from "./chatDrag.js";
-import { initVisuals } from "./visuals.js";
+  // isNarratorRoom,
+} from "./chatUI.js"; //the chatroom core interaction
+import { initChatDrag } from "./chatDrag.js"; //dragging functionality, optional
+import { initVisuals } from "./visuals.js"; // background animation, can be replaced
 import { initDialogueController } from "./dialogueController.js";
 
 // In room1, always show popup. In room2, use localStorage.
@@ -22,12 +23,14 @@ let username = isRoom2 ? localStorage.getItem("username") : null;
 let visuals;
 let dialogueControllerInitialized = false; // Track if dialogue controller has been initialized
 
+//socket related functions
 function handleSend() {
-  const message = getChatInput();
+  const message = getChatInput(); //typed in the input area
   if (message && username) {
+    //if both username and message exist
     window._socket.emit("chat", {
       text: message,
-      username,
+      username: username,
       timestamp: Date.now(),
     });
     clearChatInput();
