@@ -11,14 +11,20 @@ import {
   hideErrorMessage,
   updateUserDisplayName,
   updateLastJoinedUser,
-  isRoom2,
-  // isNarratorRoom,
 } from "./chatUI.js"; //the chatroom core interaction
 import { initChatDrag } from "./chatDrag.js"; //dragging functionality, optional
 import { initVisuals } from "./visuals.js"; // background animation, can be replaced
 import { initDialogueController } from "./dialogueController.js";
 
+// Detect which room we're in
+const isRoom2 = window.location.pathname.includes("room2");
+const isNarratorRoom = window.location.pathname.includes("narrator-room");
+const isPlayerRoom =
+  window.location.pathname.includes("player-room.html") ||
+  window.location.pathname === "/player-room";
+
 // In room1, always show popup. In room2, use localStorage.
+//>>this mechanism needs to be fixed. Html popup already submitted a username of the narrator
 let username = isRoom2 ? localStorage.getItem("username") : null;
 let visuals;
 let dialogueControllerInitialized = false; // Track if dialogue controller has been initialized
@@ -109,10 +115,11 @@ function onUsernameResponse(isTaken) {
     hideErrorMessage();
 
     // Initialize dialogue controller for player-room or narrator-room BEFORE emitting user joined
-    const isNarratorRoom = window.location.pathname.includes("narrator-room");
-    const isPlayerRoom =
-      window.location.pathname.includes("player-room.html") ||
-      window.location.pathname === "/player-room";
+    // const isNarratorRoom = window.location.pathname.includes("narrator-room");
+    // const isPlayerRoom =
+    //   window.location.pathname.includes("player-room.html") ||
+    //   window.location.pathname === "/player-room";
+    // the isNarratorRoom should have already been declared outside the scope. It seems redundant.
     if ((isNarratorRoom || isPlayerRoom) && !dialogueControllerInitialized) {
       dialogueControllerInitialized = true;
       initDialogueController(window._socket, username, onChat, () => {
@@ -171,11 +178,11 @@ window._socket.on("reconnect", () => {
   // Optionally re-bind UI event handlers if needed
 });
 
-// Detect if we're in game rooms
-const isNarratorRoom = window.location.pathname.includes("narrator-room");
-const isPlayerRoom =
-  window.location.pathname.includes("player-room.html") ||
-  window.location.pathname === "/player-room";
+// // Detect if we're in game rooms
+// const isNarratorRoom = window.location.pathname.includes("narrator-room");
+// const isPlayerRoom =
+//   window.location.pathname.includes("player-room.html") ||
+//   window.location.pathname === "/player-room";
 
 // Show username popup if needed
 if (!username) {
