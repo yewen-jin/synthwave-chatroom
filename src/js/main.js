@@ -11,6 +11,7 @@ import {
   hideErrorMessage,
   updateUserDisplayName,
   updateLastJoinedUser,
+  updateLastJoinedPlayer,
 } from "./chatUI.js"; //the chatroom core interaction
 import { initChatDrag } from "./chatDrag.js"; //dragging functionality, optional
 import { initVisuals } from "./visuals.js"; // background animation, can be replaced
@@ -25,7 +26,10 @@ const isPlayerRoom =
 
 // In room1, always show popup. In room2, use localStorage.
 //>>this mechanism needs to be fixed. Html popup already submitted a username of the narrator
-let username = isRoom2 ? localStorage.getItem("username") : null;
+// let username = isRoom2 ? localStorage.getItem("username") : null;
+let username = null;
+let isPlayer = isPlayerRoom ? true : false;
+console.log("is a player?", isPlayer);
 let visuals;
 let dialogueControllerInitialized = false; // Track if dialogue controller has been initialized
 
@@ -90,12 +94,16 @@ function onChat(messageObj) {
   if (visuals) visuals.flash();
 }
 
-function onUserJoined(name) {
+function onUserJoined(data) {
+  const { username: name, isPlayer: joinedAsPlayer } = data;
   const joinMessage = document.createElement("div");
   joinMessage.className = "system-message";
   joinMessage.innerHTML = `<i><strong>${name}</strong> entered the chat</i>`;
   addMessageToChat(joinMessage);
   updateLastJoinedUser(name);
+  if (joinedAsPlayer) {
+    updateLastJoinedPlayer(name);
+  }
 }
 
 function onUserLeft(name) {
@@ -117,13 +125,11 @@ function onUsernameResponse(isTaken) {
     // Initialize dialogue controller for player-room or narrator-room BEFORE emitting user joined
     if ((isNarratorRoom || isPlayerRoom) && !dialogueControllerInitialized) {
       dialogueControllerInitialized = true;
-      initDialogueController(window._socket, username, onChat, () => {
-        if (visuals) visuals.flash();
-      });
+      initDialogueController(window._socket, username);
     }
 
     // Emit user joined AFTER dialogue controller is set up
-    window._socket.emit("user joined", username);
+    window._socket.emit("user joined", { username, isPlayer });
   }
 }
 
@@ -182,9 +188,7 @@ if (!username) {
   // Initialize dialogue controller for player-room or narrator-room BEFORE emitting user joined
   if ((isNarratorRoom || isPlayerRoom) && !dialogueControllerInitialized) {
     dialogueControllerInitialized = true;
-    initDialogueController(window._socket, username, onChat, () => {
-      if (visuals) visuals.flash();
-    });
+    initDialogueController(window._socket, username);
   }
 
   // Emit user joined AFTER dialogue controller is set up

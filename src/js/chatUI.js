@@ -86,8 +86,18 @@ export function updateLastJoinedUser(name) {
   /* if ((!inRoom2 && !inNarratorRoom) || name === "Symoné" || name === "Liz")
     return; */
   const lastJoinedElement = document.getElementById("last-joined-user");
+
   //make sure to only show names that are not "hosts"
   if (lastJoinedElement && name !== "Symoné" && name !== "Liz") {
     lastJoinedElement.textContent = name;
+    console.log("last joined user:", lastJoinedElement.textContent);
+  }
+}
+
+export function updateLastJoinedPlayer(name) {
+  const lastJoinedPlayer = document.getElementById("last-joined-player");
+  if (lastJoinedPlayer && name !== "Symoné" && name !== "Liz") {
+    lastJoinedPlayer.textContent = name;
+    console.log("last joined player:", lastJoinedPlayer.textContent);
   }
 }
