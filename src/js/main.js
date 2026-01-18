@@ -173,25 +173,11 @@ window._socket = initSocket(
 );
 
 window._socket.on("reconnect", () => {
-  // Optionally re-join the room or re-send username
+  // Re-join with the same format as initial join
   if (username) {
-    window._socket.emit("user joined", username);
+    window._socket.emit("user joined", { username, isPlayer });
   }
-  // Optionally re-bind UI event handlers if needed
 });
 
-// Show username popup if needed
-if (!username) {
-  showUsernamePopup();
-} else {
-  updateUserDisplayName(username);
-
-  // Initialize dialogue controller for player-room or narrator-room BEFORE emitting user joined
-  if ((isNarratorRoom || isPlayerRoom) && !dialogueControllerInitialized) {
-    dialogueControllerInitialized = true;
-    initDialogueController(window._socket, username);
-  }
-
-  // Emit user joined AFTER dialogue controller is set up
-  window._socket.emit("set username", username);
-}
+// Show username popup (username is always null at startup)
+showUsernamePopup();
