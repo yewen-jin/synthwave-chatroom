@@ -9,23 +9,6 @@ export class DialogueSystem {
     this.variables = {};
   }
 
-  async loadDialogue(url) {
-    try {
-      const response = await fetch(url);
-      if (!response.ok)
-        throw new Error(`Failed to load dialogue: ${response.status}`);
-
-      this.dialogueData = await response.json();
-      this.currentNodeId = this.dialogueData.metadata.startNode;
-      this.variables = { ...this.dialogueData.variables };
-
-      return true;
-    } catch (error) {
-      console.error("Error loading dialogue:", error);
-      return false;
-    }
-  }
-
   getCurrentNode() {
     if (!this.dialogueData || !this.currentNodeId) return null;
     return this.dialogueData.nodes[this.currentNodeId];
@@ -66,44 +49,6 @@ export class DialogueSystem {
     }
 
     return true;
-  }
-
-  applyEffects(effects) {
-    if (!effects) return;
-
-    for (let [key, value] of Object.entries(effects)) {
-      if (typeof value === "string") {
-        if (value.startsWith("+")) {
-          this.variables[key] =
-            (this.variables[key] || 0) + parseFloat(value.substring(1));
-        } else if (value.startsWith("-")) {
-          this.variables[key] =
-            (this.variables[key] || 0) - parseFloat(value.substring(1));
-        } else {
-          this.variables[key] = value;
-        }
-      } else {
-        this.variables[key] = value;
-      }
-    }
-  }
-
-  selectChoice(choiceId) {
-    const availableChoices = this.getAvailableChoices();
-    const choice = availableChoices.find((c) => c.id === choiceId);
-
-    if (!choice) {
-      console.error("Invalid choice ID:", choiceId);
-      return null;
-    }
-
-    // Apply effects
-    this.applyEffects(choice.effects);
-
-    // Navigate to next node
-    this.currentNodeId = choice.nextNode;
-
-    return this.getCurrentNode();
   }
 
   isEnded() {

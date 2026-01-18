@@ -4,7 +4,7 @@ import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
 import { readFile } from "fs/promises";
-import { NARRATOR_USERNAME } from "./shared/gameParameters.js";
+import * as GameParameters from "./shared/gameParameters.js";
 
 // Fix for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -70,12 +70,14 @@ let connectedUsers = 0;
 // Track dialogue states per room
 const dialogueStates = new Map();
 
-// Helper: Check if narrator is online and broadcast status
+// Helper: Check if narrator is online
+function isNarratorOnline() {
+  return Array.from(activeUsers.values()).includes(GameParameters.NARRATOR_USERNAME);
+}
+
+// Helper: Broadcast narrator status to all clients
 function broadcastNarratorStatus() {
-  const isNarratorOnline = Array.from(activeUsers.values()).includes(
-    NARRATOR_USERNAME,
-  );
-  io.emit("narrator-status", { online: isNarratorOnline });
+  io.emit("narrator-status", { online: isNarratorOnline() });
 }
 
 // Helper: Load dialogue JSON
@@ -235,7 +237,7 @@ io.on("connection", (socket) => {
     // Check if dialogue is active and user is narrator
     const playerRoomState = dialogueStates.get("player-room");
     const isDialogueActive = playerRoomState && playerRoomState.active;
-    const isNarrator = username === NARRATOR_USERNAME;
+    const isNarrator = username === GameParameters.NARRATOR_USERNAME;
 
     // Only broadcast join message if NOT (narrator joining during active dialogue)
     if (!(isDialogueActive && isNarrator)) {
@@ -258,10 +260,7 @@ io.on("connection", (socket) => {
 
   // Send current narrator status to newly connected clients
   socket.on("request-narrator-status", () => {
-    const isNarratorOnline = Array.from(activeUsers.values()).includes(
-      NARRATOR_USERNAME,
-    );
-    socket.emit("narrator-status", { online: isNarratorOnline });
+    socket.emit("narrator-status", { online: isNarratorOnline() });
   });
 
   // Listen for chat messages from clients
@@ -315,7 +314,7 @@ io.on("connection", (socket) => {
     const state = dialogueStates.get(room);
     const sequence = node.messageSequence;
 
-    let delay = playerUsername ? 1500 : 0; // Wait 1.5s after player choice
+    let delay = playerUsername ? GameParameters.MESSAGE_DELAY_MS : 0; // Wait after player choice
 
     sequence.forEach((message, index) => {
       setTimeout(
@@ -335,7 +334,7 @@ io.on("connection", (socket) => {
             case "narrator":
               io.emit("chat", {
                 text: content,
-                username: NARRATOR_USERNAME,
+                username: GameParameters.NARRATOR_USERNAME,
                 timestamp: Date.now(),
               });
               break;
@@ -376,15 +375,15 @@ io.on("connection", (socket) => {
                     "Warning: No nextNode specified for auto-advancing node",
                   );
                 }
-              }, 1500);
+              }, GameParameters.MESSAGE_DELAY_MS);
             } else {
               // Show choices to player
               io.emit("dialogue-sync", buildSyncPayload(state));
             }
           }
         },
-        delay + index * 1500,
-      ); // 1.5s between each message
+        delay + index * GameParameters.MESSAGE_DELAY_MS,
+      );
     });
   }
 
@@ -446,14 +445,14 @@ io.on("connection", (socket) => {
       );
 
       // Send each narrator message with delay
-      let delay = playerUsername ? 1500 : 0; // If player just chose, wait 1.5s
+      let delay = playerUsername ? GameParameters.MESSAGE_DELAY_MS : 0;
       currentNode.narratorMessages.forEach((message, index) => {
         setTimeout(
           () => {
             const msgText = interpolateText(message, state.variables);
             io.emit("chat", {
               text: msgText,
-              username: NARRATOR_USERNAME,
+              username: GameParameters.NARRATOR_USERNAME,
               timestamp: Date.now(),
             });
 
@@ -479,15 +478,15 @@ io.on("connection", (socket) => {
                       "Warning: No nextNode specified for auto-advancing node",
                     );
                   }
-                }, 1500);
+                }, GameParameters.MESSAGE_DELAY_MS);
               } else {
                 // Has choices, send them to player
                 io.emit("dialogue-sync", buildSyncPayload(state));
               }
             }
           },
-          delay + index * 1500,
-        ); // 1.5s between each message
+          delay + index * GameParameters.MESSAGE_DELAY_MS,
+        );
       });
       return;
     }
@@ -517,7 +516,7 @@ io.on("connection", (socket) => {
         } else {
           console.log("Warning: No nextNode specified for system message node");
         }
-      }, 2000);
+      }, GameParameters.SYSTEM_MESSAGE_DELAY_MS);
       return;
     }
 
@@ -553,7 +552,7 @@ io.on("connection", (socket) => {
       // End dialogue after delay
       setTimeout(() => {
         handleDialogueEnd(room, state);
-      }, 3000);
+      }, GameParameters.ENDING_DELAY_MS);
       return;
     }
 
@@ -570,19 +569,16 @@ io.on("connection", (socket) => {
 
     // Check if narrator left during dialogue and is still offline
     if (state.narratorLeftDuringDialogue) {
-      const isNarratorOnline = Array.from(activeUsers.values()).includes(
-        NARRATOR_USERNAME,
-      );
-      if (!isNarratorOnline) {
+      if (!isNarratorOnline()) {
         console.log(
           `Showing deferred narrator leave message after dialogue end`,
         );
-        io.emit("user left", NARRATOR_USERNAME);
+        io.emit("user left", GameParameters.NARRATOR_USERNAME);
       }
       state.narratorLeftDuringDialogue = false;
     }
 
-    // Clean up state after 5 minutes
+    // Clean up state after timeout
     setTimeout(
       () => {
         if (!dialogueStates.get(room)?.active) {
@@ -590,7 +586,7 @@ io.on("connection", (socket) => {
           console.log(`Cleaned up dialogue state for room: ${room}`);
         }
       },
-      5 * 60 * 1000,
+      GameParameters.STATE_CLEANUP_MS,
     );
   }
 
@@ -649,7 +645,7 @@ io.on("connection", (socket) => {
       // Check if dialogue is active and user is narrator
       const playerRoomState = dialogueStates.get("player-room");
       const isDialogueActive = playerRoomState && playerRoomState.active;
-      const isNarrator = username === NARRATOR_USERNAME;
+      const isNarrator = username === GameParameters.NARRATOR_USERNAME;
 
       // Only broadcast leave message if NOT (narrator leaving during active dialogue)
       if (!(isDialogueActive && isNarrator)) {

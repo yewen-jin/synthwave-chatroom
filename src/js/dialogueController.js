@@ -2,6 +2,7 @@
 // Two-room dialogue system: Player (player-room) and Narrator (narrator-room)
 
 import { DialogueSystem } from "./dialogueSystem.js";
+import { isPlayerRoom, isNarratorRoom } from "./roomDetection.js";
 
 let dialogueSystem = null;
 let socket = null;
@@ -9,12 +10,6 @@ let username = null;
 let flashCallback = null;
 let isActive = false;
 let displayedSystemMessages = new Set(); // Track which nodes have shown their system message
-
-// Detect which room we're in
-const isPlayerRoom =
-  window.location.pathname.includes("player-room.html") ||
-  window.location.pathname === "/player-room";
-const isNarratorRoom = window.location.pathname.includes("narrator-room");
 
 export function initDialogueController(socketInstance, user, onFlashCallback) {
   socket = socketInstance;

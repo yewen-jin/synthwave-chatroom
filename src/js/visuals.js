@@ -1,7 +1,7 @@
 // visuals.js
 import p5 from 'p5';
 
-export function initVisuals(onMessageCallback) {
+export function initVisuals() {
   // Synthwave visualization settings
   let gridSize = 30;
   let horizon = 0;
@@ -119,23 +119,3 @@ export function initVisuals(onMessageCallback) {
   };
 }
 
-// Add a function to react to theme changes
-
-export function updateVisualsForTheme(theme) {
-    // You could adjust visualization colors based on theme
-    // For example:
-    switch(theme) {
-        case 'palette-purple':
-            // Adjust purple-specific visual parameters
-            break;
-        case 'palette-blue':
-            // Adjust blue-specific visual parameters
-            break;
-        case 'palette-green':
-            // Adjust blue-specific visual parameters
-            break;
-        default:
-            // Default green theme
-            break;
-    }
-}

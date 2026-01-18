@@ -16,14 +16,7 @@ import {
 import { initChatDrag } from "./chatDrag.js"; //dragging functionality, optional
 import { initVisuals } from "./visuals.js"; // background animation, can be replaced
 import { initDialogueController } from "./dialogueController.js";
-import * as GameParameters from "../../shared/gameParameters.js";
-
-// Detect which room we're in
-const isRoom2 = window.location.pathname.includes("room2");
-const isNarratorRoom = window.location.pathname.includes("narrator-room");
-const isPlayerRoom =
-  window.location.pathname.includes("player-room.html") ||
-  window.location.pathname === "/player-room";
+import { isRoom2, isNarratorRoom, isPlayerRoom } from "./roomDetection.js";
 
 // In room1, always show popup. In room2, use localStorage.
 //>>this mechanism needs to be fixed. Html popup already submitted a username of the narrator

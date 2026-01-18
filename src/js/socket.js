@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 let socket;
 
 export function initSocket(onChat, onUserJoined, onUserLeft, onUsernameResponse, onUsernameError, onGlitchControl) {
-    const socket = io(
+    socket = io(
         window.location.hostname === 'localhost'
             ? 'http://localhost:3000'
             : window.location.origin,
