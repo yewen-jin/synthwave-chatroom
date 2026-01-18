@@ -2,6 +2,7 @@
 // Two-room dialogue system: Player (player-room) and Narrator (narrator-room)
 
 import { DialogueSystem } from "./dialogueSystem.js";
+import { isPlayerRoom, isNarratorRoom } from "./roomDetection.js";
 
 let dialogueSystem = null;
 let socket = null;
@@ -10,22 +11,10 @@ let flashCallback = null;
 let isActive = false;
 let displayedSystemMessages = new Set(); // Track which nodes have shown their system message
 
-// Detect which room we're in
-const isPlayerRoom =
-  window.location.pathname.includes("player-room.html") ||
-  window.location.pathname === "/player-room";
-const isNarratorRoom = window.location.pathname.includes("narrator-room");
-
-export function initDialogueController(
-  socketInstance,
-  user,
-  onMessageCallback,
-  onFlashCallback
-) {
+export function initDialogueController(socketInstance, user, onFlashCallback) {
   socket = socketInstance;
   username = user;
   flashCallback = onFlashCallback;
-  // Note: onMessageCallback is not used - chat messages are handled via socket events
 
   if (isNarratorRoom) {
     initNarratorRoom();
@@ -37,7 +26,7 @@ export function initDialogueController(
   console.log(
     `Dialogue controller initialized for ${
       isNarratorRoom ? "narrator (narrator-room)" : "player (player-room)"
-    }`
+    }`,
   );
 }
 
@@ -110,10 +99,10 @@ function initNarratorRoom() {
 // ========== PLAYER (player-room) ==========
 function initPlayerRoom() {
   const normalInputContainer = document.getElementById(
-    "normal-input-container"
+    "normal-input-container",
   );
   const choicesInlineContainer = document.getElementById(
-    "dialogue-choices-inline"
+    "dialogue-choices-inline",
   );
   const sendBtn = document.getElementById("send-btn");
   const narratorStatusEl = document.getElementById("narrator-status");
@@ -162,8 +151,7 @@ function initPlayerRoom() {
     dialogueSystem.setVariables(data.variables);
 
     // Get current node and choices
-    const currentNodeData =
-      data.nodeData || dialogueSystem.getCurrentNodeData();
+    const currentNodeData = data.nodeData || dialogueSystem.getCurrentNode();
     const choices = dialogueSystem.getAvailableChoices();
 
     // Determine node type
@@ -185,7 +173,7 @@ function initPlayerRoom() {
       ) {
         console.log(
           "Player: Displaying system message before choices:",
-          currentNodeData.text
+          currentNodeData.text,
         );
         const chatBody = document.getElementById("chatBody");
         if (chatBody) {
@@ -230,7 +218,7 @@ function initPlayerRoom() {
     // TYPE 2: Narrator message or system message node (no choices)
     else {
       console.log(
-        "Player: Auto-advancing node - hiding choices, keeping normal input hidden"
+        "Player: Auto-advancing node - hiding choices, keeping normal input hidden",
       );
 
       // Keep input hidden during auto-advancing nodes
@@ -301,13 +289,13 @@ function handlePlayerChoice(choice) {
 
   // Hide choices immediately
   const choicesInlineContainer = document.getElementById(
-    "dialogue-choices-inline"
+    "dialogue-choices-inline",
   );
   if (choicesInlineContainer) choicesInlineContainer.style.display = "none";
 
   // Show normal input again
   const normalInputContainer = document.getElementById(
-    "normal-input-container"
+    "normal-input-container",
   );
   const sendBtn = document.getElementById("send-btn");
   if (normalInputContainer) normalInputContainer.style.display = "block";
