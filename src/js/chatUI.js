@@ -83,8 +83,11 @@ export function updateUserDisplayName(name) {
 
 export function updateLastJoinedUser(name) {
   // Check room at runtime to ensure correct detection
+  /* if ((!inRoom2 && !inNarratorRoom) || name === "Symoné" || name === "Liz")
+    return; */
   const lastJoinedElement = document.getElementById("last-joined-user");
-  if (lastJoinedElement) {
+  //make sure to only show names that are not "hosts"
+  if (lastJoinedElement && name !== "Symoné" && name !== "Liz") {
     lastJoinedElement.textContent = name;
   }
 }
