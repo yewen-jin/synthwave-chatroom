@@ -1,4 +1,5 @@
 // chatUI.js
+import * as GameParameters from "../../shared/gameParameters.js";
 
 let chatBody,
   chatInput,
@@ -88,7 +89,11 @@ export function updateLastJoinedUser(name) {
   const lastJoinedElement = document.getElementById("last-joined-user");
 
   //make sure to only show names that are not "hosts"
-  if (lastJoinedElement && name !== "Symoné" && name !== "Liz") {
+  if (
+    lastJoinedElement &&
+    name !== GameParameters.HOST_USERNAME &&
+    name !== GameParameters.NARRATOR_USERNAME
+  ) {
     lastJoinedElement.textContent = name;
     console.log("last joined user:", lastJoinedElement.textContent);
   }
@@ -96,7 +101,11 @@ export function updateLastJoinedUser(name) {
 
 export function updateLastJoinedPlayer(name) {
   const lastJoinedPlayer = document.getElementById("last-joined-player");
-  if (lastJoinedPlayer && name !== "Symoné" && name !== "Liz") {
+  if (
+    lastJoinedPlayer &&
+    name !== GameParameters.HOST_USERNAME &&
+    name !== GameParameters.NARRATOR_USERNAME
+  ) {
     lastJoinedPlayer.textContent = name;
     console.log("last joined player:", lastJoinedPlayer.textContent);
   }

@@ -16,6 +16,7 @@ import {
 import { initChatDrag } from "./chatDrag.js"; //dragging functionality, optional
 import { initVisuals } from "./visuals.js"; // background animation, can be replaced
 import { initDialogueController } from "./dialogueController.js";
+import * as GameParameters from "../../shared/gameParameters.js";
 
 // Detect which room we're in
 const isRoom2 = window.location.pathname.includes("room2");
@@ -28,7 +29,7 @@ const isPlayerRoom =
 //>>this mechanism needs to be fixed. Html popup already submitted a username of the narrator
 // let username = isRoom2 ? localStorage.getItem("username") : null;
 let username = null;
-let isPlayer = isPlayerRoom ? true : false;
+let isPlayer = isPlayerRoom;
 console.log("is a player?", isPlayer);
 let visuals;
 let dialogueControllerInitialized = false; // Track if dialogue controller has been initialized
