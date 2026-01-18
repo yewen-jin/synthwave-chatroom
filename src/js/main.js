@@ -83,7 +83,7 @@ function onChat(messageObj) {
     <span class="user-id">${messageObj.username}:</span>
     <span class="text">${messageObj.text}</span>
     <span class="timestamp">${new Date(
-      messageObj.timestamp
+      messageObj.timestamp,
     ).toLocaleTimeString()}</span>
   `;
   addMessageToChat(msgDiv);
@@ -115,11 +115,6 @@ function onUsernameResponse(isTaken) {
     hideErrorMessage();
 
     // Initialize dialogue controller for player-room or narrator-room BEFORE emitting user joined
-    // const isNarratorRoom = window.location.pathname.includes("narrator-room");
-    // const isPlayerRoom =
-    //   window.location.pathname.includes("player-room.html") ||
-    //   window.location.pathname === "/player-room";
-    // the isNarratorRoom should have already been declared outside the scope. It seems redundant.
     if ((isNarratorRoom || isPlayerRoom) && !dialogueControllerInitialized) {
       dialogueControllerInitialized = true;
       initDialogueController(window._socket, username, onChat, () => {
@@ -167,7 +162,7 @@ window._socket = initSocket(
   onUserLeft,
   onUsernameResponse,
   onUsernameTaken,
-  onGlitchControl
+  onGlitchControl,
 );
 
 window._socket.on("reconnect", () => {
@@ -177,12 +172,6 @@ window._socket.on("reconnect", () => {
   }
   // Optionally re-bind UI event handlers if needed
 });
-
-// // Detect if we're in game rooms
-// const isNarratorRoom = window.location.pathname.includes("narrator-room");
-// const isPlayerRoom =
-//   window.location.pathname.includes("player-room.html") ||
-//   window.location.pathname === "/player-room";
 
 // Show username popup if needed
 if (!username) {

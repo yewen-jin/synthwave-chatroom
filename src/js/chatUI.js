@@ -1,13 +1,4 @@
 // chatUI.js
-// Determine if we're in room2 or narrator-room
-// export const isRoom2 = window.location.pathname.includes("room2");
-// export const isNarratorRoom =
-//   window.location.pathname.includes("narrator-room");
-// const roomName = isRoom2
-//   ? "room2"
-//   : isNarratorRoom
-//     ? "narrator-room"
-//     : "default";
 
 let chatBody,
   chatInput,
@@ -48,25 +39,6 @@ export function initChatUI(onSend, onUsernameSubmit) {
       onUsernameSubmit();
     }
   });
-
-  //>> remove any room2 specific styles b/c its redundant
-  // For room2 (hidden input), listen on the document when popup is visible
-  /* if (isRoom2) {
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && usernamePopup.style.display !== "none") {
-        e.preventDefault();
-        onUsernameSubmit();
-      }
-    });
-  } */
-
-  // Apply room-specific styling if needed
-  /* if (isRoom2) {
-    document.querySelector(".msn-window")?.classList.add("room2-window");
-    document.querySelector(".title-bar")?.classList.add("room2-title");
-    document.querySelector(".chat-area")?.classList.add("room2-chat-area");
-    // Any other room2-specific UI modifications
-  } */
 }
 
 export function getChatInput() {
@@ -111,16 +83,6 @@ export function updateUserDisplayName(name) {
 
 export function updateLastJoinedUser(name) {
   // Check room at runtime to ensure correct detection
-  // const inRoom2 = window.location.pathname.includes("room2");
-  // const inNarratorRoom = window.location.pathname.includes("narrator-room");
-
-  // Only update in room2 or narrator-room, and skip narrator usernames
-  // Skip "Symoné" (room2 narrator) and "Liz" (narrator-room narrator)
-
-  //>>remove the following because we want to include everyone including performer
-  // if ((!inRoom2 && !inNarratorRoom) || name === "Symoné" || name === "Liz")
-  //   return;
-
   const lastJoinedElement = document.getElementById("last-joined-user");
   if (lastJoinedElement) {
     lastJoinedElement.textContent = name;
