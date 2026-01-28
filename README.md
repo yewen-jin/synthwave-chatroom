@@ -124,13 +124,3 @@ git push
 - Start prod server: npm start
 - Clean dist (Win CMD): rd /s /q dist
 
-## Contributing
-- Work on `vite-switch` for features
-- Test locally (both servers)
-- Merge to `production` branch when stable, build and test production locally before pushing to Render
-- Keep large generated files out of repo (dist/node_modules)
-
-If you want, I can:
-- scaffold inkjs integration (story renderer + socket sync)
-- add Twine iframe route + postMessage handlers
-- create tidy checklist for Render
