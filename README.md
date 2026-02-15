@@ -1,4 +1,4 @@
-# Void Space Chatroom
+# Synthwave Chatroom - My body is obsolete
 
 Lightweight retro / synthwave chatroom with p5.js visuals, Socket.IO realtime, and an MSN-style UI. Built with Vite for frontend development and Express + Socket.IO for the backend. Ready for local dev and Render deployment.
 

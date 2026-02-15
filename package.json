@@ -1,5 +1,5 @@
 {
-  "name": "my-body-is-obsolete-chatroom",
+  "name": "synthwave-chatroom-my-body-is-obsolete",
   "version": "2.0.0",
   "scripts": {
     "start": "NODE_ENV=production node server.js",
