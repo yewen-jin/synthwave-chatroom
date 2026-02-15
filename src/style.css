@@ -155,12 +155,19 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  cursor: url("/assets/images/cursors/pointer_64.png"), auto;
+}
+
+button {
+  cursor: url("/assets/images/cursors/pointer_64.png"), pointer !important;
 }
 
 /* Main MSN-style window container */
 .msn-window {
   position: absolute;
-  width: 800px;
+  /* width: 800px; */
+  width: 1200px;
+  height: 800px;
   background: var(--bg-primary);
   border: 3px solid var(--border-color);
   box-shadow: var(--shadow-window);
@@ -489,6 +496,10 @@ button {
   background: var(--bg-secondary) !important;
   color: var(--text-color) !important;
   border: 1px solid var(--border-color);
+}
+
+button:hover {
+  background: var(--bg-primary) !important;
 }
 
 #chatInput {
