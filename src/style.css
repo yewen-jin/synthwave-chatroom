@@ -71,6 +71,8 @@
   --bg-secondary: #9e9e9e;
   --text-color: rgb(0, 0, 0);
   --secondary-text-color: rgb(175, 175, 175);
+  --username-mine-color: green;
+  --username-others-color: purple;
 
   /* Status Colors */
   --status-online: #4caf50;
@@ -376,6 +378,18 @@ button {
 .user-id {
   font-weight: bold;
   color: var(--text-color);
+}
+
+/* when class = mine and child class = user-id*/
+.mine > .user-id {
+  color: var(--username-mine-color);
+  font-style: italic;
+  font-weight: 300;
+}
+.others > .user-id {
+  color: var(--username-others-color);
+  font-style: italic;
+  font-weight: 300;
 }
 
 .timestamp {
@@ -1029,6 +1043,18 @@ button:hover {
 
   .user-id {
     font-size: var(--font-size-xl);
+  }
+
+  /* when class = mine and child class = user-id*/
+  .mine > .user-id {
+    color: var(--username-mine-color);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .others > .user-id {
+    color: var(--username-others-color);
+    font-style: italic;
+    font-weight: 300;
   }
 
   .timestamp {
