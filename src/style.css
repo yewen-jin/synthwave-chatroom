@@ -206,7 +206,7 @@ button {
     rgb(0, 0, 0) 100%
   );
   color: var(--secondary-text-color);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-sm);
   display: flex;
   align-items: center;
   user-select: none;
@@ -237,6 +237,9 @@ button {
   animation: shine 3s linear infinite;
 }
 
+.window-title {
+  font-size: var(--font-size-md);
+}
 .msn-icon {
   width: 18px;
   height: 18px;
@@ -253,8 +256,13 @@ button {
   border: none;
   color: var(--text-color);
   font-family: "Segoe UI", Tahoma;
+  font-size: larger;
   padding: 0 6px;
   cursor: pointer;
+  height: 30px;
+  width: 30px;
+  z-index: 99;
+  cursor: url("/assets/images/cursors/pointer_64.png"), auto !important;
 }
 
 /* ============================================================================
@@ -991,7 +999,7 @@ button:hover {
   }
 
   .title-bar {
-    padding: 2px var(--spacing-xs);
+    padding: 2px var(--spacing-s);
   }
 
   .msn-icon {
