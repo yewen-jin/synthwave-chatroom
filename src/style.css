@@ -240,6 +240,7 @@ button {
 .window-title {
   font-size: var(--font-size-md);
 }
+
 .msn-icon {
   width: 18px;
   height: 18px;
@@ -533,11 +534,14 @@ button:hover {
   margin: 10px 0;
   width: 200px;
   padding: var(--spacing-sm);
+  height: 30px;
+  font-size: var(--font-size-md);
 }
 
 #username-submit {
   padding: 6px 20px;
   cursor: pointer;
+  font-size: var(--font-size-md);
 }
 
 #username-submit:hover {
@@ -643,6 +647,7 @@ button:hover {
   text-align: center;
   background: var(--bg-primary);
   color: var(--text-color);
+  font-size: var(--font-size-lg);
 }
 
 .login-content p {
