@@ -1,4 +1,4 @@
-# Void Space Chatroom
+# Synthwave Chatroom - My body is obsolete
 
 Lightweight retro / synthwave chatroom with p5.js visuals, Socket.IO realtime, and an MSN-style UI. Built with Vite for frontend development and Express + Socket.IO for the backend. Ready for local dev and Render deployment.
 
@@ -124,13 +124,3 @@ git push
 - Start prod server: npm start
 - Clean dist (Win CMD): rd /s /q dist
 
-## Contributing
-- Work on `vite-switch` for features
-- Test locally (both servers)
-- Merge to `production` branch when stable, build and test production locally before pushing to Render
-- Keep large generated files out of repo (dist/node_modules)
-
-If you want, I can:
-- scaffold inkjs integration (story renderer + socket sync)
-- add Twine iframe route + postMessage handlers
-- create tidy checklist for Render

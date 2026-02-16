@@ -71,6 +71,8 @@
   --bg-secondary: #9e9e9e;
   --text-color: rgb(0, 0, 0);
   --secondary-text-color: rgb(175, 175, 175);
+  --username-mine-color: green;
+  --username-others-color: purple;
 
   /* Status Colors */
   --status-online: #4caf50;
@@ -155,12 +157,19 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  cursor: url("/assets/images/cursors/pointer_64.png"), auto;
+}
+
+button {
+  cursor: url("/assets/images/cursors/pointer_64.png"), pointer !important;
 }
 
 /* Main MSN-style window container */
 .msn-window {
   position: absolute;
-  width: 800px;
+  /* width: 800px; */
+  width: 1000px;
+  height: 850px;
   background: var(--bg-primary);
   border: 3px solid var(--border-color);
   box-shadow: var(--shadow-window);
@@ -199,7 +208,7 @@ body {
     rgb(0, 0, 0) 100%
   );
   color: var(--secondary-text-color);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-sm);
   display: flex;
   align-items: center;
   user-select: none;
@@ -230,6 +239,10 @@ body {
   animation: shine 3s linear infinite;
 }
 
+.window-title {
+  font-size: var(--font-size-md);
+}
+
 .msn-icon {
   width: 18px;
   height: 18px;
@@ -246,8 +259,13 @@ body {
   border: none;
   color: var(--text-color);
   font-family: "Segoe UI", Tahoma;
+  font-size: larger;
   padding: 0 6px;
   cursor: pointer;
+  height: 30px;
+  width: 30px;
+  z-index: 99;
+  cursor: url("/assets/images/cursors/pointer_64.png"), auto !important;
 }
 
 /* ============================================================================
@@ -265,7 +283,7 @@ body {
 .avatar {
   width: 48px;
   height: 48px;
-  border: 1px solid var(--border-color);
+  /* border: 1px solid var(--border-color); */
   margin-right: 10px;
 }
 
@@ -301,8 +319,9 @@ body {
 .chat-area {
   display: flex;
   flex-direction: column;
-  height: 600px;
-  width: 800px;
+  height: calc(100vh - 180px);
+
+  /* width: 800px; */
 }
 
 .chat-body {
@@ -329,23 +348,28 @@ body {
 
 /* Base message styling */
 .message {
-  margin: var(--spacing-sm) 0;
-  padding: var(--spacing-sm) var(--spacing-md);
+  margin: var(--spacing-xs) 0;
+  padding: var(--spacing-xs) var(--spacing-md);
   font-size: var(--font-size-base);
-  line-height: 1.2;
   max-width: 70%;
   clear: both;
   display: block;
   background-color: rgba(var(--bg-primary), 0.3);
-  box-shadow: var(--shadow-message);
+  /* box-shadow: var(--shadow-message); */
   color: var(--text-color);
+  line-height: 0.5em;
+}
+
+.message > span {
+  /* color: rgb(255, 0, 157); */
+  line-height: 0.5em;
 }
 
 /* User's own messages - aligned right */
 .message.mine {
   float: right;
   text-align: right;
-  border-right: 3px solid var(--border-color);
+  border-right: 2px solid var(--username-mine-color);
   margin-left: auto;
 }
 
@@ -353,12 +377,24 @@ body {
 .message.others {
   float: left;
   text-align: left;
-  border-left: 3px solid var(--border-color);
+  border-left: 2px solid var(--username-others-color);
 }
 
 .user-id {
   font-weight: bold;
   color: var(--text-color);
+}
+
+/* when class = mine and child class = user-id*/
+.mine > .user-id {
+  color: var(--username-mine-color);
+  font-style: italic;
+  font-weight: 300;
+}
+.others > .user-id {
+  color: var(--username-others-color);
+  font-style: italic;
+  font-weight: 300;
 }
 
 .timestamp {
@@ -392,17 +428,19 @@ body {
 
 /* Inline system messages from messageSequence (dialogue flow) */
 .system-message-inline {
-  background: rgba(100, 255, 200, 0.08);
-  border-left: 3px solid var(--border-color);
-  padding: var(--spacing-sm) var(--spacing-md);
+  /* background: rgba(100, 255, 200, 0.08); */
+  background: var(--bg-primary);
+  /* border-left: 3px solid var(--border-color); */
+  padding: var(--spacing-xl) var(--spacing-md);
   margin: var(--spacing-xs) 0;
   font-style: italic;
   text-align: center;
   color: var(--text-color);
   opacity: 0.95;
   border-radius: var(--radius-md);
-  line-height: 1.3;
+  /* line-height: 2; */
   width: 100%;
+  max-width: 98%;
   clear: both;
   display: block;
 }
@@ -410,6 +448,7 @@ body {
 .system-message-inline .text {
   white-space: pre-wrap;
   word-wrap: break-word;
+  line-height: 1.5;
 }
 
 /* Image messages from messageSequence */
@@ -478,8 +517,8 @@ body {
 .user-avatar {
   width: 100px;
   height: 100px;
-  border: 1px solid var(--border-color);
-  border-radius: 10%;
+  /* border: 1px solid var(--border-color); */
+  /* border-radius: 10%; */
   object-fit: cover;
 }
 
@@ -489,6 +528,10 @@ button {
   background: var(--bg-secondary) !important;
   color: var(--text-color) !important;
   border: 1px solid var(--border-color);
+}
+
+button:hover {
+  background: var(--bg-primary) !important;
 }
 
 #chatInput {
@@ -513,11 +556,14 @@ button {
   margin: 10px 0;
   width: 200px;
   padding: var(--spacing-sm);
+  height: 30px;
+  font-size: var(--font-size-md);
 }
 
 #username-submit {
   padding: 6px 20px;
   cursor: pointer;
+  font-size: var(--font-size-md);
 }
 
 #username-submit:hover {
@@ -623,6 +669,7 @@ button {
   text-align: center;
   background: var(--bg-primary);
   color: var(--text-color);
+  font-size: var(--font-size-lg);
 }
 
 .login-content p {
@@ -700,9 +747,9 @@ button {
   background: rgba(0, 255, 0, 0.1);
   border: 2px solid var(--border-color);
   color: var(--text-color);
-  padding: var(--spacing-md) var(--spacing-xl);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
+  padding: var(--spacing-sm) var(--spacing-xl);
+  font-size: var(--font-size-xl);
+  cursor: url("/assets/images/cursors/pointer_64.png"), auto;
   transition: all var(--transition-fast);
   text-align: left;
   position: relative;
@@ -980,7 +1027,7 @@ button {
   }
 
   .title-bar {
-    padding: 2px var(--spacing-xs);
+    padding: 2px var(--spacing-s);
   }
 
   .msn-icon {
@@ -1004,6 +1051,18 @@ button {
 
   .user-id {
     font-size: var(--font-size-xl);
+  }
+
+  /* when class = mine and child class = user-id*/
+  .mine > .user-id {
+    color: var(--username-mine-color);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .others > .user-id {
+    color: var(--username-others-color);
+    font-style: italic;
+    font-weight: 300;
   }
 
   .timestamp {

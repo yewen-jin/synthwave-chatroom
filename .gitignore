@@ -32,4 +32,6 @@ yarn-debug.log*
 yarn-error.log*
 logs
 *.log
-# dist/
+dist/
+
+Drafts/

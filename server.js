@@ -1,18 +1,19 @@
 import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "http";
-import path from "path";
+import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { readFile } from "fs/promises";
 import * as GameParameters from "./shared/gameParameters.js";
 
 // Fix for __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = dirname(__filename);
 
 // Create Express app
 const app = express();
 const server = createServer(app);
+// create the socket
 const io = new Server(server, {
   cors: {
     origin:
@@ -28,51 +29,59 @@ const io = new Server(server, {
   },
 });
 
+//--------------- the middleware chain-----------------------//
+
 // Serve the production build from dist directory
-app.use(express.static(path.join(__dirname, "dist")));
+app.use(express.static(join(__dirname, "dist")));
 // Serve static assets (fonts, images) from built assets folder
-app.use("/assets", express.static(path.join(__dirname, "dist/assets")));
+app.use("/assets", express.static(join(__dirname, "dist/assets")));
 
 // Serve built HTML for control, room1, room2, player-room, narrator-room
 app.get("/control", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist/control.html"));
+  res.sendFile(join(__dirname, "dist/control.html"));
 });
 app.get("/room1", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist/room1.html"));
+  res.sendFile(join(__dirname, "dist/room1.html"));
 });
 app.get("/room2", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist/room2.html"));
+  res.sendFile(join(__dirname, "dist/room2.html"));
 });
 app.get("/player-room", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist/player-room.html"));
+  res.sendFile(join(__dirname, "dist/player-room.html"));
 });
 app.get("/narrator-room", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist/narrator-room.html"));
+  res.sendFile(join(__dirname, "dist/narrator-room.html"));
 });
-
+app.get("/docs", (req, res) => {
+  res.sendFile(join(__dirname, "dist/docs.html"));
+  // res.sendFile(join(__dirname, "src/documents.html"));
+});
 // Catch-all route to serve index.html
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist/index.html"));
+  res.sendFile(join(__dirname, "dist/index.html"));
 });
 
-// Handle 404s
+// Handle 404s:  send all invalid endpoint to index page
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, "dist/index.html"));
+  res.status(404).sendFile(join(__dirname, "dist/index.html"));
 });
 
-// Add active users tracking
+//---------------------------------------//
 const activeUsers = new Map();
 const takenUsernames = new Set();
-
-// Track connected users
 let connectedUsers = 0;
+const dialogueStates = new Map(); // Track dialogue states per room
 
-// Track dialogue states per room
-const dialogueStates = new Map();
-
-// Helper: Check if narrator is online
 function isNarratorOnline() {
-  return Array.from(activeUsers.values()).includes(GameParameters.NARRATOR_USERNAME);
+  return Array.from(activeUsers.values()).includes(
+    GameParameters.NARRATOR_USERNAME,
+  );
+}
+
+function isHostOnline() {
+  return Array.from(activeUsers.values()).includes(
+    GameParameters.HOST_USERNAME,
+  );
 }
 
 // Helper: Broadcast narrator status to all clients
@@ -82,9 +91,9 @@ function broadcastNarratorStatus() {
 
 // Helper: Load dialogue JSON
 async function loadDialogueData(dialogueId) {
-  const filePath = path.join(
+  const filePath = join(
     __dirname,
-    "dist",
+    "public",
     "data",
     "dialogues",
     `${dialogueId}.json`,
@@ -128,6 +137,7 @@ async function startDialogue(room, dialogueId) {
 
   try {
     validateDialogueData(dialogueData);
+    console.log("dialogue Data valid!");
   } catch (error) {
     console.error("Dialogue validation failed:", error);
     return null;
@@ -238,6 +248,7 @@ io.on("connection", (socket) => {
     const playerRoomState = dialogueStates.get("player-room");
     const isDialogueActive = playerRoomState && playerRoomState.active;
     const isNarrator = username === GameParameters.NARRATOR_USERNAME;
+    const isHost = username === GameParameters.HOST_USERNAME;
 
     // Only broadcast join message if NOT (narrator joining during active dialogue)
     if (!(isDialogueActive && isNarrator)) {
@@ -579,15 +590,12 @@ io.on("connection", (socket) => {
     }
 
     // Clean up state after timeout
-    setTimeout(
-      () => {
-        if (!dialogueStates.get(room)?.active) {
-          dialogueStates.delete(room);
-          console.log(`Cleaned up dialogue state for room: ${room}`);
-        }
-      },
-      GameParameters.STATE_CLEANUP_MS,
-    );
+    setTimeout(() => {
+      if (!dialogueStates.get(room)?.active) {
+        dialogueStates.delete(room);
+        console.log(`Cleaned up dialogue state for room: ${room}`);
+      }
+    }, GameParameters.STATE_CLEANUP_MS);
   }
 
   // Handle player choice (from player-room)
