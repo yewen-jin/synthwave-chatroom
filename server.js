@@ -53,7 +53,7 @@ app.get("/narrator-room", (req, res) => {
   res.sendFile(join(__dirname, "dist/narrator-room.html"));
 });
 app.get("/docs", (req, res) => {
-  res.sendFile(join(__dirname, "dist/documents.html"));
+  res.sendFile(join(__dirname, "dist/docs.html"));
   // res.sendFile(join(__dirname, "src/documents.html"));
 });
 // Catch-all route to serve index.html
