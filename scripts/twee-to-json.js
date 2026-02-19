@@ -131,16 +131,21 @@ storyPassages.forEach((passage) => {
   const node = {
     id: nodeId,
     type: isEnding ? "ending" : "narrative",
-    // Use new messageSequence format
-    messageSequence: parsed.messageSequence,
+    // Use new messageSequence format — apply inline formatting to all content
+    messageSequence: parsed.messageSequence.map((msg) => {
+      if (msg.content) {
+        return { ...msg, content: formatInlineMarkup(msg.content) };
+      }
+      return msg;
+    }),
     choices: parsed.choices.map((choice, index) => {
       const displayText = cleanDisplayText(choice.text);
       const choiceObj = {
         id: `${nodeId}_choice_${index + 1}`,
         // text = what gets sent to chat (null if not player dialogue)
-        text: choice.isPlayerDialogue ? choice.text : null,
+        text: choice.isPlayerDialogue ? formatInlineMarkup(choice.text) : null,
         // displayText = what shows on the choice button
-        displayText: displayText,
+        displayText: formatInlineMarkup(displayText),
         nextNode: convertToId(choice.destination),
       };
       if (choice.effects && Object.keys(choice.effects).length > 0) {
@@ -198,6 +203,23 @@ function convertToId(name) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "");
+}
+
+/**
+ * Convert inline formatting markers to HTML.
+ *   //text//  → <em>text</em>  (italic)
+ *   ''text''  → <strong>text</strong>  (Harlowe bold)
+ *   **text**  → <strong>text</strong>  (Markdown bold)
+ *   *text*    → <em>text</em>  (Markdown italic, single *)
+ */
+function formatInlineMarkup(text) {
+  if (!text) return text;
+  return text
+    .replace(/''([^']+)''/g, "<strong>$1</strong>")
+    .replace(/\/\/([^/]+)\/\//g, "<em>$1</em>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>")
+    .replace(/''/g, ""); // Strip any remaining unmatched '' markers
 }
 
 /**
@@ -444,12 +466,27 @@ function parsePassageContent(content, passageName) {
 
   // --- Line-by-line processing for messages ---
   let currentPos = 0;
+  let pendingSystemLines = []; // Accumulate consecutive system lines to merge into one message
+
+  function flushPendingSystemLines() {
+    if (pendingSystemLines.length > 0) {
+      messageSequence.push({
+        type: "system",
+        content: pendingSystemLines.join("<br>"),
+      });
+      pendingSystemLines = [];
+    }
+  }
+
   for (const line of lines) {
     const lineStart = content.indexOf(line, currentPos);
     currentPos = lineStart + line.length;
 
     const trimmedLine = line.trim();
     if (!trimmedLine) continue;
+
+    // Skip lines that are purely [[link]] choices (already handled by choice extraction)
+    if (/^\[\[.*\]\]\s*$/.test(trimmedLine)) continue;
 
     // Skip lines that are part of already-handled macro blocks
     if (lineStart >= 0 && isInHandledRange(lineStart)) continue;
@@ -462,6 +499,7 @@ function parsePassageContent(content, passageName) {
     // Check for HTML <img> tags BEFORE stripping HTML
     const htmlImgMatch = trimmedLine.match(/<img\s+[^>]*src=["']([^"']+)["'][^>]*>/i);
     if (htmlImgMatch) {
+      flushPendingSystemLines();
       const url = htmlImgMatch[1];
       // Derive alt text from filename
       const filename = url.split("/").pop().replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
@@ -501,6 +539,7 @@ function parsePassageContent(content, passageName) {
       cleanedLine.match(/!\[([^\]]*)\]\(([^)]+)\)/) ||
       cleanedLine.match(/\[img:([^\]]+)\]/);
     if (imageMatch) {
+      flushPendingSystemLines();
       const url = imageMatch[2] || imageMatch[1];
       const alt = imageMatch[1] || "Image";
       messageSequence.push({
@@ -514,6 +553,7 @@ function parsePassageContent(content, passageName) {
     // Check for pause syntax: [pause:2000] or [wait:2000]
     const pauseMatch = cleanedLine.match(/\[(pause|wait):(\d+)\]/i);
     if (pauseMatch) {
+      flushPendingSystemLines();
       messageSequence.push({
         type: "pause",
         duration: parseInt(pauseMatch[2], 10),
@@ -523,6 +563,7 @@ function parsePassageContent(content, passageName) {
 
     // Check if it's a narrator message (starts with "Liz" and contains "says:")
     // Use trimmedLine (before bracket stripping) so [[links]] are still intact
+    // Flush accumulated system lines before a non-system message type
     const lizCheckLine = trimmedLine
       .replace(/<[^>]+>/g, "")
       .replace(/\(set:\s*[^)]*\)/g, "")
@@ -530,6 +571,7 @@ function parsePassageContent(content, passageName) {
       .replace(/^\[(?!\[)/g, "") // Strip single leading [ (Harlowe block) but not [[
       .trim();
     if (/^Liz\s*:/i.test(lizCheckLine) || /^Liz\s+.*says:/i.test(lizCheckLine)) {
+      flushPendingSystemLines();
       // Extract the actual message content from the raw line (before bracket stripping)
       const messageContent = lizCheckLine
         .replace(/^Liz(\s+.*)?says:\s*/i, "")
@@ -566,32 +608,34 @@ function parsePassageContent(content, passageName) {
       }
       continue;
     }
-    // Check if it's player dialogue (contains "You:" or "You say:")
+    // Check if it's player dialogue (contains "You:", "You say:", or "You whisper:")
     // But skip if it contains a (link:) macro (already handled above)
-    // Also skip "You say nothing:" and "You whisper:" — these are silent choices, not messages
+    // Also skip "You say nothing:" — these are silent choices, not messages
     else if (
-      (/^You\s*:/i.test(cleanedLine) || /^You\s+say\s*:/i.test(cleanedLine)) &&
+      (/^You\s*:/i.test(cleanedLine) || /^You\s+(?:say|whisper)\s*:/i.test(cleanedLine)) &&
       !trimmedLine.includes("(link:") &&
       !/^You\s+say\s+nothing\s*:/i.test(cleanedLine)
     ) {
+      flushPendingSystemLines();
       playerDialogueLines.push(cleanedLine);
     }
     // Skip "You say nothing:" lines (choices handled separately, nothing sent to chat)
     else if (/^You\s+say\s+nothing\s*:/i.test(cleanedLine)) {
       continue;
     }
-    // Everything else is system/stage direction
+    // Everything else is system/stage direction — accumulate for merging
     else {
       // Remove links from stage directions
       const cleanStage = cleanedLine.replace(/\[\[([^\]]+)\]\]/g, "");
       if (cleanStage.trim().length > 0) {
-        messageSequence.push({
-          type: "system",
-          content: cleanStage.trim(),
-        });
+        pendingSystemLines.push(cleanStage.trim());
       }
+      continue;
     }
   }
+
+  // Flush any remaining accumulated system lines after the loop
+  flushPendingSystemLines();
 
   // --- Extract [[link]] choices from content (that weren't already handled) ---
   // These are standard Twee-style links NOT inside (if:)/(else:) blocks
@@ -718,6 +762,7 @@ function parseLinkContent(linkContent) {
  */
 function cleanDisplayText(text) {
   return text
+    .replace(/^<<\s*|\s*>>$/g, "") // << text >> → text (display text markers)
     .replace(/\*\*([^*]*)\*\*/g, "$1") // **bold** → bold
     .replace(/''([^']*)''/g, "$1") // ''bold'' → bold (Harlowe)
     .replace(/\/\/([^/]*)\/\//g, "$1") // //italic// → italic

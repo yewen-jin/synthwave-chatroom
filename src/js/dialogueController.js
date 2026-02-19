@@ -180,7 +180,7 @@ function initPlayerRoom() {
         if (chatBody) {
           const systemMsg = document.createElement("div");
           systemMsg.className = "system-message";
-          systemMsg.textContent = currentNodeData.text;
+          systemMsg.innerHTML = currentNodeData.text;
           chatBody.appendChild(systemMsg);
           displayedSystemMessages.add(data.currentNode);
           scrollChatToBottom();
@@ -197,7 +197,7 @@ function initPlayerRoom() {
       choices.forEach((choice) => {
         const btn = document.createElement("button");
         btn.className = "choice-btn";
-        btn.textContent = choice.displayText || choice.text;
+        btn.innerHTML = choice.displayText || choice.text;
 
         btn.addEventListener("click", () => {
           handlePlayerChoice(choice);
@@ -241,7 +241,7 @@ function initPlayerRoom() {
         if (chatBody) {
           const systemMsg = document.createElement("div");
           systemMsg.className = "system-message";
-          systemMsg.textContent = currentNodeData.text;
+          systemMsg.innerHTML = currentNodeData.text;
           chatBody.appendChild(systemMsg);
           displayedSystemMessages.add(data.currentNode);
           scrollChatToBottom();
@@ -267,6 +267,11 @@ function initPlayerRoom() {
     choicesInlineContainer.style.display = "none";
     normalInputContainer.style.display = "block";
     sendBtn.style.display = "block";
+
+    // Reset dialogue system variables to defaults
+    if (dialogueSystem) {
+      dialogueSystem.reset();
+    }
 
     // Clear displayed system messages tracker for next dialogue
     displayedSystemMessages.clear();

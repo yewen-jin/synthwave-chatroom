@@ -16,23 +16,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "The Email says: Where are you?"
-        },
-        {
-          "type": "system",
-          "content": "The Email says: Who's dancing and who's speaking?"
-        },
-        {
-          "type": "system",
-          "content": "The Email says: ..."
-        },
-        {
-          "type": "system",
-          "content": "The Email says:"
-        },
-        {
-          "type": "system",
-          "content": "== The Email leaves the chat =="
+          "content": "The Email says: Where are you?<br>The Email says: Who's dancing and who's speaking?<br>The Email says: ...<br>The Email says:<br>== The Email leaves the chat =="
         },
         {
           "type": "narrator",
@@ -203,7 +187,7 @@
         },
         {
           "id": "a_confessional_response_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -228,11 +212,7 @@
         },
         {
           "type": "system",
-          "content": "Liz says:''''The Oracle Engine does it's magic'...'macho"
-        },
-        {
-          "type": "system",
-          "content": "1928 (n.) \"tough guy,\" from Spanish macho \"male animal,\" noun use of adjective meaning \"masculine, virile,\" from Latin masculus (see masculine). As an adjective, \"ostensibly manly and virile,\" attested in English by 1943. Earlier it was used as in Spanish for male animals, especially hoofed creatures (1848).'"
+          "content": "Liz says:The Oracle Engine does it's magic'...'macho<br>1928 (n.) \"tough guy,\" from Spanish macho \"male animal,\" noun use of adjective meaning \"masculine, virile,\" from Latin masculus (see masculine). As an adjective, \"ostensibly manly and virile,\" attested in English by 1943. Earlier it was used as in Spanish for male animals, especially hoofed creatures (1848).'"
         }
       ],
       "choices": [
@@ -249,7 +229,7 @@
         },
         {
           "id": "a_historically_researched_answer_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -266,15 +246,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "UNLOCKED: Inherited Recipe"
-        },
-        {
-          "type": "system",
-          "content": "''Dear internet person, you have found An Inherited Recipe''"
-        },
-        {
-          "type": "system",
-          "content": "Inherited Recipe"
+          "content": "UNLOCKED: Inherited Recipe<br><strong>Dear internet person, you have found An Inherited Recipe</strong>"
         }
       ],
       "choices": [
@@ -317,7 +289,7 @@
         },
         {
           "id": "a_poetic_answer_that_allows_me_to_think_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -359,7 +331,7 @@
         },
         {
           "id": "a_poetic_answer_with_no_conclusions_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -401,7 +373,7 @@
         },
         {
           "id": "a_reputable_response_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -443,7 +415,7 @@
         },
         {
           "id": "a_response_that_holds_tension_to_match_my_mood_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -485,7 +457,7 @@
         },
         {
           "id": "a_scientifically_researched_answer_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -527,7 +499,7 @@
         },
         {
           "id": "a_search_result_from_the_machine_itself_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -588,7 +560,7 @@
         },
         {
           "id": "an_answer_that_satisfies_the_discomfort_of_this_question_choice_2",
-          "text": "**does my body feel trapped?**",
+          "text": "<strong>does my body feel trapped?</strong>",
           "displayText": "does my body feel trapped?",
           "nextNode": "central_area",
           "conditions": {
@@ -648,7 +620,7 @@
         },
         {
           "id": "an_emotionally_driven_response_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -690,7 +662,7 @@
         },
         {
           "id": "an_uncomfortable_response_that_allows_me_to_reflect_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -711,7 +683,7 @@
         },
         {
           "type": "narrator",
-          "content": "//Dear internet person, you have found A Severed Leg//"
+          "content": "<em>Dear internet person, you have found A Severed Leg</em>"
         },
         {
           "type": "image",
@@ -770,54 +742,14 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "The Inherited Recipe says:"
-        },
-        {
-          "type": "system",
-          "content": "Archieves inside flesh like a forgotten dream"
-        },
-        {
-          "type": "system",
-          "content": "A torn photo, a floppy disk."
-        },
-        {
-          "type": "system",
-          "content": "A gift from your bloodline sending nourishment you can't smell"
-        },
-        {
-          "type": "system",
-          "content": "But you can feel."
-        },
-        {
-          "type": "system",
-          "content": "It's telling you to 'slow down'"
-        },
-        {
-          "type": "system",
-          "content": "and other words you can no longer decode."
-        },
-        {
-          "type": "system",
-          "content": "maybe this isn't a meal at all,"
-        },
-        {
-          "type": "system",
-          "content": "but a message"
-        },
-        {
-          "type": "system",
-          "content": "you chew on this thought of what this bowl of soup and what your body are telling you."
-        },
-        {
-          "type": "system",
-          "content": "> ->main portal"
+          "content": "The Inherited Recipe says:<br>Archieves inside flesh like a forgotten dream<br>A torn photo, a floppy disk.<br>A gift from your bloodline sending nourishment you can't smell<br>But you can feel.<br>It's telling you to 'slow down'<br>and other words you can no longer decode.<br>maybe this isn't a meal at all,<br>but a message<br>you chew on this thought of what this bowl of soup and what your body are telling you."
         }
       ],
       "choices": [
         {
           "id": "can_i_read_the_poem_that_came_with_the_recipe_choice_1",
           "text": null,
-          "displayText": "<< *you wander out of obsolescence with reflection to slow down* >>",
+          "displayText": "<em>you wander out of obsolescence with reflection to slow down</em>",
           "nextNode": "main_portal"
         }
       ]
@@ -914,7 +846,7 @@
         },
         {
           "type": "narrator",
-          "content": "//Dear internet person, you have found Nail Clippings//"
+          "content": "<em>Dear internet person, you have found Nail Clippings</em>"
         },
         {
           "type": "image",
@@ -937,66 +869,14 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "Your Clippings say:"
-        },
-        {
-          "type": "system",
-          "content": "Little forgotten pieces"
-        },
-        {
-          "type": "system",
-          "content": "From your body"
-        },
-        {
-          "type": "system",
-          "content": "The parts the world deemed unworthy"
-        },
-        {
-          "type": "system",
-          "content": "imperfect"
-        },
-        {
-          "type": "system",
-          "content": "a clause you were taught somewhere between"
-        },
-        {
-          "type": "system",
-          "content": "your sexuality and spirituality"
-        },
-        {
-          "type": "system",
-          "content": "Click-Click-Opps!"
-        },
-        {
-          "type": "system",
-          "content": "What if ur body parts were alive?"
-        },
-        {
-          "type": "system",
-          "content": "Can u imagine those 'lil bones"
-        },
-        {
-          "type": "system",
-          "content": "dancing-consciously-laughing on hills"
-        },
-        {
-          "type": "system",
-          "content": "Free from the pain of being unwanted"
-        },
-        {
-          "type": "system",
-          "content": "What did you accidentally believe in?"
-        },
-        {
-          "type": "system",
-          "content": "> ->main portal"
+          "content": "Your Clippings say:<br>Little forgotten pieces<br>From your body<br>The parts the world deemed unworthy<br>imperfect<br>a clause you were taught somewhere between<br>your sexuality and spirituality<br>Click-Click-Opps!<br>What if ur body parts were alive?<br>Can u imagine those 'lil bones<br>dancing-consciously-laughing on hills<br>Free from the pain of being unwanted<br>What did you accidentally believe in?"
         }
       ],
       "choices": [
         {
           "id": "did_it_come_with_a_poem_for_me_to_read_choice_1",
           "text": null,
-          "displayText": "<< You ponder this final question. and wander out of obsolescence>>",
+          "displayText": "You ponder this final question. and wander out of obsolescence",
           "nextNode": "main_portal"
         }
       ]
@@ -1011,7 +891,7 @@
         },
         {
           "type": "narrator",
-          "content": "//Dear internet person, you have found A Pile of Dust..?//"
+          "content": "<em>Dear internet person, you have found A Pile of Dust..?</em>"
         },
         {
           "type": "image",
@@ -1034,50 +914,14 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "The Dust says:"
-        },
-        {
-          "type": "system",
-          "content": "The Body"
-        },
-        {
-          "type": "system",
-          "content": "Your body"
-        },
-        {
-          "type": "system",
-          "content": "left without touch"
-        },
-        {
-          "type": "system",
-          "content": "What is it asking for?"
-        },
-        {
-          "type": "system",
-          "content": "The dust gathers around your feet,"
-        },
-        {
-          "type": "system",
-          "content": "And (uh) she's winking now."
-        },
-        {
-          "type": "system",
-          "content": "What have you not embraced?"
-        },
-        {
-          "type": "system",
-          "content": "You look distracted."
-        },
-        {
-          "type": "system",
-          "content": "> ->main portal"
+          "content": "The Dust says:<br>The Body<br>Your body<br>left without touch<br>What is it asking for?<br>The dust gathers around your feet,<br>And (uh) she's winking now.<br>What have you not embraced?<br>You look distracted."
         }
       ],
       "choices": [
         {
           "id": "dust_eh_did_it_come_with_a_poem_at_least_choice_1",
           "text": null,
-          "displayText": "<< You say: Is this a reward or a warning? What is my body telling me?  Wander out of obsolescence. >>",
+          "displayText": "You say: Is this a reward or a warning? What is my body telling me?  Wander out of obsolescence.",
           "nextNode": "main_portal"
         }
       ]
@@ -1092,7 +936,7 @@
         },
         {
           "type": "narrator",
-          "content": "//Dear internet person, you have found An Evil Eye//"
+          "content": "<em>Dear internet person, you have found An Evil Eye</em>"
         },
         {
           "type": "image",
@@ -1126,90 +970,14 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "Your Lost Thought says:"
-        },
-        {
-          "type": "system",
-          "content": "Focused in on this universe"
-        },
-        {
-          "type": "system",
-          "content": "Everything breathes"
-        },
-        {
-          "type": "system",
-          "content": "Into a single moment."
-        },
-        {
-          "type": "system",
-          "content": "And then you blink..."
-        },
-        {
-          "type": "system",
-          "content": "eternityevaporatesflipsreverses"
-        },
-        {
-          "type": "system",
-          "content": "crys out"
-        },
-        {
-          "type": "system",
-          "content": "and then laughs"
-        },
-        {
-          "type": "system",
-          "content": "half-eaten"
-        },
-        {
-          "type": "system",
-          "content": "tip of the tongue,"
-        },
-        {
-          "type": "system",
-          "content": "a smothering darkness"
-        },
-        {
-          "type": "system",
-          "content": "It's just a feeling, but"
-        },
-        {
-          "type": "system",
-          "content": "she still has power"
-        },
-        {
-          "type": "system",
-          "content": "To sew broken images"
-        },
-        {
-          "type": "system",
-          "content": "and tell you, \"this is your memory\""
-        },
-        {
-          "type": "system",
-          "content": "and these broken images love to play!"
-        },
-        {
-          "type": "system",
-          "content": "they're so mischevious."
-        },
-        {
-          "type": "system",
-          "content": "Perhaps because they believe between a moment ago and the past"
-        },
-        {
-          "type": "system",
-          "content": "it was all a fascade."
-        },
-        {
-          "type": "system",
-          "content": "> ->main portal"
+          "content": "Your Lost Thought says:<br>Focused in on this universe<br>Everything breathes<br>Into a single moment.<br>And then you blink...<br>eternityevaporatesflipsreverses<br>crys out<br>and then laughs<br>half-eaten<br>tip of the tongue,<br>a smothering darkness<br>It's just a feeling, but<br>she still has power<br>To sew broken images<br>and tell you, \"this is your memory\"<br>and these broken images love to play!<br>they're so mischevious.<br>Perhaps because they believe between a moment ago and the past<br>it was all a fascade."
         }
       ],
       "choices": [
         {
           "id": "finalthought_choice_1",
           "text": null,
-          "displayText": "<< You ask: What will I remember tonight? Perhaps for now I'll wander out of obsolescence >>",
+          "displayText": "You ask: What will I remember tonight? Perhaps for now I'll wander out of obsolescence",
           "nextNode": "main_portal"
         }
       ]
@@ -1224,7 +992,7 @@
         },
         {
           "type": "narrator",
-          "content": "//Dear internet person, you have found A Forgotten Thought//"
+          "content": "<em>Dear internet person, you have found A Forgotten Thought</em>"
         },
         {
           "type": "image",
@@ -1253,15 +1021,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "loading..looking inside your brain. how does your body feel?"
-        },
-        {
-          "type": "system",
-          "content": "The Email says: Her we go"
-        },
-        {
-          "type": "system",
-          "content": "The Email says: Here* :-)"
+          "content": "loading..looking inside your brain. how does your body feel?<br>The Email says: Her we go<br>The Email says: Here* :-)"
         }
       ],
       "choices": [
@@ -1331,19 +1091,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "SSSS_98 says: Hey. Yes it has reached me. I'm so so glad someone else has replied."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Did you see the photo?"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Tell me what comes up for you..."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: no one else seems to see these messagess. I'm really itching to discuss with you.."
+          "content": "SSSS_98 says: Hey. Yes it has reached me. I'm so so glad someone else has replied.<br>SSSS_98 says: Did you see the photo?<br>SSSS_98 says: Tell me what comes up for you...<br>SSSS_98 says: no one else seems to see these messagess. I'm really itching to discuss with you.."
         }
       ],
       "choices": [
@@ -1361,15 +1109,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "SSSS_98 says: ''You can see my words but you cannot understand my words? ''Haha, that actually made me smile...why does everyone have to be so poetically-cryptic in hyperspace...lol."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Did you see the photo?"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Tell me what comes up for you...no one else seems to see these messages so I'm really itching to discuss with you.."
+          "content": "SSSS_98 says: <strong>You can see my words but you cannot understand my words? </strong>Haha, that actually made me smile...why does everyone have to be so poetically-cryptic in hyperspace...lol.<br>SSSS_98 says: Did you see the photo?<br>SSSS_98 says: Tell me what comes up for you...no one else seems to see these messages so I'm really itching to discuss with you.."
         }
       ],
       "choices": [
@@ -1387,23 +1127,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "...''A mirror.."
-        },
-        {
-          "type": "system",
-          "content": "..Poorer eyesight..."
-        },
-        {
-          "type": "system",
-          "content": "..A telepathic printer"
-        },
-        {
-          "type": "system",
-          "content": "Do you want any? Anyway, msg me back before the weekend."
-        },
-        {
-          "type": "system",
-          "content": "xo"
+          "content": "...A mirror..<br>..Poorer eyesight...<br>..A telepathic printer<br>Do you want any? Anyway, msg me back before the weekend.<br>xo"
         },
         {
           "type": "narrator",
@@ -1545,62 +1269,14 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "A Stranger's Smile says:"
-        },
-        {
-          "type": "system",
-          "content": "A flirtatious smile"
-        },
-        {
-          "type": "system",
-          "content": "A curious glance"
-        },
-        {
-          "type": "system",
-          "content": "A cryptic message"
-        },
-        {
-          "type": "system",
-          "content": "A non physical embrace"
-        },
-        {
-          "type": "system",
-          "content": "A crowd of curious bodies"
-        },
-        {
-          "type": "system",
-          "content": "Watching"
-        },
-        {
-          "type": "system",
-          "content": "You"
-        },
-        {
-          "type": "system",
-          "content": "Right Now."
-        },
-        {
-          "type": "system",
-          "content": "Your body perks"
-        },
-        {
-          "type": "system",
-          "content": "And pockets this stranger’s smile"
-        },
-        {
-          "type": "system",
-          "content": "For a grim day."
-        },
-        {
-          "type": "system",
-          "content": "> ->main portal"
+          "content": "A Stranger's Smile says:<br>A flirtatious smile<br>A curious glance<br>A cryptic message<br>A non physical embrace<br>A crowd of curious bodies<br>Watching<br>You<br>Right Now.<br>Your body perks<br>And pockets this stranger’s smile<br>For a grim day."
         }
       ],
       "choices": [
         {
           "id": "i_d_like_to_read_final_words_choice_1",
           "text": null,
-          "displayText": "<< You wonder as you depart: Who was that? Wander out of obsolescence>>",
+          "displayText": "You wonder as you depart: Who was that? Wander out of obsolescence",
           "nextNode": "main_portal"
         }
       ]
@@ -1611,15 +1287,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "The email reads:"
-        },
-        {
-          "type": "system",
-          "content": "Dear (the name is blurred out),"
-        },
-        {
-          "type": "system",
-          "content": "sO formal sorry! I couldn't find your account to message directly and so I wondered if you deactivated? Anyways, I did wnt to invte you you a c0nc3rt - hehe! I'll bring a few of the following items"
+          "content": "The email reads:<br>Dear (the name is blurred out),<br>sO formal sorry! I couldn't find your account to message directly and so I wondered if you deactivated? Anyways, I did wnt to invte you you a c0nc3rt - hehe! I'll bring a few of the following items"
         }
       ],
       "choices": [
@@ -1637,19 +1305,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "Your own eyebrows frown and you look around,  you remember a while ago - sometime in a past vision- that sometimes when something's broken that maybe you're in the right place."
-        },
-        {
-          "type": "system",
-          "content": "The Email says: Are you?"
-        },
-        {
-          "type": "system",
-          "content": "The Email says: Oh."
-        },
-        {
-          "type": "system",
-          "content": "The Email says: You won't believe this! You actually might regret something you've been doing this entire gameplay..."
+          "content": "Your own eyebrows frown and you look around,  you remember a while ago - sometime in a past vision- that sometimes when something's broken that maybe you're in the right place.<br>The Email says: Are you?<br>The Email says: Oh.<br>The Email says: You won't believe this! You actually might regret something you've been doing this entire gameplay..."
         }
       ],
       "choices": [
@@ -1680,7 +1336,7 @@
         {
           "id": "i_m_ready_where_to_next_choice_1",
           "text": null,
-          "displayText": "*watch the screen while things happen unknown to me*",
+          "displayText": "<em>watch the screen while things happen unknown to me</em>",
           "nextNode": "watch_the_screen_while_things_happen_unknown_to_me"
         }
       ]
@@ -1692,10 +1348,6 @@
         {
           "type": "system",
           "content": "The emails eyes widen, they look soft and suddenly you realize you are looking at a breathing being."
-        },
-        {
-          "type": "system",
-          "content": "You whisper: [[A mirror, this email represents me?->Inherited Recipe"
         }
       ],
       "choices": [
@@ -1735,23 +1387,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "The Letter says: Dear Internet Person."
-        },
-        {
-          "type": "system",
-          "content": "The Letter says: I'm surprised to see you here."
-        },
-        {
-          "type": "system",
-          "content": "The Letter says: Aimlessly looking for your lost soul parts."
-        },
-        {
-          "type": "system",
-          "content": "The Letter says: That's not why you're really here is it? You want to be entertained? You want to analyze \"art\"? You had a few moments to spare for a joke?"
-        },
-        {
-          "type": "system",
-          "content": "The Letter says: ...I don't wish to ask you, but go ahead I guess, tell me why you're here."
+          "content": "The Letter says: Dear Internet Person.<br>The Letter says: I'm surprised to see you here.<br>The Letter says: Aimlessly looking for your lost soul parts.<br>The Letter says: That's not why you're really here is it? You want to be entertained? You want to analyze \"art\"? You had a few moments to spare for a joke?<br>The Letter says: ...I don't wish to ask you, but go ahead I guess, tell me why you're here."
         }
       ],
       "choices": [
@@ -1811,50 +1447,14 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "Your Bloody Leg Says:"
-        },
-        {
-          "type": "system",
-          "content": "My body watches you"
-        },
-        {
-          "type": "system",
-          "content": "And you peer back"
-        },
-        {
-          "type": "system",
-          "content": "Silent drips of blood"
-        },
-        {
-          "type": "system",
-          "content": "A wounded unwanted mind"
-        },
-        {
-          "type": "system",
-          "content": "How often do you allow your mind to think?"
-        },
-        {
-          "type": "system",
-          "content": "The body is so fragile,"
-        },
-        {
-          "type": "system",
-          "content": "So flight or fight, bby!"
-        },
-        {
-          "type": "system",
-          "content": "Inward or outward?"
-        },
-        {
-          "type": "system",
-          "content": "> ->main portal"
+          "content": "Your Bloody Leg Says:<br>My body watches you<br>And you peer back<br>Silent drips of blood<br>A wounded unwanted mind<br>How often do you allow your mind to think?<br>The body is so fragile,<br>So flight or fight, bby!<br>Inward or outward?"
         }
       ],
       "choices": [
         {
           "id": "let_me_read_the_poem_that_came_with_my_bloody_leg_choice_1",
           "text": null,
-          "displayText": "<< You say to youreself: Who am I really listening to?  Wander out of obsolescence. >>",
+          "displayText": "You say to youreself: Who am I really listening to?  Wander out of obsolescence.",
           "nextNode": "main_portal"
         }
       ]
@@ -1865,50 +1465,14 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "The Evil Eye says:"
-        },
-        {
-          "type": "system",
-          "content": "A side eye, an echoed chuckle"
-        },
-        {
-          "type": "system",
-          "content": "an eye for extraction"
-        },
-        {
-          "type": "system",
-          "content": "Your eyes turn inward"
-        },
-        {
-          "type": "system",
-          "content": "Reminding itself,"
-        },
-        {
-          "type": "system",
-          "content": "\"you have not moved your body the same since --\""
-        },
-        {
-          "type": "system",
-          "content": "Did you invite this gaze?"
-        },
-        {
-          "type": "system",
-          "content": "Undetected for so long 'til now,"
-        },
-        {
-          "type": "system",
-          "content": "a painful thought, transformed"
-        },
-        {
-          "type": "system",
-          "content": "> ->main portal"
+          "content": "The Evil Eye says:<br>A side eye, an echoed chuckle<br>an eye for extraction<br>Your eyes turn inward<br>Reminding itself,<br>\"you have not moved your body the same since --\"<br>Did you invite this gaze?<br>Undetected for so long 'til now,<br>a painful thought, transformed"
         }
       ],
       "choices": [
         {
           "id": "liz_i_d_like_to_read_the_poem_that_came_with_evil_eye_choice_1",
           "text": null,
-          "displayText": "<< the eye watches you as you leave this chat.  Wander out of obsolescence >>",
+          "displayText": "the eye watches you as you leave this chat.  Wander out of obsolescence",
           "nextNode": "main_portal"
         }
       ]
@@ -1919,15 +1483,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "The Code says: Okay."
-        },
-        {
-          "type": "system",
-          "content": "The Code says: Thank you for answering."
-        },
-        {
-          "type": "system",
-          "content": "The Code Says: Now, I'm curious. Are you content in this moment or feeling itchy to move forward?"
+          "content": "The Code says: Okay.<br>The Code says: Thank you for answering.<br>The Code Says: Now, I'm curious. Are you content in this moment or feeling itchy to move forward?"
         }
       ],
       "choices": [
@@ -1951,11 +1507,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "SSSS_98 says: A map..."
-        },
-        {
-          "type": "system",
-          "content": "SSS_98 whispers: Well, let me log the coordinates for you."
+          "content": "SSSS_98 says: A map...<br>SSS_98 whispers: Well, let me log the coordinates for you."
         }
       ],
       "choices": [
@@ -1973,19 +1525,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "The code roles their eyes. The feeling stings. The first time a non-human has made you feel blasé"
-        },
-        {
-          "type": "system",
-          "content": "The Code says: You are."
-        },
-        {
-          "type": "system",
-          "content": "The Code says: So easily seduced."
-        },
-        {
-          "type": "system",
-          "content": "The Code says: What is it that makes you so easy?"
+          "content": "The code roles their eyes. The feeling stings. The first time a non-human has made you feel blasé<br>The Code says: You are.<br>The Code says: So easily seduced.<br>The Code says: What is it that makes you so easy?"
         }
       ],
       "choices": [
@@ -2053,7 +1593,7 @@
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "*looks at your disappointed* I don't want to throw you off your journey, Internet Person."
+          "content": "<em>looks at your disappointed</em> I don't want to throw you off your journey, Internet Person."
         },
         {
           "type": "narrator",
@@ -2225,47 +1765,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "The Email says:"
-        },
-        {
-          "type": "system",
-          "content": "\"I can't believe it's almost 2010!"
-        },
-        {
-          "type": "system",
-          "content": "Time has flown by -"
-        },
-        {
-          "type": "system",
-          "content": "HmmmmM"
-        },
-        {
-          "type": "system",
-          "content": "It's almost 2 in the morning,"
-        },
-        {
-          "type": "system",
-          "content": "and the deep quiet and the soothing pace of tumblr is really"
-        },
-        {
-          "type": "system",
-          "content": "really allowing me to reflect on like,"
-        },
-        {
-          "type": "system",
-          "content": "these websites - public digital rooms,"
-        },
-        {
-          "type": "system",
-          "content": "we're all sharing parts of ourselves here"
-        },
-        {
-          "type": "system",
-          "content": "and we're all apart of something"
-        },
-        {
-          "type": "system",
-          "content": "I wonder if one day the internet will be..."
+          "content": "The Email says:<br>\"I can't believe it's almost 2010!<br>Time has flown by -<br>HmmmmM<br>It's almost 2 in the morning,<br>and the deep quiet and the soothing pace of tumblr is really<br>really allowing me to reflect on like,<br>these websites - public digital rooms,<br>we're all sharing parts of ourselves here<br>and we're all apart of something<br>I wonder if one day the internet will be..."
         },
         {
           "type": "narrator",
@@ -2273,15 +1773,7 @@
         },
         {
           "type": "system",
-          "content": "> You say: [[...still a place  place of sancutary, like it was in the past...->A Stranger's SmileR"
-        },
-        {
-          "type": "system",
-          "content": "> You say: [[...an archieve, or perhaps a graveyard...a museum? ->The Evil Eye"
-        },
-        {
-          "type": "system",
-          "content": ">  as in fact, what is there to say? You haven't quite swallowed your feelings of the past and your relaionship."
+          "content": "> You say: [[...still a place  place of sancutary, like it was in the past...->A Stranger's SmileR<br>> You say: [[...an archieve, or perhaps a graveyard...a museum? ->The Evil Eye<br>>  as in fact, what is there to say? You haven't quite swallowed your feelings of the past and your relaionship."
         }
       ],
       "choices": [
@@ -2333,7 +1825,7 @@
         },
         {
           "type": "narrator",
-          "content": "//Dear internet person, you have found An Inherited Recipe//"
+          "content": "<em>Dear internet person, you have found An Inherited Recipe</em>"
         },
         {
           "type": "image",
@@ -2555,7 +2047,7 @@
         },
         {
           "id": "straight_to_the_point_result_choice_2",
-          "text": "**ah**",
+          "text": "<strong>ah</strong>",
           "displayText": "ah",
           "nextNode": "central_area",
           "conditions": {
@@ -2660,79 +2152,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "AURORA-WEAVE v9.7 — Story-Only Network Illusion Script"
-        },
-        {
-          "type": "system",
-          "content": "(This language does not exist; This language exists. Just as much as you.)"
-        },
-        {
-          "type": "system",
-          "content": "module aurora.weave"
-        },
-        {
-          "type": "system",
-          "content": "init {"
-        },
-        {
-          "type": "system",
-          "content": "channel = holoLink.open(port: \"ether:∆42\")"
-        },
-        {
-          "type": "system",
-          "content": "flux = quantumCache.allocate(phantomBytes: 88_000)"
-        },
-        {
-          "type": "system",
-          "content": "weave {"
-        },
-        {
-          "type": "system",
-          "content": "targetSite = \"https://any.site\"   // fictional placeholder"
-        },
-        {
-          "type": "system",
-          "content": "echo(\"Spinning illusion threads…\")"
-        },
-        {
-          "type": "system",
-          "content": "Apply non-real “overlays”"
-        },
-        {
-          "type": "system",
-          "content": "mirageLayer.paint(text: \"ALTERED REALITY\", hue: \"violet-fire\")"
-        },
-        {
-          "type": "system",
-          "content": "mirageLayer.distort(mode: \"dream-bend\", intensity: 0.73)"
-        },
-        {
-          "type": "system",
-          "content": "Bind the illusion to the narrative framework"
-        },
-        {
-          "type": "system",
-          "content": "holoLink.bind(mirageLayer, to: targetSite, using: \"story-thread\")"
-        },
-        {
-          "type": "system",
-          "content": "finalize {"
-        },
-        {
-          "type": "system",
-          "content": "echo(\"Illusion deployed. (Remember: This is not a game)\")"
-        },
-        {
-          "type": "system",
-          "content": "The Email says: Goodbye..."
-        },
-        {
-          "type": "system",
-          "content": "The Code Enters Chat"
-        },
-        {
-          "type": "system",
-          "content": "The Code says: S.C.R.O.L.L"
+          "content": "AURORA-WEAVE v9.7 — Story-Only Network Illusion Script<br>(This language does not exist; This language exists. Just as much as you.)<br>module aurora.weave<br>init {<br>channel = holoLink.open(port: \"ether:∆42\")<br>flux = quantumCache.allocate(phantomBytes: 88_000)<br>weave {<br>targetSite = \"https:<em>any.site\"   </em> fictional placeholder<br>echo(\"Spinning illusion threads…\")<br>Apply non-real “overlays”<br>mirageLayer.paint(text: \"ALTERED REALITY\", hue: \"violet-fire\")<br>mirageLayer.distort(mode: \"dream-bend\", intensity: 0.73)<br>Bind the illusion to the narrative framework<br>holoLink.bind(mirageLayer, to: targetSite, using: \"story-thread\")<br>finalize {<br>echo(\"Illusion deployed. (Remember: This is not a game)\")<br>The Email says: Goodbye...<br>The Code Enters Chat<br>The Code says: S.C.R.O.L.L"
         }
       ],
       "choices": [
@@ -2818,7 +2238,7 @@
         },
         {
           "type": "narrator",
-          "content": "//Dear internet person, you have found A Stranger's Smile//"
+          "content": "<em>Dear internet person, you have found A Stranger's Smile</em>"
         },
         {
           "type": "image",
@@ -2860,14 +2280,6 @@
         {
           "type": "system",
           "content": "I guess I should wait for someone to enter the chat? Or maybe if I am taking a big risk here..."
-        },
-        {
-          "type": "system",
-          "content": "I decide to shout into the metaverse, \"Hello?!\" Suddenly, hear digital birds fly off by your disturbance,"
-        },
-        {
-          "type": "system",
-          "content": "I wait patiently wait infront of the screen confused"
         }
       ],
       "choices": [
@@ -3041,15 +2453,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "The Code says: ..."
-        },
-        {
-          "type": "system",
-          "content": "The Code says: Yeah, you're not ready, transporting you."
-        },
-        {
-          "type": "system",
-          "content": "loading new sphere"
+          "content": "The Code says: ...<br>The Code says: Yeah, you're not ready, transporting you.<br>loading new sphere"
         }
       ],
       "choices": [
@@ -3067,11 +2471,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "SSSS_98 says: Aha, a mirror..."
-        },
-        {
-          "type": "system",
-          "content": "SSS_98 says: Well."
+          "content": "SSSS_98 says: Aha, a mirror...<br>SSS_98 says: Well."
         }
       ],
       "choices": [
@@ -3173,7 +2573,7 @@
       "choices": [
         {
           "id": "back_to_chat_with_ssss_98_choice_1",
-          "text": "Yes, I know it's a kind of a ''mirror''",
+          "text": "Yes, I know it's a kind of a <strong>mirror</strong>",
           "displayText": "Yes, I know it's a kind of a mirror",
           "nextNode": "yes_i_know_it_s_a_kind_of_a_mirror"
         },
@@ -3258,23 +2658,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "Thread Topic: Jouissance."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Who owns these tools?"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says:  By tools I mean = my body"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: I don't have many friends to discuss this with.."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says:  But, I often think, I want my body on display for pleasure."
+          "content": "Thread Topic: Jouissance.<br>SSSS_98 says: Who owns these tools?<br>SSSS_98 says:  By tools I mean = my body<br>SSSS_98 says: I don't have many friends to discuss this with..<br>SSSS_98 says:  But, I often think, I want my body on display for pleasure."
         }
       ],
       "choices": [
@@ -3312,10 +2696,6 @@
           "type": "image",
           "url": "https://i.postimg.cc/fLSrt7Pq/IMG-1949.jpg",
           "alt": "IMG 1949"
-        },
-        {
-          "type": "system",
-          "content": "WANDER INTO OBSOLESCENCE"
         }
       ],
       "choices": [
@@ -3333,19 +2713,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "SSSS_98 says: Hello? Is anyone there? I keep seein a lot of activity on my other posts/other's threads the past couple of days, but I can't tell what's going on like is this even visible?"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Can you all see this?"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Can you all see me?"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says:  Are you really there even if you can see this?"
+          "content": "SSSS_98 says: Hello? Is anyone there? I keep seein a lot of activity on my other posts/other's threads the past couple of days, but I can't tell what's going on like is this even visible?<br>SSSS_98 says: Can you all see this?<br>SSSS_98 says: Can you all see me?<br>SSSS_98 says:  Are you really there even if you can see this?"
         },
         {
           "type": "narrator",
@@ -3373,15 +2741,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "SSSS_98 says: I've never really thought about it before"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: but, I guess I'm grateful for this kind of thread space to kind of tune out of the world, I feel like I'm kind of growing up online and learning about myself with all of this information around me."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: I'm curious to know what others think."
+          "content": "SSSS_98 says: I've never really thought about it before<br>SSSS_98 says: but, I guess I'm grateful for this kind of thread space to kind of tune out of the world, I feel like I'm kind of growing up online and learning about myself with all of this information around me.<br>SSSS_98 says: I'm curious to know what others think."
         }
       ],
       "choices": [
@@ -3399,35 +2759,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": "Liz says:..Here's the thread below that followed the image."
-        },
-        {
-          "type": "system",
-          "content": "Thread Topic: Jouissance."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Hey everyone,"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: has anyone seen this image floating around on here?"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: It keeps coming up for me, like a lot. I had to start a convo about it as so many thoughts and questions keep coming up for me around my relationship with my own body."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: The first time I saw the image, it felt like a kind of optical illusion, if I blinked the image looked slightly different and it kind of tripped me out."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: The second time, I think I started to really focus in on the vaginal area. I thought of my own gentalia and my body as a machine of pleasure and hesitation."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says:  Objectification and beauty."
+          "content": "Liz says:..Here's the thread below that followed the image.<br>Thread Topic: Jouissance.<br>SSSS_98 says: Hey everyone,<br>SSSS_98 says: has anyone seen this image floating around on here?<br>SSSS_98 says: It keeps coming up for me, like a lot. I had to start a convo about it as so many thoughts and questions keep coming up for me around my relationship with my own body.<br>SSSS_98 says: The first time I saw the image, it felt like a kind of optical illusion, if I blinked the image looked slightly different and it kind of tripped me out.<br>SSSS_98 says: The second time, I think I started to really focus in on the vaginal area. I thought of my own gentalia and my body as a machine of pleasure and hesitation.<br>SSSS_98 says:  Objectification and beauty."
         }
       ],
       "choices": [
@@ -3483,7 +2815,7 @@
         },
         {
           "type": "narrator",
-          "content": "You're here, but are you //here// here?"
+          "content": "You're here, but are you <em>here</em> here?"
         },
         {
           "type": "narrator",
@@ -3577,19 +2909,7 @@
       "messageSequence": [
         {
           "type": "system",
-          "content": ".blink {"
-        },
-        {
-          "type": "system",
-          "content": "animation: blink 1s step-start infinite;"
-        },
-        {
-          "type": "system",
-          "content": "@keyframes blink {"
-        },
-        {
-          "type": "system",
-          "content": "50% { opacity: 0; }"
+          "content": ".blink {<br>animation: blink 1s step-start infinite;<br>@keyframes blink {<br>50% { opacity: 0; }"
         }
       ],
       "choices": []

@@ -413,6 +413,12 @@ io.on("connection", (socket) => {
     const state = dialogueStates.get(room);
     if (!state || !state.active) return;
 
+    // Reset variables when returning to the start node
+    if (state.currentNode === state.dialogueData.metadata.startNode) {
+      console.log("Returned to start node — resetting variables to defaults");
+      state.variables = { ...state.dialogueData.variables };
+    }
+
     const currentNode = state.dialogueData.nodes[state.currentNode];
     console.log(
       `Processing node: ${state.currentNode}, type: ${currentNode.type}`,
@@ -584,6 +590,8 @@ io.on("connection", (socket) => {
   // Helper: Handle dialogue end
   function handleDialogueEnd(room, state) {
     state.active = false;
+    // Reset all variables to default values
+    state.variables = { ...state.dialogueData.variables };
     io.emit("dialogue-end", {
       reason: "completed",
     });
