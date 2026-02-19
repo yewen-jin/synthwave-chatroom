@@ -608,6 +608,38 @@ function parsePassageContent(content, passageName) {
       }
       continue;
     }
+    // Check if it's a third-party speaker (e.g. "SSSS_98 says:", "The Email says:", "The Code says:")
+    // These are NOT "Liz says:" or "You say:" — they are other characters speaking.
+    // NOTE: These get a "speaker" property so they can receive special styling distinct from
+    // generic system messages. Each speaker line is kept separate (not merged with adjacent lines).
+    else if (
+      /\bsays?:/i.test(cleanedLine) &&
+      !/^Liz\b/i.test(cleanedLine) &&
+      !/^You\b/i.test(cleanedLine)
+    ) {
+      flushPendingSystemLines();
+      // Extract the speaker name (everything before "says:" or "say:")
+      const speakerMatch = cleanedLine.match(/^(.+?)\s+says?:\s*/i);
+      const speaker = speakerMatch ? speakerMatch[1].trim() : null;
+      const speakerContent = speakerMatch
+        ? cleanedLine.slice(speakerMatch[0].length).trim()
+        : cleanedLine;
+      // Remove [[links]] from the content
+      const cleanContent = speakerContent.replace(/\[\[([^\]]+)\]\]/g, (match, linkContent) => {
+        if (linkContent.includes("->")) return linkContent.split("->")[0].trim();
+        if (linkContent.includes("<-")) return linkContent.split("<-")[1].trim();
+        if (linkContent.includes("|")) return linkContent.split("|")[0].trim();
+        return linkContent.trim();
+      });
+      messageSequence.push({
+        type: "system",
+        speaker: speaker,
+        content: cleanContent.length > 0
+          ? `${speaker} says: ${cleanContent}`
+          : `${speaker} says:`,
+      });
+      continue;
+    }
     // Check if it's player dialogue (contains "You:", "You say:", or "You whisper:")
     // But skip if it contains a (link:) macro (already handled above)
     // Also skip "You say nothing:" — these are silent choices, not messages
@@ -713,8 +745,9 @@ function parsePassageContent(content, passageName) {
     nextNode = narratorLinks[0];
   }
 
-  // If no messages were found, add passage name as fallback system message
-  if (messageSequence.length === 0) {
+  // If no messages were found AND there are no choices, add passage name as fallback.
+  // Choice-only nodes (e.g. "I", "have", "released") should have no system message.
+  if (messageSequence.length === 0 && choices.length === 0) {
     messageSequence.push({
       type: "system",
       content: passageName,

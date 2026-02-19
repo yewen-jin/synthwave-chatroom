@@ -451,6 +451,13 @@ button {
   line-height: 1.5;
 }
 
+/* Third-party speaker messages (e.g. "SSSS_98 says:", "The Email says:", "The Code says:")
+   These can be styled differently from generic system messages.
+   Use [data-speaker="SSSS_98"] for per-speaker styling. */
+.speaker-message {
+  /* TODO: Add special styling for third-party speaker messages */
+}
+
 /* Image messages from messageSequence */
 .image-message {
   text-align: center;

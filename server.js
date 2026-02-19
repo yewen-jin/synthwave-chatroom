@@ -349,6 +349,7 @@ io.on("connection", (socket) => {
                 username: "SYSTEM",
                 timestamp: Date.now(),
                 isSystem: true,
+                speaker: message.speaker || null, // Third-party speaker name for special styling
               });
               break;
 
