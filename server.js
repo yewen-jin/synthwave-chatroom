@@ -184,11 +184,21 @@ function applyEffects(effects, variables) {
   return newVars;
 }
 
+// Helper: Compute derived variables (e.g. ordinal from clicks)
+const ordinalWords = ["first", "second", "third"];
+function computeDerivedVariables(variables) {
+  const derived = { ...variables };
+  const clicks = derived.clicks || 0;
+  derived.ordinal = ordinalWords[clicks - 1] || `${clicks}th`;
+  return derived;
+}
+
 // Helper: Interpolate variables in text
 function interpolateText(text, variables) {
   if (!text || typeof text !== "string") return text;
+  const vars = computeDerivedVariables(variables);
   return text.replace(/\${(\w+)}/g, (match, variable) => {
-    return variables.hasOwnProperty(variable) ? variables[variable] : match;
+    return vars.hasOwnProperty(variable) ? vars[variable] : match;
   });
 }
 

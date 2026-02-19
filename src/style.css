@@ -169,7 +169,7 @@ button {
   position: absolute;
   /* width: 800px; */
   width: 1000px;
-  height: 850px;
+  /* height: 850px; */
   background: var(--bg-primary);
   border: 3px solid var(--border-color);
   box-shadow: var(--shadow-window);

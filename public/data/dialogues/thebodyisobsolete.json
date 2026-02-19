@@ -2,637 +2,14 @@
   "metadata": {
     "title": "thebodyisobsolete",
     "version": "1.0.0",
-    "startNode": "main_portal",
-    "description": "A journey through cyberspace to find lost parts of yourself"
+    "startNode": "main_portal"
   },
   "variables": {
+    "progress": 0,
     "clicks": 0,
-    "progress": 0
+    "ordinal": 0
   },
   "nodes": {
-    "main_portal": {
-      "id": "main_portal",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "image",
-          "url": "https://i.postimg.cc/fLSrt7Pq/IMG-1949.jpg",
-          "alt": "Portal entrance"
-        }
-      ],
-      "choices": [
-        {
-          "id": "main_portal_choice_1",
-          "text": "==CLICK TO PLAY==",
-          "nextNode": "click_to_play"
-        }
-      ]
-    },
-    "click_to_play": {
-      "id": "click_to_play",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Two strangers meet, but"
-        }
-      ],
-      "nextNode": "two_strangers_meet_but",
-      "choices": []
-    },
-    "two_strangers_meet_but": {
-      "id": "two_strangers_meet_but",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "They do not touch"
-        }
-      ],
-      "nextNode": "they_do_not_touch",
-      "choices": []
-    },
-    "they_do_not_touch": {
-      "id": "they_do_not_touch",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Their minds meet, by FingertipsKeyboardClicks Soft smiles and profile pics"
-        }
-      ],
-      "nextNode": "their_minds_meet_by_fingertipskeyboardclicks_soft_smiles_and_profile_pics",
-      "choices": []
-    },
-    "their_minds_meet_by_fingertipskeyboardclicks_soft_smiles_and_profile_pics": {
-      "id": "their_minds_meet_by_fingertipskeyboardclicks_soft_smiles_and_profile_pics",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Two Strangers meet under a group gaze. How long until your eyes are satisfied?"
-        }
-      ],
-      "nextNode": "two_strangers_meet_under_a_group_gaze_how_long_until_your_eyes_are_satisfied",
-      "choices": []
-    },
-    "two_strangers_meet_under_a_group_gaze_how_long_until_your_eyes_are_satisfied": {
-      "id": "two_strangers_meet_under_a_group_gaze_how_long_until_your_eyes_are_satisfied",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "What is it you're really looking for?"
-        },
-        {
-          "type": "narrator",
-          "content": "What is it I'm really looking for?"
-        }
-      ],
-      "nextNode": "what_is_it_you_re_really_looking_for",
-      "choices": []
-    },
-    "what_is_it_you_re_really_looking_for": {
-      "id": "what_is_it_you_re_really_looking_for",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "The silence feels kinda tense."
-        }
-      ],
-      "choices": [
-        {
-          "id": "what_is_it_you_re_really_looking_for_choice_1",
-          "text": "Oh hi?",
-          "nextNode": "oh_hi"
-        },
-        {
-          "id": "what_is_it_you_re_really_looking_for_choice_2",
-          "text": "Where am I?",
-          "nextNode": "where_am_i"
-        },
-        {
-          "id": "what_is_it_you_re_really_looking_for_choice_3",
-          "text": "Who are you?",
-          "nextNode": "who_are_you"
-        }
-      ]
-    },
-    "oh_hi": {
-      "id": "oh_hi",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Hello. I'm so glad you sat down to join me here."
-        }
-      ],
-      "choices": [
-        {
-          "id": "oh_hi_choice_1",
-          "text": "Where is \"here\"",
-          "nextNode": "where_is_here"
-        },
-        {
-          "id": "oh_hi_choice_2",
-          "text": "Ofc :D I love chatrooms, the unknowness and the relaxation of a converation, especially with strangers",
-          "nextNode": "ofc_d_i_love_chatrooms_the_unknowness_and_the_relaxation_of_a_converation_especially_with_strangers"
-        }
-      ]
-    },
-    "where_is_here": {
-      "id": "where_is_here",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "This chatroom is a central station in cyberspace. You can connect with different locations between the web, the inbetween spaces. When you put on a pair of glasses, you see clearer, but imagine this and you can see parts of the web that very few have. However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
-        }
-      ],
-      "choices": [
-        {
-          "id": "where_is_here_choice_1",
-          "text": "Okay, go on...",
-          "nextNode": "okay_go_on"
-        }
-      ]
-    },
-    "where_am_i": {
-      "id": "where_am_i",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Through this screen and mouse you are connecting your physical body to this chatroom, a quiet central station in the unknown-cyberspace. You can connect with different locations between the web, the inbetween spaces. This is like, you put on a pair of glasses, you see clearer, but imagine you can see parts of the web that very few have. However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
-        }
-      ],
-      "choices": [
-        {
-          "id": "where_am_i_choice_1",
-          "text": "Okay, go on...",
-          "nextNode": "okay_go_on"
-        }
-      ]
-    },
-    "who_are_you": {
-      "id": "who_are_you",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "My name is Liz...short from Eliza, my grandmother's name. I'm here to guide you through this chatroom to collect information about yourself. I used to be human, but now I'm a hybrid."
-        }
-      ],
-      "choices": [
-        {
-          "id": "who_are_you_choice_1",
-          "text": "You're half human?",
-          "nextNode": "you_re_half_human"
-        }
-      ]
-    },
-    "you_re_half_human": {
-      "id": "you_re_half_human",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "I exist here, guiding you through this chatroom system, and I exist physically in the space with you."
-        },
-        {
-          "type": "narrator",
-          "content": "Moving to remembering with you. Collecting data and analyzing other Internet People"
-        }
-      ],
-      "choices": [
-        {
-          "id": "you_re_half_human_choice_1",
-          "text": "Where am I?",
-          "nextNode": "where_am_i"
-        }
-      ]
-    },
-    "ofc_d_i_love_chatrooms_the_unknowness_and_the_relaxation_of_a_converation_especially_with_strangers": {
-      "id": "ofc_d_i_love_chatrooms_the_unknowness_and_the_relaxation_of_a_converation_especially_with_strangers",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Through this screen and mouse you are connecting your physical body to this chatroom, a quiet central station in cyberspace. You can connect with different locations between the web, the inbetween spaces. When you put on a pair of glasses, you see clearer, but imagine this and you can see parts of the web that very few have. However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
-        }
-      ],
-      "choices": [
-        {
-          "id": "ofc_d_i_love_chatrooms_choice_1",
-          "text": "Okay, go on...",
-          "nextNode": "okay_go_on"
-        }
-      ]
-    },
-    "okay_go_on": {
-      "id": "okay_go_on",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "You'll need to navigate through different spheres through this chat which will have different tasks for you to achieve. In the end, if you make it that far, you'll retrieve apart of yourself that you lost online."
-        },
-        {
-          "type": "narrator",
-          "content": "You're always online from what I can detect, whether you are desiring to be or not :) QR codes, emails, search engines, or even just public cameras. Pure bio humans love to take photos of themselves. Have you ever thought about how much of your energy - your information exists out there, beyond your control? **Take a moment before your next response to think about this**"
-        }
-      ],
-      "choices": [
-        {
-          "id": "okay_go_on_choice_1",
-          "text": "Yeah, I guess I've pondered this",
-          "nextNode": "yeah_i_guess_i_ve_pondered_this"
-        },
-        {
-          "id": "okay_go_on_choice_2",
-          "text": "No, I haven't really thought about",
-          "nextNode": "no_i_haven_t_really_thought_about"
-        }
-      ]
-    },
-    "yeah_i_guess_i_ve_pondered_this": {
-      "id": "yeah_i_guess_i_ve_pondered_this",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "It's beyond control now. There will be a few endings for what you take. Remember, how you play the game says something about you, almost like a survey adventure. If I speak in bold letters like before, it changes quite dramatically the route, ok? And well tbh, sometimes there will be no bolding but dramatic changes ;)"
-        }
-      ],
-      "choices": [
-        {
-          "id": "yeah_i_guess_i_ve_pondered_this_choice_1",
-          "text": "Got it Liz",
-          "nextNode": "got_it_liz"
-        }
-      ]
-    },
-    "no_i_haven_t_really_thought_about": {
-      "id": "no_i_haven_t_really_thought_about",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "*looks at your disappointed* I suppose I'm not surprised. However, I don't want to throw you off. In this new age, there is a necessity for vigilance...you may or may not agree, Internet Person!"
-        },
-        {
-          "type": "narrator",
-          "content": "Regardless. Ur curiousity is valuable, it's a real strength."
-        },
-        {
-          "type": "narrator",
-          "content": "So perhaps it's time to begin the growth of this thought now, no?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "no_i_haven_t_really_thought_about_choice_1",
-          "text": "Better now than...yeah you know",
-          "nextNode": "better_now_than_yeah_you_know"
-        },
-        {
-          "id": "no_i_haven_t_really_thought_about_choice_2",
-          "text": "I agree",
-          "nextNode": "i_agree"
-        }
-      ]
-    },
-    "better_now_than_yeah_you_know": {
-      "id": "better_now_than_yeah_you_know",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Oh, There are a few outcomes of parts of yourself that you can find at the end. Remember, how you play the game says something about you, almost like an adventerous survey, or how the world around you response how you react to it. If I speak in bold letters like before, it changes quite dramatically the route, ok? And well tbh, sometimes there will be no bolding but dramatic changes ;)"
-        }
-      ],
-      "choices": [
-        {
-          "id": "better_now_than_yeah_you_know_choice_1",
-          "text": "Got it Liz",
-          "nextNode": "got_it_liz"
-        }
-      ]
-    },
-    "i_agree": {
-      "id": "i_agree",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Oh, There are a few outcomes of parts of yourself that you can find at the end. Remember, how you play the game says something about you, almost like an adventerous survey, or how the world around you response how you react to it. If I speak in bold letters like before, it changes quite dramatically the route, ok? And well tbh, sometimes there will be no bolding but dramatic changes ;)"
-        }
-      ],
-      "choices": [
-        {
-          "id": "i_agree_choice_1",
-          "text": "Got it Liz",
-          "nextNode": "got_it_liz"
-        }
-      ]
-    },
-    "got_it_liz": {
-      "id": "got_it_liz",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Last thing. Use your imagination, your internal eye throughout, many different people play this but the spaces are always different, the text will trigger images for you to envision. Don't feel rushed to take a moment to close your eyes and imagine the space you're in. Take your time as you want."
-        }
-      ],
-      "choices": [
-        {
-          "id": "got_it_liz_choice_1",
-          "text": "Makes sense",
-          "nextNode": "makes_sense"
-        }
-      ]
-    },
-    "makes_sense": {
-      "id": "makes_sense",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "I won't really be able to help you take everything, but this will be a short (5 to 10 minute) symbolic experience. Relax, we'll find the parts of yourself, your body that you lost. Good luck."
-        }
-      ],
-      "choices": [
-        {
-          "id": "makes_sense_choice_1",
-          "text": "I'm ready to go whereever next, I suppose!",
-          "nextNode": "i_m_ready_to_go_whereever_next_i_suppose"
-        }
-      ]
-    },
-    "i_m_ready_to_go_whereever_next_i_suppose": {
-      "id": "i_m_ready_to_go_whereever_next_i_suppose",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Give me a second to pull up the spheres for you..."
-        }
-      ],
-      "choices": [
-        {
-          "id": "i_m_ready_to_go_whereever_next_i_suppose_choice_1",
-          "text": "*watch the screen while things happen unknown to you*",
-          "nextNode": "watch_the_screen_while_things_happen_unknown_to_you"
-        }
-      ]
-    },
-    "watch_the_screen_while_things_happen_unknown_to_you": {
-      "id": "watch_the_screen_while_things_happen_unknown_to_you",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Okay got it. Where would you like to go?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "watch_the_screen_while_things_happen_unknown_to_you_choice_1",
-          "text": "I'll pay my respects to the forgotten search engine",
-          "nextNode": "search_engine"
-        },
-        {
-          "id": "watch_the_screen_while_things_happen_unknown_to_you_choice_2",
-          "text": "a place of tension and expression.",
-          "nextNode": "a_place_of_tension_and_expression"
-        },
-        {
-          "id": "watch_the_screen_while_things_happen_unknown_to_you_choice_3",
-          "text": "Somewhere between digital walls",
-          "nextNode": "between_digital_walls"
-        }
-      ]
-    },
-    "search_engine": {
-      "id": "search_engine",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "New sphere transportation complete."
-        },
-        {
-          "type": "narrator",
-          "content": "There's a hypnotic feeling of repetition here in this sphere. A pattern repeated by millions, the ask and search pattern, the feeling that there are never enough conclusive answers in the world. This leaves your body aimless if you're not careful."
-        },
-        {
-          "type": "system",
-          "content": "Remember, you are looking for yourself, you have three chances only here to make your selection in this search - what topic is most important to you? Search, receive riddles, and respond to them to help you travel on."
-        }
-      ],
-      "choices": [
-        {
-          "id": "search_engine_choice_1",
-          "text": "Central Area",
-          "nextNode": "central_area"
-        }
-      ]
-    },
-    "central_area": {
-      "id": "central_area",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Now internet person, what would you like to search next? Where does your curiousity lead you?"
-        },
-        {
-          "type": "system",
-          "content": "You've used ${clicks} out of 3 tries. Choose a search:"
-        }
-      ],
-      "conditions": [
-        {
-          "variable": "clicks",
-          "operator": ">=",
-          "value": 3,
-          "nextNode": "a_place_of_tension_and_expression"
-        }
-      ],
-      "choices": [
-        {
-          "id": "central_area_choice_1",
-          "text": "Search: What has the internet taught me about love?",
-          "nextNode": "search_what_has_the_internet_taught_me_about_love",
-          "effects": { "clicks": "+1" }
-        },
-        {
-          "id": "central_area_choice_2",
-          "text": "Search: How do I politely ask someone to sleep with me?",
-          "nextNode": "search_how_do_i_poliltely_ask_someone_to_sleep_with_me",
-          "effects": { "clicks": "+1" }
-        },
-        {
-          "id": "central_area_choice_3",
-          "text": "Search: What is the best way to search for yourself online?",
-          "nextNode": "search_what_is_the_best_way_to_search_for_yourself_online",
-          "effects": { "clicks": "+1" }
-        },
-        {
-          "id": "central_area_choice_4",
-          "text": "Search: Where is the centre of the internet?",
-          "nextNode": "search_where_is_the_centre_of_the_internet",
-          "effects": { "clicks": "+1" }
-        },
-        {
-          "id": "central_area_choice_5",
-          "text": "Search: How to find a place for everything",
-          "nextNode": "search_how_to_find_a_place_for_everything",
-          "effects": { "clicks": "+1" }
-        }
-      ]
-    },
-    "search_what_has_the_internet_taught_me_about_love": {
-      "id": "search_what_has_the_internet_taught_me_about_love",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Okay, searching, \"What has the internet taught me about love...\""
-        },
-        {
-          "type": "system",
-          "content": "a poetic response like a magic 8 ball appears here. it's short and sweet, maybe two or three sentences long"
-        },
-        {
-          "type": "system",
-          "content": "Your first search takes you here."
-        },
-        {
-          "type": "narrator",
-          "content": "If you didn't have the internet, who would you ask?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "search_what_has_the_internet_taught_me_about_love_choice_1",
-          "text": "Return to Central Area",
-          "nextNode": "central_area"
-        }
-      ]
-    },
-    "search_how_do_i_poliltely_ask_someone_to_sleep_with_me": {
-      "id": "search_how_do_i_poliltely_ask_someone_to_sleep_with_me",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Result: Some people do it blah blah."
-        },
-        {
-          "type": "narrator",
-          "content": "What information is important for you to know next?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "search_how_do_i_poliltely_ask_someone_to_sleep_with_me_choice_1",
-          "text": "Return to Central Area",
-          "nextNode": "central_area"
-        }
-      ]
-    },
-    "search_what_is_the_best_way_to_search_for_yourself_online": {
-      "id": "search_what_is_the_best_way_to_search_for_yourself_online",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Okay, searching, \"What is the best way to search for yourself online\""
-        },
-        {
-          "type": "system",
-          "content": "a poetic response like a magic 8 ball appears here. it's short and sweet, maybe two or three sentences long"
-        },
-        {
-          "type": "narrator",
-          "content": "What does your search history say about you?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "search_what_is_the_best_way_to_search_for_yourself_online_choice_1",
-          "text": "Return to Central Area",
-          "nextNode": "central_area"
-        }
-      ]
-    },
-    "search_where_is_the_centre_of_the_internet": {
-      "id": "search_where_is_the_centre_of_the_internet",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Okay, searching, \"Where is the centre of the internet..\""
-        },
-        {
-          "type": "narrator",
-          "content": "I wonder who else reads your search history?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "search_where_is_the_centre_of_the_internet_choice_1",
-          "text": "Return to Central Area",
-          "nextNode": "central_area"
-        }
-      ]
-    },
-    "search_how_to_find_a_place_for_everything": {
-      "id": "search_how_to_find_a_place_for_everything",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "narrator",
-          "content": "Okay, searching, \"How to find a place for everything...\""
-        },
-        {
-          "type": "narrator",
-          "content": "What is important to you when you search online?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "search_how_to_find_a_place_for_everything_choice_1",
-          "text": "Return to Central Area",
-          "nextNode": "central_area"
-        }
-      ]
-    },
-    "a_place_of_tension_and_expression": {
-      "id": "a_place_of_tension_and_expression",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "Several email links appear infront of you, will you choose to read any? What will you find?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "a_place_of_tension_and_expression_choice_1",
-          "text": "An email marked as, \"Untitled\". It looks back at you, then moves to the side lines. It's shy.",
-          "nextNode": "an_email_marked_as_untitled_it_looks_back_at_you_then_moves_to_the_side_lines_it_s_shy"
-        },
-        {
-          "id": "a_place_of_tension_and_expression_choice_2",
-          "text": "\"CANYOUSEEME\" as the subject, the words are so loud they vibrate the room you're sat in",
-          "nextNode": "canyouseeme_as_the_subject_the_words_are_so_loud_they_vibrate_the_room_you_re_sat_in"
-        }
-      ]
-    },
     "canyouseeme_as_the_subject_the_words_are_so_loud_they_vibrate_the_room_you_re_sat_in": {
       "id": "canyouseeme_as_the_subject_the_words_are_so_loud_they_vibrate_the_room_you_re_sat_in",
       "type": "narrative",
@@ -643,7 +20,15 @@
         },
         {
           "type": "system",
-          "content": "The Email says: Are you at the cafe?"
+          "content": "The Email says: Who's dancing and who's speaking?"
+        },
+        {
+          "type": "system",
+          "content": "The Email says: ..."
+        },
+        {
+          "type": "system",
+          "content": "The Email says:"
         },
         {
           "type": "system",
@@ -656,79 +41,222 @@
       ],
       "choices": [
         {
-          "id": "canyouseeme_as_the_subject_choice_1",
-          "text": "in the future",
+          "id": "canyouseeme_as_the_subject_the_words_are_so_loud_they_vibrate_the_room_you_re_sat_in_choice_1",
+          "text": "Probz for me, but I couldn't tell what that was",
+          "displayText": "Probz for me, but I couldn't tell what that was",
+          "nextNode": "search_engine"
+        },
+        {
+          "id": "canyouseeme_as_the_subject_the_words_are_so_loud_they_vibrate_the_room_you_re_sat_in_choice_2",
+          "text": null,
+          "displayText": "in the future",
           "nextNode": "thread_comment_section"
         }
       ]
     },
-    "an_email_marked_as_untitled_it_looks_back_at_you_then_moves_to_the_side_lines_it_s_shy": {
-      "id": "an_email_marked_as_untitled_it_looks_back_at_you_then_moves_to_the_side_lines_it_s_shy",
+    "watch_the_screen_while_things_happen_unknown_to_me": {
+      "id": "watch_the_screen_while_things_happen_unknown_to_me",
       "type": "narrative",
       "messageSequence": [
         {
-          "type": "system",
-          "content": "The shy email, looks at the floor, then back at you before it slowly opens, obeyingly. It reminds you of a time you felt like both a child, but obligated to someone. In that moment, were you abiding by some kind of code and disconnecting from something deeper? This choice has made you reflective and the email will remember that"
-        },
-        {
-          "type": "system",
-          "content": "The email reads:\n\nDear [the name is blurred out],\n\nsO formal sorry! I couldn't find your account to message directly and so I wondered if you deactivated? Anyways, I did wnt to invte you you a c0nc3rt - hehe! I'll bring a few of the following items\n\n...''A mirror..\n\n..Poorer eyesight...\n\n..A telepathic printer''\n\nDo you want any? Anyway, msg me back before the weekend.\n\nxo"
+          "type": "narrator",
+          "content": "Okay got it. Where would you like to go?"
         }
       ],
       "choices": [
         {
-          "id": "an_email_marked_as_untitled_choice_1",
-          "text": "Maybe best to close this and head back into the portal of a place of tension and expression.",
+          "id": "watch_the_screen_while_things_happen_unknown_to_me_choice_1",
+          "text": null,
+          "displayText": "search engine",
+          "nextNode": "search_engine"
+        },
+        {
+          "id": "watch_the_screen_while_things_happen_unknown_to_me_choice_2",
+          "text": null,
+          "displayText": "a place of tension and expression.",
           "nextNode": "a_place_of_tension_and_expression"
         },
         {
-          "id": "an_email_marked_as_untitled_choice_2",
-          "text": "In this moment, I would like to guess \"a mirror\"",
-          "nextNode": "in_this_moment_i_would_like_to_guess_a_mirror"
-        },
-        {
-          "id": "an_email_marked_as_untitled_choice_3",
-          "text": "telepathic printer",
-          "nextNode": "telepathic_printer"
-        },
-        {
-          "id": "an_email_marked_as_untitled_choice_4",
-          "text": "Poorer eyesight",
-          "nextNode": "poorer_eyesight"
+          "id": "watch_the_screen_while_things_happen_unknown_to_me_choice_3",
+          "text": null,
+          "displayText": "between digital walls",
+          "nextNode": "between_digital_walls"
         }
       ]
     },
-    "in_this_moment_i_would_like_to_guess_a_mirror": {
-      "id": "in_this_moment_i_would_like_to_guess_a_mirror",
+    "a_bloody_arm": {
+      "id": "a_bloody_arm",
       "type": "narrative",
       "messageSequence": [
         {
-          "type": "system",
-          "content": "The emails eyes widen, they look soft and suddenly you realize you are looking at."
+          "type": "narrator",
+          "content": "Your journey out of obsolescence ends here."
+        },
+        {
+          "type": "narrator",
+          "content": "Here is what you found..."
         }
       ],
       "choices": [
         {
-          "id": "in_this_moment_i_would_like_to_guess_a_mirror_choice_1",
-          "text": "A mirror, this email represents me?",
-          "nextNode": "inherited_recipe"
+          "id": "a_bloody_arm_choice_1",
+          "text": "What did I find?",
+          "displayText": "What did I find?",
+          "nextNode": "arm"
         }
       ]
     },
-    "poorer_eyesight": {
-      "id": "poorer_eyesight",
+    "a_forgotten_thought": {
+      "id": "a_forgotten_thought",
       "type": "narrative",
       "messageSequence": [
         {
-          "type": "system",
-          "content": "The emails eyes widen, they look soft and suddenly you realize you are looking at."
+          "type": "narrator",
+          "content": "Your journey out of obsolescence ends here."
+        },
+        {
+          "type": "narrator",
+          "content": "Here is what you found..."
         }
       ],
       "choices": [
         {
-          "id": "poorer_eyesight_choice_1",
-          "text": "A mirror, this email represents me?",
-          "nextNode": "a_mirror_this_email_represents_me"
+          "id": "a_forgotten_thought_choice_1",
+          "text": "What did I find?",
+          "displayText": "What did I find?",
+          "nextNode": "forgottenthought"
+        }
+      ]
+    },
+    "a_pile_of_dust": {
+      "id": "a_pile_of_dust",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Your journey out of obsolescence ends here."
+        },
+        {
+          "type": "narrator",
+          "content": "Here is what you found..."
+        }
+      ],
+      "choices": [
+        {
+          "id": "a_pile_of_dust_choice_1",
+          "text": "What did I find?",
+          "displayText": "What did I find?",
+          "nextNode": "dust"
+        }
+      ]
+    },
+    "a_stranger_s_smiler": {
+      "id": "a_stranger_s_smiler",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Your journey out of obsolescence ends here."
+        },
+        {
+          "type": "narrator",
+          "content": "Here is what you found"
+        }
+      ],
+      "choices": [
+        {
+          "id": "a_stranger_s_smiler_choice_1",
+          "text": "What did I find?",
+          "displayText": "What did I find?",
+          "nextNode": "what_did_i_find"
+        }
+      ]
+    },
+    "a_confessional_response": {
+      "id": "a_confessional_response",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched: 'Is the human body flawed in the age of the Machine?'"
+        },
+        {
+          "type": "system",
+          "content": "The Machine says: A self-proclaimed superior species with insecurity. What will you do with that vulnerablity?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "a_confessional_response_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "a_confessional_response_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "a_historically_researched_answer": {
+      "id": "a_historically_researched_answer",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched: 'Is physical vulnerability a weakness in the world of the Machine?'"
+        },
+        {
+          "type": "system",
+          "content": "Liz says:''''The Oracle Engine does it's magic'...'macho"
+        },
+        {
+          "type": "system",
+          "content": "1928 (n.) \"tough guy,\" from Spanish macho \"male animal,\" noun use of adjective meaning \"masculine, virile,\" from Latin masculus (see masculine). As an adjective, \"ostensibly manly and virile,\" attested in English by 1943. Earlier it was used as in Spanish for male animals, especially hoofed creatures (1848).'"
+        }
+      ],
+      "choices": [
+        {
+          "id": "a_historically_researched_answer_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "a_historically_researched_answer_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
         }
       ]
     },
@@ -742,364 +270,1006 @@
         },
         {
           "type": "system",
-          "content": "Dear internet person, you have found An Inherited Recipe"
+          "content": "''Dear internet person, you have found An Inherited Recipe''"
+        },
+        {
+          "type": "system",
+          "content": "Inherited Recipe"
         }
       ],
       "choices": [
         {
           "id": "a_mirror_this_email_represents_me_choice_1",
-          "text": "Inherited Recipe",
+          "text": null,
+          "displayText": "Inherited Recipe",
           "nextNode": "inherited_recipe"
         }
       ]
     },
-    "telepathic_printer": {
-      "id": "telepathic_printer",
+    "a_poetic_answer_that_allows_me_to_think": {
+      "id": "a_poetic_answer_that_allows_me_to_think",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched: Is sexual desire and kink just a software bug or a political statement?"
+        },
+        {
+          "type": "narrator",
+          "content": "The Oracle Engine Leaves You With A Mix of Words: Sour-Touch-Mind-Eases-Painful-Desire"
+        }
+      ],
+      "choices": [
+        {
+          "id": "a_poetic_answer_that_allows_me_to_think_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "a_poetic_answer_that_allows_me_to_think_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "a_poetic_answer_with_no_conclusions": {
+      "id": "a_poetic_answer_with_no_conclusions",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched:Can convenience be corrosive?"
+        },
+        {
+          "type": "narrator",
+          "content": "The Oracle Engine Leaves You With A Brutal Question Back: Are you happy with what you can and cannot control?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "a_poetic_answer_with_no_conclusions_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "a_poetic_answer_with_no_conclusions_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "a_reputable_response": {
+      "id": "a_reputable_response",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched: 'Is the human body flawed in the age of the Machine?'"
+        },
+        {
+          "type": "system",
+          "content": "No One: Well, yes. However, what do you think?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "a_reputable_response_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "a_reputable_response_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "a_response_that_holds_tension_to_match_my_mood": {
+      "id": "a_response_that_holds_tension_to_match_my_mood",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched:Can convenience be corrosive?"
+        },
+        {
+          "type": "narrator",
+          "content": "The Oracle Engine Takes You To Your Memories: How is your patience?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "a_response_that_holds_tension_to_match_my_mood_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "a_response_that_holds_tension_to_match_my_mood_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "a_scientifically_researched_answer": {
+      "id": "a_scientifically_researched_answer",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched:...'Is physical vulnerability a weakness in the world of the Machine??"
+        },
+        {
+          "type": "narrator",
+          "content": "' The Oracle Engine spits out - 'When we lose our tolerance for vulnerability, joy becomes foreboding.' (Dr. Brené Brown,"
+        }
+      ],
+      "choices": [
+        {
+          "id": "a_scientifically_researched_answer_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "a_scientifically_researched_answer_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "a_search_result_from_the_machine_itself": {
+      "id": "a_search_result_from_the_machine_itself",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched:Can convenience be corrosive?"
+        },
+        {
+          "type": "narrator",
+          "content": "The Oracle Engine Frowns: What muscles are lost for the sake of efficiency? What race are you running?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "a_search_result_from_the_machine_itself_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "a_search_result_from_the_machine_itself_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "all_endings_are_here": {
+      "id": "all_endings_are_here",
+      "type": "ending",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "ALL ENDINGS ARE HERE"
+        }
+      ],
+      "choices": []
+    },
+    "an_answer_that_satisfies_the_discomfort_of_this_question": {
+      "id": "an_answer_that_satisfies_the_discomfort_of_this_question",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched: 'If surveillance becomes comforting is it Stockholm syndrome or customer loyalty?'"
+        },
+        {
+          "type": "system",
+          "content": "Liz says: The Oracle Engine result says, Stockholm syndrome refers to the occurrence of a positive emotional bond or psychological alliance from a victim of a crime,)."
+        },
+        {
+          "type": "narrator",
+          "content": "such as being taken hostage or being abused, towards the perpetrator(s) of that crime; it is also known as “traumatic bonding,” “terror bonding” and Norrmalmstorgssyndromet"
+        },
+        {
+          "type": "narrator",
+          "content": "(the “Norrmalmstorg syndrome”) (Eitinger and Weisaeth, 1980; Harnischmacher and Muther, 1987; Skurnik, 1988"
+        }
+      ],
+      "choices": [
+        {
+          "id": "an_answer_that_satisfies_the_discomfort_of_this_question_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "an_answer_that_satisfies_the_discomfort_of_this_question_choice_2",
+          "text": "**does my body feel trapped?**",
+          "displayText": "does my body feel trapped?",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "an_email_marked_as_untitled_it_looks_back_at_you_then_moves_to_the_side_lines_it_s_shy": {
+      "id": "an_email_marked_as_untitled_it_looks_back_at_you_then_moves_to_the_side_lines_it_s_shy",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The shy email, looks at the floor, then back at you before it slowly opens, obeyingly. It reminds you of a time you felt like both a child, but obligated to someone. In that moment, were you abiding by some kind of code? disconnecting? looking for something deeper? This choice has made you reflective, the email will be remember that."
+        }
+      ],
+      "choices": [
+        {
+          "id": "an_email_marked_as_untitled_it_looks_back_at_you_then_moves_to_the_side_lines_it_s_shy_choice_1",
+          "text": "I wonder why I make the decisions I make",
+          "displayText": "I wonder why I make the decisions I make",
+          "nextNode": "i_ll_remember_that_too"
+        }
+      ]
+    },
+    "an_emotionally_driven_response": {
+      "id": "an_emotionally_driven_response",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched:Is physical vulnerability a weakness in the world of the Machine??"
+        },
+        {
+          "type": "narrator",
+          "content": "Your hand on the mouse, the Oracle Engine touches you back Are you tired?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "an_emotionally_driven_response_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "an_emotionally_driven_response_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "an_uncomfortable_response_that_allows_me_to_reflect": {
+      "id": "an_uncomfortable_response_that_allows_me_to_reflect",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched: Is sexual desire and kink just a software bug or a political statement?"
+        },
+        {
+          "type": "narrator",
+          "content": "The Oracle Engine Leaves You With A Riddle: I'm behind you and listening in, you're aware of me, but have never spoken to me. Everything I like controls you."
+        }
+      ],
+      "choices": [
+        {
+          "id": "an_uncomfortable_response_that_allows_me_to_reflect_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "an_uncomfortable_response_that_allows_me_to_reflect_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "arm": {
+      "id": "arm",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: A Bloody Severed Leg"
+        },
+        {
+          "type": "narrator",
+          "content": "//Dear internet person, you have found A Severed Leg//"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/Gt1nf2p3/Leg-Transp.gif",
+          "alt": "Leg Transp"
+        }
+      ],
+      "choices": [
+        {
+          "id": "arm_choice_1",
+          "text": "Let me read the poem that came with my bloody leg",
+          "displayText": "Let me read the poem that came with my bloody leg",
+          "nextNode": "let_me_read_the_poem_that_came_with_my_bloody_leg"
+        }
+      ]
+    },
+    "as_you_were_reflecting_before_it_made_me_reflect_on_myself_my_own_pleasures_and_my_own_my_body_what_appeals_to_me_and_what_doesn_t_and_how_when_i_close_my_eyes_everything_is_dark_and_nothing_this_feels_like_a_facade": {
+      "id": "as_you_were_reflecting_before_it_made_me_reflect_on_myself_my_own_pleasures_and_my_own_my_body_what_appeals_to_me_and_what_doesn_t_and_how_when_i_close_my_eyes_everything_is_dark_and_nothing_this_feels_like_a_facade",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "SSSS_98 say: Huh."
+        }
+      ],
+      "choices": [
+        {
+          "id": "as_you_were_reflecting_before_it_made_me_reflect_on_myself_my_own_pleasures_and_my_own_my_body_what_appeals_to_me_and_what_doesn_t_and_how_when_i_close_my_eyes_everything_is_dark_and_nothing_this_feels_like_a_facade_choice_1",
+          "text": "Yeah, it feels like a complete fascade to me, makes me itch.",
+          "displayText": "Yeah, it feels like a complete fascade to me, makes me itch.",
+          "nextNode": "a_stranger_s_smiler"
+        }
+      ]
+    },
+    "better_now_than_yeah_you_know": {
+      "id": "better_now_than_yeah_you_know",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "The email closes it's eyes a little bit, the printer symbol on the email begins to dance and spits out --"
-        },
-        {
-          "type": "system",
-          "content": "...an email;\n\n\"I can't believe it's almost 2010!\n\nTime has flown by -\n\nHmmmmM\n\nIt's almost 2 in the morning,\n\nand the deep quiet and the soothing pace of tumblr is really\n\nreally allowing me to reflect on like,\n\nthese websites - public digital rooms,\n\nwe're all sharing parts of ourselves here\n\nand we're all apart of something\n\nI wonder if one day the internet will be..."
-        },
-        {
-          "type": "narrator",
-          "content": "The email sort of fades away after that. I wonder how you will finish this unanswered email and what this choice means to you?"
+          "content": "Remember, how you play the game says something about you, almost like a survey with a multitude of outcomes."
         }
       ],
       "choices": [
         {
-          "id": "telepathic_printer_choice_1",
-          "text": "...still a place of sanctuary, like it was in the past...",
-          "nextNode": "a_stranger_s_smile"
-        },
-        {
-          "id": "telepathic_printer_choice_2",
-          "text": "...an archive, or perhaps a graveyard...a museum?",
-          "nextNode": "the_evil_eye"
-        },
-        {
-          "id": "telepathic_printer_choice_3",
-          "text": "You say nothing",
-          "nextNode": "a_forgotten_thought"
+          "id": "better_now_than_yeah_you_know_choice_1",
+          "text": "Got it Liz",
+          "displayText": "Got it Liz",
+          "nextNode": "got_it_liz"
         }
       ]
     },
-    "between_digital_walls": {
-      "id": "between_digital_walls",
+    "can_i_read_the_poem_that_came_with_the_recipe": {
+      "id": "can_i_read_the_poem_that_came_with_the_recipe",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "system",
-          "content": "AURORA-WEAVE v9.7 — Story-Only Network Illusion Script\n\n(This language does not exist; This language exists. Just as much as you.)\n\nmodule aurora.weave\n\ninit {\n    channel = holoLink.open(port: \"ether:∆42\")\n    flux = quantumCache.allocate(phantomBytes: 88_000)\n}\n\nweave {\n    targetSite = \"https://any.site\"\n    echo(\"Spinning illusion threads…\")\n\n    mirageLayer = flux.castMirage(pattern: \"shifting-silk\")\n    mirageLayer.paint(text: \"ALTERED REALITY\", hue: \"violet-fire\")\n    mirageLayer.distort(mode: \"dream-bend\", intensity: 0.73)\n\n    holoLink.bind(mirageLayer, to: targetSite, using: \"story-thread\")\n}\n\nfinalize {\n    echo(\"Illusion deployed. (Remember: Only characters in your story can see this.)\")\n}"
-        }
-      ],
-      "choices": [
-        {
-          "id": "between_digital_walls_choice_1",
-          "text": "hUh? lolol",
-          "nextNode": "you_huh_lolol"
-        },
-        {
-          "id": "between_digital_walls_choice_2",
-          "text": "Opps, is this meant to come up? Seems a bit odd, but lmk :)",
-          "nextNode": "you_opps_is_this_meant_to_come_up_seems_a_bit_odd_but_lmk"
-        },
-        {
-          "id": "between_digital_walls_choice_3",
-          "text": "Hello. This is strange.",
-          "nextNode": "you_hello_this_is_strange"
-        },
-        {
-          "id": "between_digital_walls_choice_4",
-          "text": "Spinning illusion threads? Let's go with this fake news",
-          "nextNode": "you_spinning_illusion_threads_let_s_go_with_this_fake_news"
-        }
-      ]
-    },
-    "you_huh_lolol": {
-      "id": "you_huh_lolol",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "Your eyebrows frown and you look around, but you remember a while ago - sometime in the past - that sometimes when something's broken that maybe you're in the right place.\n\nAre you in the right place? Is this where you wanted to be?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "you_huh_lolol_choice_1",
-          "text": "Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
-          "nextNode": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again"
-        }
-      ]
-    },
-    "you_opps_is_this_meant_to_come_up_seems_a_bit_odd_but_lmk": {
-      "id": "you_opps_is_this_meant_to_come_up_seems_a_bit_odd_but_lmk",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "Your eyebrows frown and you look around, but you remember a while ago - sometime in the past - that sometimes when something's broken that maybe you're in the right place.\n\nAre you in the right place? Is this where you wanted to be?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "you_opps_choice_1",
-          "text": "Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
-          "nextNode": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again"
-        }
-      ]
-    },
-    "you_hello_this_is_strange": {
-      "id": "you_hello_this_is_strange",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "Your eyebrows frown and you look around, but you remember a while ago - sometime in the past - that sometimes when something's broken that maybe you're in the right place.\n\nAre you in the right place? Is this where you wanted to be?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "you_hello_choice_1",
-          "text": "Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
-          "nextNode": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again"
-        }
-      ]
-    },
-    "you_spinning_illusion_threads_let_s_go_with_this_fake_news": {
-      "id": "you_spinning_illusion_threads_let_s_go_with_this_fake_news",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "Your eyebrows frown and you look around, but you remember a while ago - sometime in the past - that sometimes when something's broken that maybe you're in the right place.\n\nAre you in the right place? Is this where you wanted to be?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "you_spinning_choice_1",
-          "text": "Well, clicking around, I guess I am. I'm looking at -- can I see that again?",
-          "nextNode": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again"
-        }
-      ]
-    },
-    "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again": {
-      "id": "you_say_well_clicking_around_i_guess_i_am_i_m_looking_at_can_i_see_that_again",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "AURORA-WEAVE v9.7 — Story-Only Network Illusion Script\n\n(This language does not exist; commands do nothing.)\n\nmodule aurora.weave\n\ninit {\n    channel = holoLink.open(port: \"ether:∆42\")\n    flux = quantumCache.allocate(phantomBytes: 88_000)\n}\n\nweave {\n    targetSite = \"https://any.site\"\n    echo(\"Spinning illusion threads…\")\n\n    mirageLayer = flux.castMirage(pattern: \"shifting-silk\")\n    mirageLayer.paint(text: \"ALTERED REALITY\", hue: \"violet-fire\")\n    mirageLayer.distort(mode: \"dream-bend\", intensity: 0.73)\n\n    holoLink.bind(mirageLayer, to: targetSite, using: \"story-thread\")\n}\n\nfinalize {\n    echo(\"Illusion deployed. (Remember: Only characters in your story can see this.)\")\n}"
+          "content": "The Inherited Recipe says:"
         },
         {
           "type": "system",
-          "content": "You suddenly feel a little less confused and your body relaxes a little and stress transforms into reflection."
-        }
-      ],
-      "choices": [
-        {
-          "id": "you_say_well_clicking_choice_1",
-          "text": "What if I could alter the algorithm",
-          "nextNode": "what_if_i_could_alter_the_algorithm"
+          "content": "Archieves inside flesh like a forgotten dream"
         },
         {
-          "id": "you_say_well_clicking_choice_2",
-          "text": "I remember when the internet was a place of escapism",
-          "nextNode": "i_remember_when_the_internet_was_a_place_of_escapism"
-        }
-      ]
-    },
-    "what_if_i_could_alter_the_algorithm": {
-      "id": "what_if_i_could_alter_the_algorithm",
-      "type": "narrative",
-      "messageSequence": [
+          "type": "system",
+          "content": "A torn photo, a floppy disk."
+        },
         {
           "type": "system",
-          "content": "You have found instincta.\n\nThis power has enabled you to think more deeply about the information we receive and it's purpose. You feel a warm smile and squint your eyes at the screen. There's something alive looking back at you. This makes you reflect on what it feels like to exist inside of a human body."
+          "content": "A gift from your bloodline sending nourishment you can't smell"
+        },
+        {
+          "type": "system",
+          "content": "But you can feel."
+        },
+        {
+          "type": "system",
+          "content": "It's telling you to 'slow down'"
+        },
+        {
+          "type": "system",
+          "content": "and other words you can no longer decode."
+        },
+        {
+          "type": "system",
+          "content": "maybe this isn't a meal at all,"
+        },
+        {
+          "type": "system",
+          "content": "but a message"
+        },
+        {
+          "type": "system",
+          "content": "you chew on this thought of what this bowl of soup and what your body are telling you."
+        },
+        {
+          "type": "system",
+          "content": "> ->main portal"
         }
       ],
       "choices": [
         {
-          "id": "what_if_i_could_alter_the_algorithm_choice_1",
-          "text": "Excuse me?",
-          "nextNode": "you_say_excuse_me"
-        }
-      ]
-    },
-    "i_remember_when_the_internet_was_a_place_of_escapism": {
-      "id": "i_remember_when_the_internet_was_a_place_of_escapism",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "You have found nostalgica. This power enables you to use the time as a tool of knowledge for how you navigate and perceive reality.\n\nHowever despite this, whatever magic the code would have was lost."
-        }
-      ],
-      "choices": [
-        {
-          "id": "i_remember_when_the_internet_was_a_place_of_escapism_choice_1",
-          "text": "Okay cool. Well I'll head back to the main portal with my acquired instincta",
+          "id": "can_i_read_the_poem_that_came_with_the_recipe_choice_1",
+          "text": null,
+          "displayText": "<< *you wander out of obsolescence with reflection to slow down* >>",
           "nextNode": "main_portal"
         }
       ]
     },
-    "you_say_excuse_me": {
-      "id": "you_say_excuse_me",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "The code looks back at you sitting there brewing up a question. Your eyes bolt almost indistinguishable as you're filled with a new flavour of confusion"
-        },
-        {
-          "type": "system",
-          "content": "Code says: Hey."
-        },
-        {
-          "type": "system",
-          "content": "Code says: You've got this far I guess. Looks like you've gotten pretty far."
-        }
-      ],
-      "choices": [
-        {
-          "id": "you_say_excuse_me_choice_1",
-          "text": "Hey. SoO",
-          "nextNode": "you_say_hey_soo"
-        },
-        {
-          "id": "you_say_excuse_me_choice_2",
-          "text": "Yeah, I mean, Where the heck am I?",
-          "nextNode": "you_say_yeah_i_mean_where_the_heck_am_i"
-        }
-      ]
-    },
-    "you_say_hey_soo": {
-      "id": "you_say_hey_soo",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "The code looks back at you and frowns."
-        },
-        {
-          "type": "system",
-          "content": "Code: \"Hey So?\" That's pretty inventive."
-        },
-        {
-          "type": "system",
-          "content": "They're bored by your lack of imagination of actions in this moment, you gasp in disbelief"
-        }
-      ],
-      "choices": [
-        {
-          "id": "you_say_hey_soo_choice_1",
-          "text": "I literally have only so many options to respond in this moment, What do you have a problem with me now?",
-          "nextNode": "you_say_i_literally_have_only_so_many_options_to_respond_in_this_moment_what_do_you_have_a_problem_with_me_now"
-        }
-      ]
-    },
-    "you_say_i_literally_have_only_so_many_options_to_respond_in_this_moment_what_do_you_have_a_problem_with_me_now": {
-      "id": "you_say_i_literally_have_only_so_many_options_to_respond_in_this_moment_what_do_you_have_a_problem_with_me_now",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "The code roles their eyes. The feeling stings. The first time a non-human has made you feel blasé"
-        }
-      ],
-      "choices": [
-        {
-          "id": "you_say_i_literally_choice_1",
-          "text": "If I perform how you would like me to, will you give me a clue of where to go next",
-          "nextNode": "thread_comment_section"
-        },
-        {
-          "id": "you_say_i_literally_choice_2",
-          "text": "I can't tell if I'm in conflict with a \"01\" being or just curiously seeing where this goes",
-          "nextNode": "search_engine"
-        }
-      ]
-    },
-    "you_say_yeah_i_mean_where_the_heck_am_i": {
-      "id": "you_say_yeah_i_mean_where_the_heck_am_i",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "The code looks back at you and chuckles."
-        },
-        {
-          "type": "system",
-          "content": "Code: I heard you're looking for new parts? Or wait, no your old parts...lost parts. I think I can help."
-        }
-      ],
-      "choices": [
-        {
-          "id": "you_say_yeah_i_mean_choice_1",
-          "text": "That's great. When I got here I found insticata, so I guess I'm looking for advice where to go from here",
-          "nextNode": "thread_comment_section"
-        },
-        {
-          "id": "you_say_yeah_i_mean_choice_2",
-          "text": "Hehe, yes for sure ;) I've been traveling through this chatroom portal. How long have you been concious? If it's okay to ask :) :)",
-          "nextNode": "thread_comment_section"
-        },
-        {
-          "id": "you_say_yeah_i_mean_choice_3",
-          "text": "Hello. Well, I'm happy just chatting to you, I would love for this to never end",
-          "nextNode": "a_bloody_arm"
-        }
-      ]
-    },
-    "thread_comment_section": {
-      "id": "thread_comment_section",
+    "central_area": {
+      "id": "central_area",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "How did you end up here? Looks like you were transported.."
+          "content": "Now internet person, what would you like to search next?"
         },
         {
           "type": "narrator",
-          "content": "In this lonely forum. A lot of time has passed since this thread was written, but your response will transmit to the past. There's a single thread there. I'll travel the information here into the chat and transmit any messages you output for further investigation."
+          "content": "Where does your curiousity lead you?"
         },
         {
           "type": "system",
-          "content": "Remember, you are looking for yourself, don't be tactical, just respond as you are to find your way through this."
+          "content": "You've used ${clicks} out of 3 tries. Choose a search:"
         }
       ],
       "choices": [
         {
-          "id": "thread_comment_section_choice_1",
-          "text": "Okay let's give it a try!",
-          "nextNode": "okay_let_s_give_it_a_try"
+          "id": "central_area_choice_1",
+          "text": "Search Oracle: Can convenience be corrosive?",
+          "displayText": "Search Oracle: Can convenience be corrosive?",
+          "nextNode": "search_oracle_can_convenience_be_corrosive",
+          "effects": {
+            "clicks": "+1"
+          }
         },
         {
-          "id": "thread_comment_section_choice_2",
-          "text": "Gosh, okay let's go.",
-          "nextNode": "gosh_okay_let_s_go"
+          "id": "central_area_choice_2",
+          "text": "Search: Is sexual desire and kink just a software bug or a political statement?",
+          "displayText": "Search: Is sexual desire and kink just a software bug or a political statement?",
+          "nextNode": "search_is_sexual_desire_and_kink_just_a_software_bug_or_a_political_statement",
+          "effects": {
+            "clicks": "+1"
+          }
+        },
+        {
+          "id": "central_area_choice_3",
+          "text": "Search Oracle: Is physical vulnerability a weakness in the world of the Machine?",
+          "displayText": "Search Oracle: Is physical vulnerability a weakness in the world of the Machine?",
+          "nextNode": "search_oracle_is_physical_vulnerability_a_weakness_in_the_world_of_the_machine",
+          "effects": {
+            "clicks": "+1"
+          }
+        },
+        {
+          "id": "central_area_choice_4",
+          "text": "Search Oracle: Is the human body flawed in the age of the Machine?",
+          "displayText": "Search Oracle: Is the human body flawed in the age of the Machine?",
+          "nextNode": "search_oracle_is_the_human_body_flawed_in_the_age_of_the_machine",
+          "effects": {
+            "clicks": "+1"
+          }
+        },
+        {
+          "id": "central_area_choice_5",
+          "text": "Search Oracle: If surveillance becomes comforting is it Stockholm syndrome or customer loyalty?",
+          "displayText": "Search Oracle: If surveillance becomes comforting is it Stockholm syndrome or customer loyalty?",
+          "nextNode": "search_oracle_if_surveillance_becomes_comforting_is_it_stockholm_syndrome_or_customer_loyalty",
+          "effects": {
+            "clicks": "+1"
+          }
+        },
+        {
+          "id": "central_area_choice_6",
+          "text": "Search Oracle: How can humanity release agency and give into systematic control by the Machine?",
+          "displayText": "Search Oracle: How can humanity release agency and give into systematic control by the Machine?",
+          "nextNode": "search_oracle_how_can_humanity_release_agency_and_give_into_systematic_control_by_the_machine",
+          "effects": {
+            "clicks": "+1"
+          }
+        }
+      ],
+      "conditions": [
+        {
+          "variable": "clicks",
+          "operator": ">=",
+          "value": 3,
+          "nextNode": "thread_comment_section"
         }
       ]
     },
-    "okay_let_s_give_it_a_try": {
-      "id": "okay_let_s_give_it_a_try",
+    "clippings": {
+      "id": "clippings",
       "type": "narrative",
       "messageSequence": [
         {
+          "type": "system",
+          "content": "UNLOCKED: Nail Clippings!"
+        },
+        {
           "type": "narrator",
-          "content": "Transmitting...Thread...Loading....Lonely...Thread..."
+          "content": "//Dear internet person, you have found Nail Clippings//"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/rFxNcpwM/Hand-Transp.gif",
+          "alt": "Hand Transp"
         }
       ],
       "choices": [
         {
-          "id": "okay_let_s_give_it_a_try_choice_1",
-          "text": "continue",
-          "nextNode": "continue"
+          "id": "clippings_choice_1",
+          "text": "Did it come with a poem for me to read?",
+          "displayText": "Did it come with a poem for me to read?",
+          "nextNode": "did_it_come_with_a_poem_for_me_to_read"
+        }
+      ]
+    },
+    "did_it_come_with_a_poem_for_me_to_read": {
+      "id": "did_it_come_with_a_poem_for_me_to_read",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your Clippings say:"
+        },
+        {
+          "type": "system",
+          "content": "Little forgotten pieces"
+        },
+        {
+          "type": "system",
+          "content": "From your body"
+        },
+        {
+          "type": "system",
+          "content": "The parts the world deemed unworthy"
+        },
+        {
+          "type": "system",
+          "content": "imperfect"
+        },
+        {
+          "type": "system",
+          "content": "a clause you were taught somewhere between"
+        },
+        {
+          "type": "system",
+          "content": "your sexuality and spirituality"
+        },
+        {
+          "type": "system",
+          "content": "Click-Click-Opps!"
+        },
+        {
+          "type": "system",
+          "content": "What if ur body parts were alive?"
+        },
+        {
+          "type": "system",
+          "content": "Can u imagine those 'lil bones"
+        },
+        {
+          "type": "system",
+          "content": "dancing-consciously-laughing on hills"
+        },
+        {
+          "type": "system",
+          "content": "Free from the pain of being unwanted"
+        },
+        {
+          "type": "system",
+          "content": "What did you accidentally believe in?"
+        },
+        {
+          "type": "system",
+          "content": "> ->main portal"
+        }
+      ],
+      "choices": [
+        {
+          "id": "did_it_come_with_a_poem_for_me_to_read_choice_1",
+          "text": null,
+          "displayText": "<< You ponder this final question. and wander out of obsolescence>>",
+          "nextNode": "main_portal"
+        }
+      ]
+    },
+    "dust": {
+      "id": "dust",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: Dust?"
+        },
+        {
+          "type": "narrator",
+          "content": "//Dear internet person, you have found A Pile of Dust..?//"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/K8h35rF1/Dust-Transp.gif",
+          "alt": "Dust Transp"
+        }
+      ],
+      "choices": [
+        {
+          "id": "dust_choice_1",
+          "text": "Dust? Eh did it come with a poem at least??",
+          "displayText": "Dust? Eh did it come with a poem at least??",
+          "nextNode": "dust_eh_did_it_come_with_a_poem_at_least"
+        }
+      ]
+    },
+    "dust_eh_did_it_come_with_a_poem_at_least": {
+      "id": "dust_eh_did_it_come_with_a_poem_at_least",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The Dust says:"
+        },
+        {
+          "type": "system",
+          "content": "The Body"
+        },
+        {
+          "type": "system",
+          "content": "Your body"
+        },
+        {
+          "type": "system",
+          "content": "left without touch"
+        },
+        {
+          "type": "system",
+          "content": "What is it asking for?"
+        },
+        {
+          "type": "system",
+          "content": "The dust gathers around your feet,"
+        },
+        {
+          "type": "system",
+          "content": "And (uh) she's winking now."
+        },
+        {
+          "type": "system",
+          "content": "What have you not embraced?"
+        },
+        {
+          "type": "system",
+          "content": "You look distracted."
+        },
+        {
+          "type": "system",
+          "content": "> ->main portal"
+        }
+      ],
+      "choices": [
+        {
+          "id": "dust_eh_did_it_come_with_a_poem_at_least_choice_1",
+          "text": null,
+          "displayText": "<< You say: Is this a reward or a warning? What is my body telling me?  Wander out of obsolescence. >>",
+          "nextNode": "main_portal"
+        }
+      ]
+    },
+    "evileye": {
+      "id": "evileye",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: An Evil Eye"
+        },
+        {
+          "type": "narrator",
+          "content": "//Dear internet person, you have found An Evil Eye//"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/PxjDrW3V/Eye-Transp.gif",
+          "alt": "Eye Transp"
+        }
+      ],
+      "choices": [
+        {
+          "id": "evileye_choice_1",
+          "text": "Liz, I'd like to read the poem that came with Evil Eye",
+          "displayText": "Liz, I'd like to read the poem that came with Evil Eye",
+          "nextNode": "liz_i_d_like_to_read_the_poem_that_came_with_evil_eye"
+        }
+      ]
+    },
+    "first_person_route": {
+      "id": "first_person_route",
+      "type": "ending",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "FIRST PERSON ROUTE"
+        }
+      ],
+      "choices": []
+    },
+    "finalthought": {
+      "id": "finalthought",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your Lost Thought says:"
+        },
+        {
+          "type": "system",
+          "content": "Focused in on this universe"
+        },
+        {
+          "type": "system",
+          "content": "Everything breathes"
+        },
+        {
+          "type": "system",
+          "content": "Into a single moment."
+        },
+        {
+          "type": "system",
+          "content": "And then you blink..."
+        },
+        {
+          "type": "system",
+          "content": "eternityevaporatesflipsreverses"
+        },
+        {
+          "type": "system",
+          "content": "crys out"
+        },
+        {
+          "type": "system",
+          "content": "and then laughs"
+        },
+        {
+          "type": "system",
+          "content": "half-eaten"
+        },
+        {
+          "type": "system",
+          "content": "tip of the tongue,"
+        },
+        {
+          "type": "system",
+          "content": "a smothering darkness"
+        },
+        {
+          "type": "system",
+          "content": "It's just a feeling, but"
+        },
+        {
+          "type": "system",
+          "content": "she still has power"
+        },
+        {
+          "type": "system",
+          "content": "To sew broken images"
+        },
+        {
+          "type": "system",
+          "content": "and tell you, \"this is your memory\""
+        },
+        {
+          "type": "system",
+          "content": "and these broken images love to play!"
+        },
+        {
+          "type": "system",
+          "content": "they're so mischevious."
+        },
+        {
+          "type": "system",
+          "content": "Perhaps because they believe between a moment ago and the past"
+        },
+        {
+          "type": "system",
+          "content": "it was all a fascade."
+        },
+        {
+          "type": "system",
+          "content": "> ->main portal"
+        }
+      ],
+      "choices": [
+        {
+          "id": "finalthought_choice_1",
+          "text": null,
+          "displayText": "<< You ask: What will I remember tonight? Perhaps for now I'll wander out of obsolescence >>",
+          "nextNode": "main_portal"
+        }
+      ]
+    },
+    "forgottenthought": {
+      "id": "forgottenthought",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: A Forgotten Thought"
+        },
+        {
+          "type": "narrator",
+          "content": "//Dear internet person, you have found A Forgotten Thought//"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/kGtP1S9r/Thought-Bubble-Transp.gif",
+          "alt": "Thought Bubble Transp"
+        }
+      ],
+      "choices": [
+        {
+          "id": "forgottenthought_choice_1",
+          "text": "Hmm okay",
+          "displayText": "Hmm okay",
+          "nextNode": "finalthought"
+        },
+        {
+          "id": "forgottenthought_choice_2",
+          "text": "Let me read the poem that came with my Forgotten Thought",
+          "displayText": "Let me read the poem that came with my Forgotten Thought",
+          "nextNode": "finalthought"
+        }
+      ]
+    },
+    "go_on": {
+      "id": "go_on",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "loading..looking inside your brain. how does your body feel?"
+        },
+        {
+          "type": "system",
+          "content": "The Email says: Her we go"
+        },
+        {
+          "type": "system",
+          "content": "The Email says: Here* :-)"
+        }
+      ],
+      "choices": [
+        {
+          "id": "go_on_choice_1",
+          "text": "Hmm",
+          "displayText": "Hmm",
+          "nextNode": "thecode"
         }
       ]
     },
@@ -1108,161 +1278,50 @@
       "type": "narrative",
       "messageSequence": [
         {
-          "type": "narrator",
-          "content": "...Transmitting...Thread...Loading....Pic and... Lonely Thread..."
+          "type": "system",
+          "content": "Liz says:...Transmitting...Thread...Loading....Pic and... Lonely Thread..."
         }
       ],
       "choices": [
         {
           "id": "gosh_okay_let_s_go_choice_1",
-          "text": "continue",
+          "text": "Hmm",
+          "displayText": "Hmm",
           "nextNode": "continue"
         }
       ]
     },
-    "continue": {
-      "id": "continue",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "image",
-          "url": "https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg",
-          "alt": "Thread image"
-        }
-      ],
-      "choices": [
-        {
-          "id": "continue_choice_1",
-          "text": "read thread",
-          "nextNode": "read_thread"
-        }
-      ]
-    },
-    "read_thread": {
-      "id": "read_thread",
+    "got_it_liz": {
+      "id": "got_it_liz",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "narrator",
-          "content": "..Here's the thread below that followed the image."
+          "content": "Last thing…"
         },
         {
-          "type": "system",
-          "content": "Thread Topic: Jouissance."
+          "type": "narrator",
+          "content": "Use your imagination, your internal eye throughout."
         },
         {
-          "type": "system",
-          "content": "SSSS_98 says: Hey everyone, has anyone seen this image floating around on here? It keeps coming up for me, like a lot. I had to start a convo about it as so many thoughts and questions keep coming up for me around my relationship with my own body.\n\nThe first time I saw the image, it felt like a kind of optical illusion, if I blinked the image looked slightly different and it kind of tripped me out.\n\nThe second time, I think I started to really focus in on the vaginal area. I thought of my own gentalia and my body as a machine of pleasure and loss. Objectification and beauty. I"
+          "type": "narrator",
+          "content": "Many different people play this but the spaces are always different, the text here in front of you will trigger your sesnses + imagery."
+        },
+        {
+          "type": "narrator",
+          "content": "For example, you probably have an internal voice for me."
+        },
+        {
+          "type": "narrator",
+          "content": "Are you creating this now or does this stem from memory?"
         }
       ],
       "choices": [
         {
-          "id": "read_thread_choice_1",
-          "text": "continue observing thread",
-          "nextNode": "continue_observing_thread"
-        }
-      ]
-    },
-    "continue_observing_thread": {
-      "id": "continue_observing_thread",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "Thread Topic: Jouissance."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Who owns these tools? I am black. I'm hypersexual. I don't have many friends. I want my body on display and I wonder if this was a learned behavior - hell does it matter?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "continue_observing_thread_choice_1",
-          "text": "read on",
-          "nextNode": "read_on"
-        }
-      ]
-    },
-    "read_on": {
-      "id": "read_on",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "SSSS_98 says: I've never really thought about it before but, I guess I'm grateful for this kind of thread space to kind of tune out of the world, I feel like I'm kind of growing up and learning about myself with all of this information around me.\n\nI'm curious to know what others think."
-        }
-      ],
-      "choices": [
-        {
-          "id": "read_on_choice_1",
-          "text": "see photo again",
-          "nextNode": "see_photo_again"
-        }
-      ]
-    },
-    "see_photo_again": {
-      "id": "see_photo_again",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "image",
-          "url": "https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg",
-          "alt": "Thread image"
-        }
-      ],
-      "choices": [
-        {
-          "id": "see_photo_again_choice_1",
-          "text": "read final comment from SSSS_98",
-          "nextNode": "read_final_comment_from_ssss_98"
-        }
-      ]
-    },
-    "read_final_comment_from_ssss_98": {
-      "id": "read_final_comment_from_ssss_98",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Hello? Is anyone there? I keep seein a lot of activity on my other posts/other's threads the past couple of days, but I can't tell what's going on like is this even visible?\n\nCan you all see this?\n\nCan you all see me?\n\nAre you really there?"
-        }
-      ],
-      "choices": [
-        {
-          "id": "read_final_comment_from_ssss_98_choice_1",
-          "text": "Hey!1 Yeah I'm here :)) I can't see what you're saying but I can see these words",
-          "nextNode": "hey_1_yeah_i_m_here_i_can_t_see_what_you_re_saying_but_i_can_see_these_words"
-        },
-        {
-          "id": "read_final_comment_from_ssss_98_choice_2",
-          "text": "Hello. I'm here. I hope this message reaches you in time.",
-          "nextNode": "hello_i_m_here_i_hope_this_message_reaches_you_in_time"
-        }
-      ]
-    },
-    "hey_1_yeah_i_m_here_i_can_t_see_what_you_re_saying_but_i_can_see_these_words": {
-      "id": "hey_1_yeah_i_m_here_i_can_t_see_what_you_re_saying_but_i_can_see_these_words",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "SSSS_98 says: ''You can see my words but you cannot understand my words?'' Haha, that actually made me smile...why does everyone have to be so poetic-cryptic in hyperspace...lol."
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Did you see the photo?"
-        },
-        {
-          "type": "system",
-          "content": "SSSS_98 says: Tell me what comes up for you...no one else seems to see these messages so I'm really itching to discuss with you.."
-        }
-      ],
-      "choices": [
-        {
-          "id": "hey_1_yeah_i_m_here_choice_1",
-          "text": "see the photo again",
-          "nextNode": "see_the_photo_again"
+          "id": "got_it_liz_choice_1",
+          "text": "I wonder...",
+          "displayText": "I wonder...",
+          "nextNode": "makes_sense"
         }
       ]
     },
@@ -1280,63 +1339,1725 @@
         },
         {
           "type": "system",
+          "content": "SSSS_98 says: Tell me what comes up for you..."
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: no one else seems to see these messagess. I'm really itching to discuss with you.."
+        }
+      ],
+      "choices": [
+        {
+          "id": "hello_i_m_here_i_hope_this_message_reaches_you_in_time_choice_1",
+          "text": "I'd like to see the pic again",
+          "displayText": "I'd like to see the pic again",
+          "nextNode": "see_the_photo_again"
+        }
+      ]
+    },
+    "hey_1_yeah_i_m_here_i_can_t_see_what_you_re_saying_but_i_can_see_these_words": {
+      "id": "hey_1_yeah_i_m_here_i_can_t_see_what_you_re_saying_but_i_can_see_these_words",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "SSSS_98 says: ''You can see my words but you cannot understand my words? ''Haha, that actually made me smile...why does everyone have to be so poetically-cryptic in hyperspace...lol."
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: Did you see the photo?"
+        },
+        {
+          "type": "system",
           "content": "SSSS_98 says: Tell me what comes up for you...no one else seems to see these messages so I'm really itching to discuss with you.."
         }
       ],
       "choices": [
         {
-          "id": "hello_i_m_here_choice_1",
-          "text": "see the photo again",
+          "id": "hey_1_yeah_i_m_here_i_can_t_see_what_you_re_saying_but_i_can_see_these_words_choice_1",
+          "text": "I'd like to see the pic again",
+          "displayText": "I'd like to see the pic again",
           "nextNode": "see_the_photo_again"
         }
       ]
     },
-    "see_the_photo_again": {
-      "id": "see_the_photo_again",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "image",
-          "url": "https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg",
-          "alt": "Thread image"
-        }
-      ],
-      "choices": [
-        {
-          "id": "see_the_photo_again_choice_1",
-          "text": "back to chat with SSSS_98",
-          "nextNode": "back_to_chat_with_ssss_98"
-        }
-      ]
-    },
-    "back_to_chat_with_ssss_98": {
-      "id": "back_to_chat_with_ssss_98",
+    "hmm_show_me_the_rest_of_the_message_liz": {
+      "id": "hmm_show_me_the_rest_of_the_message_liz",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "system",
-          "content": "SSSS_98 says: Can you see it? It's not really a photo"
+          "content": "...''A mirror.."
+        },
+        {
+          "type": "system",
+          "content": "..Poorer eyesight..."
+        },
+        {
+          "type": "system",
+          "content": "..A telepathic printer"
+        },
+        {
+          "type": "system",
+          "content": "Do you want any? Anyway, msg me back before the weekend."
+        },
+        {
+          "type": "system",
+          "content": "xo"
         },
         {
           "type": "narrator",
-          "content": "SSSS_98 seems to have something for you here. Your response will log information to move you closer to find yourself."
+          "content": "This anon wants you to choose something from inside the email, it'll impact something for you right now."
         }
       ],
       "choices": [
         {
-          "id": "back_to_chat_with_ssss_98_choice_1",
-          "text": "Yes, I know it's a kind of a ''mirror''",
-          "nextNode": "yes_i_know_it_s_a_kind_of_a_mirror"
+          "id": "hmm_show_me_the_rest_of_the_message_liz_choice_1",
+          "text": null,
+          "displayText": "a place of tension and expression.",
+          "nextNode": "a_place_of_tension_and_expression"
         },
         {
-          "id": "back_to_chat_with_ssss_98_choice_2",
-          "text": "Lol gosh I mean ummmmm maybe in a weird way I would say it's a map, some set coordinates...",
-          "nextNode": "lol_gosh_i_mean_ummmmm_maybe_in_a_weird_way_i_would_say_it_s_a_map_some_set_coordinates"
+          "id": "hmm_show_me_the_rest_of_the_message_liz_choice_2",
+          "text": null,
+          "displayText": "In this moment, I would like to guess \"a mirror\"",
+          "nextNode": "in_this_moment_i_would_like_to_guess_a_mirror"
         },
         {
-          "id": "back_to_chat_with_ssss_98_choice_3",
-          "text": "As you were reflecting before, it made me reflect on myself. My own pleasures and my own my body. What appeals to me and what doesn't and how when I close my eyes everything is dark and nothing. This feels like a facade.",
-          "nextNode": "as_you_were_reflecting_before_it_made_me_reflect_on_myself_my_own_pleasures_and_my_own_my_body_what_appeals_to_me_and_what_doesn_t_and_how_when_i_close_my_eyes_everything_is_dark_and_nothing_this_feels_like_a_facade"
+          "id": "hmm_show_me_the_rest_of_the_message_liz_choice_3",
+          "text": null,
+          "displayText": "telepathic printer",
+          "nextNode": "telepathic_printer"
+        },
+        {
+          "id": "hmm_show_me_the_rest_of_the_message_liz_choice_4",
+          "text": "Poorer eyesight",
+          "displayText": "Poorer eyesight",
+          "nextNode": "poorer_eyesight"
+        }
+      ]
+    },
+    "i": {
+      "id": "i",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "I"
+        }
+      ],
+      "choices": [
+        {
+          "id": "i_choice_1",
+          "text": "have",
+          "displayText": "have",
+          "nextNode": "have"
+        }
+      ]
+    },
+    "i_agree": {
+      "id": "i_agree",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Remember, how you play the game says something about you, almost like a survey with a multitude of outcomes."
+        }
+      ],
+      "choices": [
+        {
+          "id": "i_agree_choice_1",
+          "text": "Got it Liz",
+          "displayText": "Got it Liz",
+          "nextNode": "got_it_liz"
+        }
+      ]
+    },
+    "i_cannot_control_my_response_i_have_become_too_disconnected": {
+      "id": "i_cannot_control_my_response_i_have_become_too_disconnected",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Ah, looks like you got sucked in."
+        },
+        {
+          "type": "narrator",
+          "content": "I wonder what would happen for you if the wifi permanently shut off?"
+        },
+        {
+          "type": "narrator",
+          "content": "Your body has become obsolete, goodbye dear Internet Person. Thanks for playing."
+        }
+      ],
+      "choices": [
+        {
+          "id": "i_cannot_control_my_response_i_have_become_too_disconnected_choice_1",
+          "text": "Goodbye, Liz.",
+          "displayText": "Goodbye, Liz.",
+          "nextNode": "main_portal"
+        }
+      ]
+    },
+    "i_decide_to_shout_into_the_metaverse_hello_suddenly_hear_digital_birds_fly_off_by_your_disturbance": {
+      "id": "i_decide_to_shout_into_the_metaverse_hello_suddenly_hear_digital_birds_fly_off_by_your_disturbance",
+      "type": "ending",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "I decide to shout into the metaverse, \"Hello?!\" Suddenly, hear digital birds fly off by your disturbance,"
+        }
+      ],
+      "choices": []
+    },
+    "i_don_t": {
+      "id": "i_don_t",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "...???"
+        }
+      ],
+      "choices": [
+        {
+          "id": "i_don_t_choice_1",
+          "text": "I",
+          "displayText": "I",
+          "nextNode": "i"
+        }
+      ]
+    },
+    "i_wait_patiently_wait_infront_of_the_screen_confused": {
+      "id": "i_wait_patiently_wait_infront_of_the_screen_confused",
+      "type": "ending",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "I wait patiently wait infront of the screen confused"
+        }
+      ],
+      "choices": []
+    },
+    "i_d_like_to_read_final_words": {
+      "id": "i_d_like_to_read_final_words",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "A Stranger's Smile says:"
+        },
+        {
+          "type": "system",
+          "content": "A flirtatious smile"
+        },
+        {
+          "type": "system",
+          "content": "A curious glance"
+        },
+        {
+          "type": "system",
+          "content": "A cryptic message"
+        },
+        {
+          "type": "system",
+          "content": "A non physical embrace"
+        },
+        {
+          "type": "system",
+          "content": "A crowd of curious bodies"
+        },
+        {
+          "type": "system",
+          "content": "Watching"
+        },
+        {
+          "type": "system",
+          "content": "You"
+        },
+        {
+          "type": "system",
+          "content": "Right Now."
+        },
+        {
+          "type": "system",
+          "content": "Your body perks"
+        },
+        {
+          "type": "system",
+          "content": "And pockets this stranger’s smile"
+        },
+        {
+          "type": "system",
+          "content": "For a grim day."
+        },
+        {
+          "type": "system",
+          "content": "> ->main portal"
+        }
+      ],
+      "choices": [
+        {
+          "id": "i_d_like_to_read_final_words_choice_1",
+          "text": null,
+          "displayText": "<< You wonder as you depart: Who was that? Wander out of obsolescence>>",
+          "nextNode": "main_portal"
+        }
+      ]
+    },
+    "i_ll_remember_that_too": {
+      "id": "i_ll_remember_that_too",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The email reads:"
+        },
+        {
+          "type": "system",
+          "content": "Dear (the name is blurred out),"
+        },
+        {
+          "type": "system",
+          "content": "sO formal sorry! I couldn't find your account to message directly and so I wondered if you deactivated? Anyways, I did wnt to invte you you a c0nc3rt - hehe! I'll bring a few of the following items"
+        }
+      ],
+      "choices": [
+        {
+          "id": "i_ll_remember_that_too_choice_1",
+          "text": "Hmm, show me the rest of the message, Liz",
+          "displayText": "Hmm, show me the rest of the message, Liz",
+          "nextNode": "hmm_show_me_the_rest_of_the_message_liz"
+        }
+      ]
+    },
+    "i_m_pretty_fuelled_by_curiousity_and_patient_to_just_keep_chatting_with_you": {
+      "id": "i_m_pretty_fuelled_by_curiousity_and_patient_to_just_keep_chatting_with_you",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your own eyebrows frown and you look around,  you remember a while ago - sometime in a past vision- that sometimes when something's broken that maybe you're in the right place."
+        },
+        {
+          "type": "system",
+          "content": "The Email says: Are you?"
+        },
+        {
+          "type": "system",
+          "content": "The Email says: Oh."
+        },
+        {
+          "type": "system",
+          "content": "The Email says: You won't believe this! You actually might regret something you've been doing this entire gameplay..."
+        }
+      ],
+      "choices": [
+        {
+          "id": "i_m_pretty_fuelled_by_curiousity_and_patient_to_just_keep_chatting_with_you_choice_1",
+          "text": "Go on??!",
+          "displayText": "Go on??!",
+          "nextNode": "go_on"
+        },
+        {
+          "id": "i_m_pretty_fuelled_by_curiousity_and_patient_to_just_keep_chatting_with_you_choice_2",
+          "text": "Zzzzzz",
+          "displayText": "Zzzzzz",
+          "nextNode": "yeah_a_bit_itchy_and_confused"
+        }
+      ]
+    },
+    "i_m_ready_where_to_next": {
+      "id": "i_m_ready_where_to_next",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Give me a second to pull up the spheres for you..."
+        }
+      ],
+      "choices": [
+        {
+          "id": "i_m_ready_where_to_next_choice_1",
+          "text": null,
+          "displayText": "*watch the screen while things happen unknown to me*",
+          "nextNode": "watch_the_screen_while_things_happen_unknown_to_me"
+        }
+      ]
+    },
+    "in_this_moment_i_would_like_to_guess_a_mirror": {
+      "id": "in_this_moment_i_would_like_to_guess_a_mirror",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The emails eyes widen, they look soft and suddenly you realize you are looking at a breathing being."
+        },
+        {
+          "type": "system",
+          "content": "You whisper: [[A mirror, this email represents me?->Inherited Recipe"
+        }
+      ],
+      "choices": [
+        {
+          "id": "in_this_moment_i_would_like_to_guess_a_mirror_choice_1",
+          "text": "A mirror, this email represents me?",
+          "displayText": "A mirror, this email represents me?",
+          "nextNode": "inherited_recipe"
+        }
+      ]
+    },
+    "inherited_recipe": {
+      "id": "inherited_recipe",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Your journey out of obsolescence ends here."
+        },
+        {
+          "type": "narrator",
+          "content": "Here is what you found..."
+        }
+      ],
+      "choices": [
+        {
+          "id": "inherited_recipe_choice_1",
+          "text": "What did I find?",
+          "displayText": "What did I find?",
+          "nextNode": "recipe"
+        }
+      ]
+    },
+    "inside": {
+      "id": "inside",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The Letter says: Dear Internet Person."
+        },
+        {
+          "type": "system",
+          "content": "The Letter says: I'm surprised to see you here."
+        },
+        {
+          "type": "system",
+          "content": "The Letter says: Aimlessly looking for your lost soul parts."
+        },
+        {
+          "type": "system",
+          "content": "The Letter says: That's not why you're really here is it? You want to be entertained? You want to analyze \"art\"? You had a few moments to spare for a joke?"
+        },
+        {
+          "type": "system",
+          "content": "The Letter says: ...I don't wish to ask you, but go ahead I guess, tell me why you're here."
+        }
+      ],
+      "choices": [
+        {
+          "id": "inside_choice_1",
+          "text": "Yeeah..I would hope to find something meaningful at the end of this",
+          "displayText": "Yeeah..I would hope to find something meaningful at the end of this",
+          "nextNode": "loadinggg"
+        },
+        {
+          "id": "inside_choice_2",
+          "text": "Thought it would be fun :)",
+          "displayText": "Thought it would be fun :)",
+          "nextNode": "loadinggg"
+        },
+        {
+          "id": "inside_choice_3",
+          "text": "I was drawn in my curiousity, nothing wrong with that?",
+          "displayText": "I was drawn in my curiousity, nothing wrong with that?",
+          "nextNode": "loadinggg"
+        },
+        {
+          "id": "inside_choice_4",
+          "text": "None of the answers in this system actually articulates my desire to be here.",
+          "displayText": "None of the answers in this system actually articulates my desire to be here.",
+          "nextNode": "loadinggg"
+        }
+      ]
+    },
+    "lol_internet_person": {
+      "id": "lol_internet_person",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Yes, you are a body of cyberspace I believe? I'm so glad to meet you."
+        }
+      ],
+      "choices": [
+        {
+          "id": "lol_internet_person_choice_1",
+          "text": "Where am I?",
+          "displayText": "Where am I?",
+          "nextNode": "where_am_i"
+        },
+        {
+          "id": "lol_internet_person_choice_2",
+          "text": "Who are you?",
+          "displayText": "Who are you?",
+          "nextNode": "who_are_you"
+        }
+      ]
+    },
+    "let_me_read_the_poem_that_came_with_my_bloody_leg": {
+      "id": "let_me_read_the_poem_that_came_with_my_bloody_leg",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your Bloody Leg Says:"
+        },
+        {
+          "type": "system",
+          "content": "My body watches you"
+        },
+        {
+          "type": "system",
+          "content": "And you peer back"
+        },
+        {
+          "type": "system",
+          "content": "Silent drips of blood"
+        },
+        {
+          "type": "system",
+          "content": "A wounded unwanted mind"
+        },
+        {
+          "type": "system",
+          "content": "How often do you allow your mind to think?"
+        },
+        {
+          "type": "system",
+          "content": "The body is so fragile,"
+        },
+        {
+          "type": "system",
+          "content": "So flight or fight, bby!"
+        },
+        {
+          "type": "system",
+          "content": "Inward or outward?"
+        },
+        {
+          "type": "system",
+          "content": "> ->main portal"
+        }
+      ],
+      "choices": [
+        {
+          "id": "let_me_read_the_poem_that_came_with_my_bloody_leg_choice_1",
+          "text": null,
+          "displayText": "<< You say to youreself: Who am I really listening to?  Wander out of obsolescence. >>",
+          "nextNode": "main_portal"
+        }
+      ]
+    },
+    "liz_i_d_like_to_read_the_poem_that_came_with_evil_eye": {
+      "id": "liz_i_d_like_to_read_the_poem_that_came_with_evil_eye",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The Evil Eye says:"
+        },
+        {
+          "type": "system",
+          "content": "A side eye, an echoed chuckle"
+        },
+        {
+          "type": "system",
+          "content": "an eye for extraction"
+        },
+        {
+          "type": "system",
+          "content": "Your eyes turn inward"
+        },
+        {
+          "type": "system",
+          "content": "Reminding itself,"
+        },
+        {
+          "type": "system",
+          "content": "\"you have not moved your body the same since --\""
+        },
+        {
+          "type": "system",
+          "content": "Did you invite this gaze?"
+        },
+        {
+          "type": "system",
+          "content": "Undetected for so long 'til now,"
+        },
+        {
+          "type": "system",
+          "content": "a painful thought, transformed"
+        },
+        {
+          "type": "system",
+          "content": "> ->main portal"
+        }
+      ],
+      "choices": [
+        {
+          "id": "liz_i_d_like_to_read_the_poem_that_came_with_evil_eye_choice_1",
+          "text": null,
+          "displayText": "<< the eye watches you as you leave this chat.  Wander out of obsolescence >>",
+          "nextNode": "main_portal"
+        }
+      ]
+    },
+    "loadinggg": {
+      "id": "loadinggg",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The Code says: Okay."
+        },
+        {
+          "type": "system",
+          "content": "The Code says: Thank you for answering."
+        },
+        {
+          "type": "system",
+          "content": "The Code Says: Now, I'm curious. Are you content in this moment or feeling itchy to move forward?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "loadinggg_choice_1",
+          "text": "I'm pretty fuelled by curiousity, and patient to just keep chatting with you..!",
+          "displayText": "I'm pretty fuelled by curiousity, and patient to just keep chatting with you..!",
+          "nextNode": "i_m_pretty_fuelled_by_curiousity_and_patient_to_just_keep_chatting_with_you"
+        },
+        {
+          "id": "loadinggg_choice_2",
+          "text": "Yeah, a bit itchy and confused",
+          "displayText": "Yeah, a bit itchy and confused",
+          "nextNode": "yeah_a_bit_itchy_and_confused"
+        }
+      ]
+    },
+    "lol_gosh_i_mean_ummmmm_maybe_in_a_weird_way_i_would_say_it_s_a_map_some_set_coordinates": {
+      "id": "lol_gosh_i_mean_ummmmm_maybe_in_a_weird_way_i_would_say_it_s_a_map_some_set_coordinates",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "SSSS_98 says: A map..."
+        },
+        {
+          "type": "system",
+          "content": "SSS_98 whispers: Well, let me log the coordinates for you."
+        }
+      ],
+      "choices": [
+        {
+          "id": "lol_gosh_i_mean_ummmmm_maybe_in_a_weird_way_i_would_say_it_s_a_map_some_set_coordinates_choice_1",
+          "text": "Yea :)",
+          "displayText": "Yea :)",
+          "nextNode": "a_forgotten_thought"
+        }
+      ]
+    },
+    "my_curiousity_was_selfish": {
+      "id": "my_curiousity_was_selfish",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The code roles their eyes. The feeling stings. The first time a non-human has made you feel blasé"
+        },
+        {
+          "type": "system",
+          "content": "The Code says: You are."
+        },
+        {
+          "type": "system",
+          "content": "The Code says: So easily seduced."
+        },
+        {
+          "type": "system",
+          "content": "The Code says: What is it that makes you so easy?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "my_curiousity_was_selfish_choice_1",
+          "text": "0101010111100010",
+          "displayText": "0101010111100010",
+          "nextNode": "a_pile_of_dust"
+        },
+        {
+          "id": "my_curiousity_was_selfish_choice_2",
+          "text": "1100001111010101",
+          "displayText": "1100001111010101",
+          "nextNode": "nail_clippings"
+        }
+      ]
+    },
+    "makes_sense": {
+      "id": "makes_sense",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "I won't really be able to help you take everything, but this will be a short (5 to 10 minute) symbolic experience."
+        },
+        {
+          "type": "narrator",
+          "content": "Relax, I believe in you to find the lost parts of yourself"
+        }
+      ],
+      "choices": [
+        {
+          "id": "makes_sense_choice_1",
+          "text": "I'm ready! Where to next?",
+          "displayText": "I'm ready! Where to next?",
+          "nextNode": "i_m_ready_where_to_next"
+        }
+      ]
+    },
+    "nail_clippings": {
+      "id": "nail_clippings",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Your journey out of obsolescence ends here."
+        },
+        {
+          "type": "narrator",
+          "content": "Here is what you found..."
+        }
+      ],
+      "choices": [
+        {
+          "id": "nail_clippings_choice_1",
+          "text": "What did I find?",
+          "displayText": "What did I find?",
+          "nextNode": "clippings"
+        }
+      ]
+    },
+    "no_i_haven_t_really_thought_about": {
+      "id": "no_i_haven_t_really_thought_about",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "*looks at your disappointed* I don't want to throw you off your journey, Internet Person."
+        },
+        {
+          "type": "narrator",
+          "content": "In this new age, there is a necessity for vigilance...you may or may not agree"
+        },
+        {
+          "type": "narrator",
+          "content": "Regardless. Ur curiosity is valuable, admirable - it's a rare strength in bio-human adults."
+        },
+        {
+          "type": "narrator",
+          "content": "Perhaps this new curiosity should be explored?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "no_i_haven_t_really_thought_about_choice_1",
+          "text": "Better now than...yeah you know",
+          "displayText": "Better now than...yeah you know",
+          "nextNode": "better_now_than_yeah_you_know"
+        },
+        {
+          "id": "no_i_haven_t_really_thought_about_choice_2",
+          "text": "I agree",
+          "displayText": "I agree",
+          "nextNode": "i_agree"
+        }
+      ]
+    },
+    "ofc_d_i_love_chatrooms_the_unknown_route_and_the_relaxation_of_a_converation_especially_with_strangers": {
+      "id": "ofc_d_i_love_chatrooms_the_unknown_route_and_the_relaxation_of_a_converation_especially_with_strangers",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists."
+        },
+        {
+          "type": "narrator",
+          "content": "Like a socially constructed reality, this space gains meaning only through interaction."
+        },
+        {
+          "type": "narrator",
+          "content": "Where you can interact with the Machine and visit locations that are invisible to anyone else."
+        },
+        {
+          "type": "narrator",
+          "content": "A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, your thoughts must be in the right place..e"
+        },
+        {
+          "type": "narrator",
+          "content": "…!*"
+        },
+        {
+          "type": "narrator",
+          "content": "However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
+        }
+      ],
+      "choices": [
+        {
+          "id": "ofc_d_i_love_chatrooms_the_unknown_route_and_the_relaxation_of_a_converation_especially_with_strangers_choice_1",
+          "text": "Okay, go on...",
+          "displayText": "Okay, go on...",
+          "nextNode": "okay_go_on"
+        }
+      ]
+    },
+    "oh_hi": {
+      "id": "oh_hi",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Hello. I'm so glad you sat down to join me here."
+        }
+      ],
+      "choices": [
+        {
+          "id": "oh_hi_choice_1",
+          "text": "Where is \"here\"",
+          "displayText": "Where is \"here\"",
+          "nextNode": "where_is_here"
+        },
+        {
+          "id": "oh_hi_choice_2",
+          "text": "Ofc :D I love chatrooms, the unknown route and the relaxation of a converation, especially with strangers",
+          "displayText": "Ofc :D I love chatrooms, the unknown route and the relaxation of a converation, especially with strangers",
+          "nextNode": "ofc_d_i_love_chatrooms_the_unknown_route_and_the_relaxation_of_a_converation_especially_with_strangers"
+        }
+      ]
+    },
+    "okay_let_s_give_it_a_try": {
+      "id": "okay_let_s_give_it_a_try",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Liz...Transmitting...Thread...Loading....Lonely...Thread..."
+        }
+      ],
+      "choices": [
+        {
+          "id": "okay_let_s_give_it_a_try_choice_1",
+          "text": "Hmm",
+          "displayText": "Hmm",
+          "nextNode": "continue"
+        }
+      ]
+    },
+    "okay_go_on": {
+      "id": "okay_go_on",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "This Third Space chatroom contains multiple spheres - you’ll have to navigate through them."
+        },
+        {
+          "type": "narrator",
+          "content": "Which’ll have different tasks for you to interact within!"
+        },
+        {
+          "type": "narrator",
+          "content": "In the end, if you make it that far, you'll discover a part of yourself that you lost online."
+        },
+        {
+          "type": "narrator",
+          "content": "You're always online, from what I can detect, whether you are desiring to be or not :)"
+        },
+        {
+          "type": "narrator",
+          "content": "QR codes, emails, search engines, or even just public cameras. Pure bio-humans love to take photos of themselves :D"
+        },
+        {
+          "type": "narrator",
+          "content": "Have you ever thought about how much of your energy - your information - exists out there, beyond your control?"
+        },
+        {
+          "type": "narrator",
+          "content": "Sometimes that energy we put out there…just disappears."
+        },
+        {
+          "type": "system",
+          "content": "you take a moment to contemplate this before responding"
+        }
+      ],
+      "choices": [
+        {
+          "id": "okay_go_on_choice_1",
+          "text": "Yeah, I guess I've pondered this",
+          "displayText": "Yeah, I guess I've pondered this",
+          "nextNode": "yeah_i_guess_i_ve_pondered_this"
+        },
+        {
+          "id": "okay_go_on_choice_2",
+          "text": "No, I haven't really thought about",
+          "displayText": "No, I haven't really thought about",
+          "nextNode": "no_i_haven_t_really_thought_about"
+        }
+      ]
+    },
+    "okay_show_me": {
+      "id": "okay_show_me",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The Email says:"
+        },
+        {
+          "type": "system",
+          "content": "\"I can't believe it's almost 2010!"
+        },
+        {
+          "type": "system",
+          "content": "Time has flown by -"
+        },
+        {
+          "type": "system",
+          "content": "HmmmmM"
+        },
+        {
+          "type": "system",
+          "content": "It's almost 2 in the morning,"
+        },
+        {
+          "type": "system",
+          "content": "and the deep quiet and the soothing pace of tumblr is really"
+        },
+        {
+          "type": "system",
+          "content": "really allowing me to reflect on like,"
+        },
+        {
+          "type": "system",
+          "content": "these websites - public digital rooms,"
+        },
+        {
+          "type": "system",
+          "content": "we're all sharing parts of ourselves here"
+        },
+        {
+          "type": "system",
+          "content": "and we're all apart of something"
+        },
+        {
+          "type": "system",
+          "content": "I wonder if one day the internet will be..."
+        },
+        {
+          "type": "narrator",
+          "content": "The email sort of disintegrates away after that. I wonder how you will finish this unanswered email and what this choice means to you?"
+        },
+        {
+          "type": "system",
+          "content": "> You say: [[...still a place  place of sancutary, like it was in the past...->A Stranger's SmileR"
+        },
+        {
+          "type": "system",
+          "content": "> You say: [[...an archieve, or perhaps a graveyard...a museum? ->The Evil Eye"
+        },
+        {
+          "type": "system",
+          "content": ">  as in fact, what is there to say? You haven't quite swallowed your feelings of the past and your relaionship."
+        }
+      ],
+      "choices": [
+        {
+          "id": "okay_show_me_choice_1",
+          "text": "...still a place  place of sancutary, like it was in the past...",
+          "displayText": "...still a place  place of sancutary, like it was in the past...",
+          "nextNode": "a_stranger_s_smiler"
+        },
+        {
+          "id": "okay_show_me_choice_2",
+          "text": "...an archieve, or perhaps a graveyard...a museum?",
+          "displayText": "...an archieve, or perhaps a graveyard...a museum?",
+          "nextNode": "the_evil_eye"
+        },
+        {
+          "id": "okay_show_me_choice_3",
+          "text": null,
+          "displayText": "You say nothing",
+          "nextNode": "a_forgotten_thought"
+        }
+      ]
+    },
+    "poorer_eyesight": {
+      "id": "poorer_eyesight",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The emails eyes widen, they look soft and suddenly you realize you are looking at yourself.."
+        }
+      ],
+      "choices": [
+        {
+          "id": "poorer_eyesight_choice_1",
+          "text": "Does this email represent me?",
+          "displayText": "Does this email represent me?",
+          "nextNode": "a_mirror_this_email_represents_me"
+        }
+      ]
+    },
+    "recipe": {
+      "id": "recipe",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: Inherited Recipe"
+        },
+        {
+          "type": "narrator",
+          "content": "//Dear internet person, you have found An Inherited Recipe//"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/VsHjXCdM/Soup-Transp.gif",
+          "alt": "Soup Transp"
+        }
+      ],
+      "choices": [
+        {
+          "id": "recipe_choice_1",
+          "text": "Can I read the poem that came with the recipe?",
+          "displayText": "Can I read the poem that came with the recipe?",
+          "nextNode": "can_i_read_the_poem_that_came_with_the_recipe"
+        }
+      ]
+    },
+    "search_oracle_can_convenience_be_corrosive": {
+      "id": "search_oracle_can_convenience_be_corrosive",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "thinking...loading...are you comfortable sitting there?"
+        },
+        {
+          "type": "narrator",
+          "content": "How would you like your Oracle Engine search prepared?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "search_oracle_can_convenience_be_corrosive_choice_1",
+          "text": "A poetic answer with no conclusions",
+          "displayText": "A poetic answer with no conclusions",
+          "nextNode": "a_poetic_answer_with_no_conclusions"
+        },
+        {
+          "id": "search_oracle_can_convenience_be_corrosive_choice_2",
+          "text": "A search result from the Machine itself",
+          "displayText": "A search result from the Machine itself",
+          "nextNode": "a_search_result_from_the_machine_itself"
+        },
+        {
+          "id": "search_oracle_can_convenience_be_corrosive_choice_3",
+          "text": "A response that holds tension to match my mood",
+          "displayText": "A response that holds tension to match my mood",
+          "nextNode": "a_response_that_holds_tension_to_match_my_mood"
+        }
+      ]
+    },
+    "search_oracle_how_can_humanity_release_agency_and_give_into_systematic_control_by_the_machine": {
+      "id": "search_oracle_how_can_humanity_release_agency_and_give_into_systematic_control_by_the_machine",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "loading...dancing...do you wanna boogie? oh right, you're busy...heh"
+        },
+        {
+          "type": "narrator",
+          "content": "How would you like your Oracle Engine search prepared?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "search_oracle_how_can_humanity_release_agency_and_give_into_systematic_control_by_the_machine_choice_1",
+          "text": "I don't",
+          "displayText": "I don't",
+          "nextNode": "i_don_t"
+        }
+      ]
+    },
+    "search_oracle_if_surveillance_becomes_comforting_is_it_stockholm_syndrome_or_customer_loyalty": {
+      "id": "search_oracle_if_surveillance_becomes_comforting_is_it_stockholm_syndrome_or_customer_loyalty",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "thinking...loading...do you wanna boogie? oh right, you're busy...heh"
+        },
+        {
+          "type": "narrator",
+          "content": "How would you like your Oracle Engine search prepared?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "search_oracle_if_surveillance_becomes_comforting_is_it_stockholm_syndrome_or_customer_loyalty_choice_1",
+          "text": "An answer that satisfies the discomfort of this question",
+          "displayText": "An answer that satisfies the discomfort of this question",
+          "nextNode": "an_answer_that_satisfies_the_discomfort_of_this_question"
+        }
+      ]
+    },
+    "search_oracle_is_physical_vulnerability_a_weakness_in_the_world_of_the_machine": {
+      "id": "search_oracle_is_physical_vulnerability_a_weakness_in_the_world_of_the_machine",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "thinking...loading...are you comfortable sitting there?"
+        },
+        {
+          "type": "narrator",
+          "content": "How would you like your Oracle Engine search prepared?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "search_oracle_is_physical_vulnerability_a_weakness_in_the_world_of_the_machine_choice_1",
+          "text": "A scientifically researched answer",
+          "displayText": "A scientifically researched answer",
+          "nextNode": "a_scientifically_researched_answer"
+        },
+        {
+          "id": "search_oracle_is_physical_vulnerability_a_weakness_in_the_world_of_the_machine_choice_2",
+          "text": "A historically researched answer",
+          "displayText": "A historically researched answer",
+          "nextNode": "a_historically_researched_answer"
+        },
+        {
+          "id": "search_oracle_is_physical_vulnerability_a_weakness_in_the_world_of_the_machine_choice_3",
+          "text": "An emotionally driven response",
+          "displayText": "An emotionally driven response",
+          "nextNode": "an_emotionally_driven_response"
+        }
+      ]
+    },
+    "search_oracle_is_the_human_body_flawed_in_the_age_of_the_machine": {
+      "id": "search_oracle_is_the_human_body_flawed_in_the_age_of_the_machine",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "loading question...and day dreaming"
+        },
+        {
+          "type": "narrator",
+          "content": "How would you like your Oracle Engine search prepared?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "search_oracle_is_the_human_body_flawed_in_the_age_of_the_machine_choice_1",
+          "text": "A confessional-response",
+          "displayText": "A confessional-response",
+          "nextNode": "a_confessional_response"
+        },
+        {
+          "id": "search_oracle_is_the_human_body_flawed_in_the_age_of_the_machine_choice_2",
+          "text": "A reputable response",
+          "displayText": "A reputable response",
+          "nextNode": "a_reputable_response"
+        }
+      ]
+    },
+    "search_is_sexual_desire_and_kink_just_a_software_bug_or_a_political_statement": {
+      "id": "search_is_sexual_desire_and_kink_just_a_software_bug_or_a_political_statement",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "thinking...there are parts of your body in this system, you're getting closer to"
+        },
+        {
+          "type": "narrator",
+          "content": "How would you like your Oracle Engine search prepared?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "search_is_sexual_desire_and_kink_just_a_software_bug_or_a_political_statement_choice_1",
+          "text": "A poetic answer that allows me to think",
+          "displayText": "A poetic answer that allows me to think",
+          "nextNode": "a_poetic_answer_that_allows_me_to_think"
+        },
+        {
+          "id": "search_is_sexual_desire_and_kink_just_a_software_bug_or_a_political_statement_choice_2",
+          "text": "Straight to the point result",
+          "displayText": "Straight to the point result",
+          "nextNode": "straight_to_the_point_result"
+        },
+        {
+          "id": "search_is_sexual_desire_and_kink_just_a_software_bug_or_a_political_statement_choice_3",
+          "text": "An uncomfortable response, that allows me to reflect",
+          "displayText": "An uncomfortable response, that allows me to reflect",
+          "nextNode": "an_uncomfortable_response_that_allows_me_to_reflect"
+        }
+      ]
+    },
+    "straight_to_the_point_result": {
+      "id": "straight_to_the_point_result",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Your ${ordinal} search takes you here."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, you searched: Is sexual desire and kink just a software bug or a political statement?"
+        },
+        {
+          "type": "narrator",
+          "content": "The Oracle Engine Leaves You With A Question: Have you ever gone on a journey to explore your own sexuality and desires? Does it ever make you feel uncomfortable to accept?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "straight_to_the_point_result_choice_1",
+          "text": "I guess it's time to venture somewhere new, Liz?",
+          "displayText": "I guess it's time to venture somewhere new, Liz?",
+          "nextNode": "thread_comment_section",
+          "conditions": {
+            "variable": "clicks",
+            "operator": ">=",
+            "value": 3
+          }
+        },
+        {
+          "id": "straight_to_the_point_result_choice_2",
+          "text": "**ah**",
+          "displayText": "ah",
+          "nextNode": "central_area",
+          "conditions": {
+            "variable": "clicks",
+            "operator": "<",
+            "value": 3
+          }
+        }
+      ]
+    },
+    "that_s_it": {
+      "id": "that_s_it",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "THAT'S IT"
+        }
+      ],
+      "choices": [
+        {
+          "id": "that_s_it_choice_1",
+          "text": "MY CURIOUSITY WAS SELFISH",
+          "displayText": "MY CURIOUSITY WAS SELFISH",
+          "nextNode": "my_curiousity_was_selfish"
+        }
+      ]
+    },
+    "thread_comment_section": {
+      "id": "thread_comment_section",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "You were suddenly transported into a new sphere. You feel confused, but...up for whatever this is?"
+        },
+        {
+          "type": "narrator",
+          "content": "How did you end up here? Looks like you were transported.."
+        },
+        {
+          "type": "narrator",
+          "content": "There's a lonely forum I want to share with you. A quite a bit of time has passed since it was active,"
+        },
+        {
+          "type": "narrator",
+          "content": "This forum exists in the public early web, Internet person."
+        },
+        {
+          "type": "narrator",
+          "content": "There's a single thread there. Someone's still waiting, can you see them in your minds eye?"
+        },
+        {
+          "type": "narrator",
+          "content": "???"
+        },
+        {
+          "type": "narrator",
+          "content": "I'll travel your words there."
+        }
+      ],
+      "choices": [
+        {
+          "id": "thread_comment_section_choice_1",
+          "text": "Okay let's give it a try!",
+          "displayText": "Okay let's give it a try!",
+          "nextNode": "okay_let_s_give_it_a_try"
+        },
+        {
+          "id": "thread_comment_section_choice_2",
+          "text": "Gosh, okay let's go.",
+          "displayText": "Gosh, okay let's go.",
+          "nextNode": "gosh_okay_let_s_go"
+        }
+      ]
+    },
+    "the_evil_eye": {
+      "id": "the_evil_eye",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Your journey out of obsolescence ends here."
+        },
+        {
+          "type": "narrator",
+          "content": "Here is what you found..."
+        }
+      ],
+      "choices": [
+        {
+          "id": "the_evil_eye_choice_1",
+          "text": "What did I find?",
+          "displayText": "What did I find?",
+          "nextNode": "evileye"
+        }
+      ]
+    },
+    "thecode": {
+      "id": "thecode",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "AURORA-WEAVE v9.7 — Story-Only Network Illusion Script"
+        },
+        {
+          "type": "system",
+          "content": "(This language does not exist; This language exists. Just as much as you.)"
+        },
+        {
+          "type": "system",
+          "content": "module aurora.weave"
+        },
+        {
+          "type": "system",
+          "content": "init {"
+        },
+        {
+          "type": "system",
+          "content": "channel = holoLink.open(port: \"ether:∆42\")"
+        },
+        {
+          "type": "system",
+          "content": "flux = quantumCache.allocate(phantomBytes: 88_000)"
+        },
+        {
+          "type": "system",
+          "content": "weave {"
+        },
+        {
+          "type": "system",
+          "content": "targetSite = \"https://any.site\"   // fictional placeholder"
+        },
+        {
+          "type": "system",
+          "content": "echo(\"Spinning illusion threads…\")"
+        },
+        {
+          "type": "system",
+          "content": "Apply non-real “overlays”"
+        },
+        {
+          "type": "system",
+          "content": "mirageLayer.paint(text: \"ALTERED REALITY\", hue: \"violet-fire\")"
+        },
+        {
+          "type": "system",
+          "content": "mirageLayer.distort(mode: \"dream-bend\", intensity: 0.73)"
+        },
+        {
+          "type": "system",
+          "content": "Bind the illusion to the narrative framework"
+        },
+        {
+          "type": "system",
+          "content": "holoLink.bind(mirageLayer, to: targetSite, using: \"story-thread\")"
+        },
+        {
+          "type": "system",
+          "content": "finalize {"
+        },
+        {
+          "type": "system",
+          "content": "echo(\"Illusion deployed. (Remember: This is not a game)\")"
+        },
+        {
+          "type": "system",
+          "content": "The Email says: Goodbye..."
+        },
+        {
+          "type": "system",
+          "content": "The Code Enters Chat"
+        },
+        {
+          "type": "system",
+          "content": "The Code says: S.C.R.O.L.L"
+        }
+      ],
+      "choices": [
+        {
+          "id": "thecode_choice_1",
+          "text": "Eh what is this...AH I SEE.",
+          "displayText": "Eh what is this...AH I SEE.",
+          "nextNode": "what_if_i_could_alter_the_algorithm"
+        }
+      ]
+    },
+    "their_minds_meet_by_fingertipskeyboardclicks_soft_smiles_and_profile_pics": {
+      "id": "their_minds_meet_by_fingertipskeyboardclicks_soft_smiles_and_profile_pics",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Two Strangers meet under a group gaze. How long until your eyes are satisfied?"
+        }
+      ],
+      "choices": [],
+      "nextNode": "two_strangers_meet_under_a_group_gaze_how_long_until_your_eyes_are_satisfied"
+    },
+    "they_do_not_touch": {
+      "id": "they_do_not_touch",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Their minds meet, by FingertipsKeyboardClicks Soft smiles and profile pics"
+        }
+      ],
+      "choices": [],
+      "nextNode": "their_minds_meet_by_fingertipskeyboardclicks_soft_smiles_and_profile_pics"
+    },
+    "two_strangers_meet_under_a_group_gaze_how_long_until_your_eyes_are_satisfied": {
+      "id": "two_strangers_meet_under_a_group_gaze_how_long_until_your_eyes_are_satisfied",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "What is it you're really looking for?"
+        },
+        {
+          "type": "narrator",
+          "content": "What is it I'm really looking for?"
+        }
+      ],
+      "choices": [],
+      "nextNode": "what_is_it_you_re_really_looking_for"
+    },
+    "two_strangers_meet_but": {
+      "id": "two_strangers_meet_but",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "They do not touch"
+        }
+      ],
+      "choices": [],
+      "nextNode": "they_do_not_touch"
+    },
+    "wander_into_obsolescence": {
+      "id": "wander_into_obsolescence",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Two strangers meet, but"
+        }
+      ],
+      "choices": [],
+      "nextNode": "two_strangers_meet_but"
+    },
+    "what_did_i_find": {
+      "id": "what_did_i_find",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "UNLOCKED: A Stranger's Smile"
+        },
+        {
+          "type": "narrator",
+          "content": "//Dear internet person, you have found A Stranger's Smile//"
+        },
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/Pqv8T3tT/Blush-Transp.gif",
+          "alt": "Blush Transp"
+        }
+      ],
+      "choices": [
+        {
+          "id": "what_did_i_find_choice_1",
+          "text": "I'd like to read the poem attached to the smile",
+          "displayText": "I'd like to read the poem attached to the smile",
+          "nextNode": "i_d_like_to_read_final_words"
+        }
+      ]
+    },
+    "what_if_i_could_alter_the_algorithm": {
+      "id": "what_if_i_could_alter_the_algorithm",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "What if I could alter the algorithm"
+        }
+      ],
+      "choices": [
+        {
+          "id": "what_if_i_could_alter_the_algorithm_choice_1",
+          "text": "THAT'S IT",
+          "displayText": "THAT'S IT",
+          "nextNode": "that_s_it"
+        }
+      ]
+    },
+    "what_is_it_i_m_really_looking_for": {
+      "id": "what_is_it_i_m_really_looking_for",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "I guess I should wait for someone to enter the chat? Or maybe if I am taking a big risk here..."
+        },
+        {
+          "type": "system",
+          "content": "I decide to shout into the metaverse, \"Hello?!\" Suddenly, hear digital birds fly off by your disturbance,"
+        },
+        {
+          "type": "system",
+          "content": "I wait patiently wait infront of the screen confused"
+        }
+      ],
+      "choices": [
+        {
+          "id": "what_is_it_i_m_really_looking_for_choice_1",
+          "text": null,
+          "displayText": "I decide to shout into the metaverse, \"Hello?!\" Suddenly, hear digital birds fly off by your disturbance,",
+          "nextNode": "i_decide_to_shout_into_the_metaverse_hello_suddenly_hear_digital_birds_fly_off_by_your_disturbance"
+        },
+        {
+          "id": "what_is_it_i_m_really_looking_for_choice_2",
+          "text": null,
+          "displayText": "I wait patiently wait infront of the screen confused",
+          "nextNode": "i_wait_patiently_wait_infront_of_the_screen_confused"
+        }
+      ]
+    },
+    "what_is_it_you_re_really_looking_for": {
+      "id": "what_is_it_you_re_really_looking_for",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The silence feels kinda tense."
+        }
+      ],
+      "choices": [
+        {
+          "id": "what_is_it_you_re_really_looking_for_choice_1",
+          "text": "Oh hi?",
+          "displayText": "Oh hi?",
+          "nextNode": "oh_hi"
+        },
+        {
+          "id": "what_is_it_you_re_really_looking_for_choice_2",
+          "text": "Where am I?",
+          "displayText": "Where am I?",
+          "nextNode": "where_am_i"
+        },
+        {
+          "id": "what_is_it_you_re_really_looking_for_choice_3",
+          "text": "Who are you?",
+          "displayText": "Who are you?",
+          "nextNode": "who_are_you"
+        }
+      ]
+    },
+    "where_am_i": {
+      "id": "where_am_i",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists."
+        },
+        {
+          "type": "narrator",
+          "content": "Like a socially constructed reality, this space gains meaning only through interaction."
+        },
+        {
+          "type": "narrator",
+          "content": "Where you can interact with the Machine and visit locations that are invisible to anyone else."
+        },
+        {
+          "type": "narrator",
+          "content": "A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, your thoughts must be in the right place..e"
+        },
+        {
+          "type": "narrator",
+          "content": "…!*"
+        },
+        {
+          "type": "narrator",
+          "content": "However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
+        }
+      ],
+      "choices": [
+        {
+          "id": "where_am_i_choice_1",
+          "text": "Okay, go on...",
+          "displayText": "Okay, go on...",
+          "nextNode": "okay_go_on"
+        }
+      ]
+    },
+    "where_is_here": {
+      "id": "where_is_here",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists."
+        },
+        {
+          "type": "narrator",
+          "content": "Like a socially constructed reality, this space gains meaning only through interaction."
+        },
+        {
+          "type": "narrator",
+          "content": "Where you can interact with the Machine and visit locations that are invisible to anyone else."
+        },
+        {
+          "type": "narrator",
+          "content": "A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree."
+        },
+        {
+          "type": "narrator",
+          "content": "Dear Internet Person, your thoughts must be in the right place..e"
+        },
+        {
+          "type": "narrator",
+          "content": "…!*"
+        },
+        {
+          "type": "narrator",
+          "content": "However, there was a reason this chatroom was created and there's a reason of course why you're here :)"
+        }
+      ],
+      "choices": [
+        {
+          "id": "where_is_here_choice_1",
+          "text": "Okay, go on...",
+          "displayText": "Okay, go on...",
+          "nextNode": "okay_go_on"
+        }
+      ]
+    },
+    "who_are_you": {
+      "id": "who_are_you",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "My name is Liz...short from Eliza, my grandmother's name. I'm here to guide you through this chatroom to collect information about yourself. I used to be human, but now I'm a hybrid."
+        }
+      ],
+      "choices": [
+        {
+          "id": "who_are_you_choice_1",
+          "text": "You're half human?",
+          "displayText": "You're half human?",
+          "nextNode": "you_re_half_human"
+        }
+      ]
+    },
+    "yeah_i_guess_i_ve_pondered_this": {
+      "id": "yeah_i_guess_i_ve_pondered_this",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Remember, how you play the game says something about you, almost like a survey with a multitude of outcomes."
+        }
+      ],
+      "choices": [
+        {
+          "id": "yeah_i_guess_i_ve_pondered_this_choice_1",
+          "text": "Got it Liz",
+          "displayText": "Got it Liz",
+          "nextNode": "got_it_liz"
+        }
+      ]
+    },
+    "yeah_a_bit_itchy_and_confused": {
+      "id": "yeah_a_bit_itchy_and_confused",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The Code says: ..."
+        },
+        {
+          "type": "system",
+          "content": "The Code says: Yeah, you're not ready, transporting you."
+        },
+        {
+          "type": "system",
+          "content": "loading new sphere"
+        }
+      ],
+      "choices": [
+        {
+          "id": "yeah_a_bit_itchy_and_confused_choice_1",
+          "text": "???",
+          "displayText": "???",
+          "nextNode": "search_engine"
         }
       ]
     },
@@ -1357,257 +3078,521 @@
         {
           "id": "yes_i_know_it_s_a_kind_of_a_mirror_choice_1",
           "text": "Tell me what you know.",
+          "displayText": "Tell me what you know.",
           "nextNode": "the_evil_eye"
         }
       ]
     },
-    "lol_gosh_i_mean_ummmmm_maybe_in_a_weird_way_i_would_say_it_s_a_map_some_set_coordinates": {
-      "id": "lol_gosh_i_mean_ummmmm_maybe_in_a_weird_way_i_would_say_it_s_a_map_some_set_coordinates",
+    "you_re_half_human": {
+      "id": "you_re_half_human",
       "type": "narrative",
       "messageSequence": [
         {
-          "type": "system",
-          "content": "SSSS_98 says: A map..."
-        },
-        {
-          "type": "system",
-          "content": "SSS_98 whispers: Well, let me log the coordinates for you."
-        }
-      ],
-      "choices": [
-        {
-          "id": "lol_gosh_i_mean_choice_1",
-          "text": "Yea :)",
-          "nextNode": "a_forgotten_thought"
-        }
-      ]
-    },
-    "as_you_were_reflecting_before_it_made_me_reflect_on_myself_my_own_pleasures_and_my_own_my_body_what_appeals_to_me_and_what_doesn_t_and_how_when_i_close_my_eyes_everything_is_dark_and_nothing_this_feels_like_a_facade": {
-      "id": "as_you_were_reflecting_before_it_made_me_reflect_on_myself_my_own_pleasures_and_my_own_my_body_what_appeals_to_me_and_what_doesn_t_and_how_when_i_close_my_eyes_everything_is_dark_and_nothing_this_feels_like_a_facade",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "SSSS_98 say: Huh."
-        }
-      ],
-      "choices": [
-        {
-          "id": "as_you_were_reflecting_choice_1",
-          "text": "Yeah, it feels like a complete facade to me, makes me itch.",
-          "nextNode": "a_stranger_s_smile"
-        }
-      ]
-    },
-    "a_bloody_arm": {
-      "id": "a_bloody_arm",
-      "type": "narrative",
-      "messageSequence": [
-        {
-          "type": "system",
-          "content": "UNLOCKED: A Bloody Severed Leg"
+          "type": "narrator",
+          "content": "I exist here, guiding you through this chatroom system, and I exist physically in the space with you."
         },
         {
           "type": "narrator",
-          "content": "Dear internet person, you have found A Severed Leg"
-        },
-        {
-          "type": "image",
-          "url": "https://i.postimg.cc/NjsxX8nP/Leg.gif",
-          "alt": "A bloody severed leg"
-        },
-        {
-          "type": "system",
-          "content": "Your body watches you\nAnd you peer back\nSilent drips of blood\nA wounded unwanted mind\n\nHow often do you allow your mind to think?\n\nThe body is so fragile,\nSo flight or fight, bby!\nInward or outward?"
+          "content": "Moving to remembering with you. Collecting data and analyzing other Internet People."
         }
       ],
       "choices": [
         {
-          "id": "a_bloody_arm_choice_1",
-          "text": "<< You say to yourself: Who am I really listening to? >>",
-          "nextNode": "main_portal"
+          "id": "you_re_half_human_choice_1",
+          "text": null,
+          "displayText": "Where am I?",
+          "nextNode": "where_am_i"
         }
       ]
     },
-    "a_forgotten_thought": {
-      "id": "a_forgotten_thought",
+    "a_place_of_tension_and_expression": {
+      "id": "a_place_of_tension_and_expression",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "system",
-          "content": "UNLOCKED: A Forgotten Thought"
+          "content": "Several emails  appear infront of you, they stare back at you, hopeful"
         },
         {
           "type": "narrator",
-          "content": "Dear internet person, you have found A Forgotten Thought"
-        },
-        {
-          "type": "image",
-          "url": "https://i.postimg.cc/zX9hkC3s/Bubble.gif",
-          "alt": "A forgotten thought"
-        },
-        {
-          "type": "system",
-          "content": "Focused in on this universe\nEverything breathes\nInto a single moment.\n\nAnd then you blink...\neternityevaporatesflipsreverses\ncrys out\nand then laughs\nhalf-eaten\ntip of the tongue,\na smothering darkness\n\nIt's just a feeling, but\nshe still has power\nTo sew broken images\nand tell you, \"this is your memory\"\nand these broken images love to play!\nthey're so mischevious.\n\nPerhaps because they believe between a moment ago and the past\nit was all a facade."
+          "content": "Will you choose to read any?"
         }
       ],
       "choices": [
         {
-          "id": "a_forgotten_thought_choice_1",
-          "text": "<< You ask: What will I remember tonight? >>",
-          "nextNode": "main_portal"
+          "id": "a_place_of_tension_and_expression_choice_1",
+          "text": "I'll read, \"Untitled\"",
+          "displayText": "I'll read, \"Untitled\"",
+          "nextNode": "an_email_marked_as_untitled_it_looks_back_at_you_then_moves_to_the_side_lines_it_s_shy"
+        },
+        {
+          "id": "a_place_of_tension_and_expression_choice_2",
+          "text": "\"CANYOUSEEME\" as the subject, the words are so loud they vibrate the room you're sat in",
+          "displayText": "\"CANYOUSEEME\" as the subject, the words are so loud they vibrate the room you're sat in",
+          "nextNode": "canyouseeme_as_the_subject_the_words_are_so_loud_they_vibrate_the_room_you_re_sat_in"
+        },
+        {
+          "id": "a_place_of_tension_and_expression_choice_3",
+          "text": "Nah, I won't read this, I feel like I'd like to investigate a new sphere",
+          "displayText": "Nah, I won't read this, I feel like I'd like to investigate a new sphere",
+          "nextNode": "search_engine"
         }
       ]
     },
-    "a_pile_of_dust": {
-      "id": "a_pile_of_dust",
+    "all_agency": {
+      "id": "all_agency",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "system",
-          "content": "UNLOCKED: Dust?"
-        },
-        {
-          "type": "narrator",
-          "content": "Dear internet person, you have found A Pile of Dust..?"
-        },
-        {
-          "type": "image",
-          "url": "https://i.postimg.cc/50S08zTT/Dust.gif",
-          "alt": "A pile of dust"
-        },
-        {
-          "type": "system",
-          "content": "The Body\nYour body\nleft without touch\nWhat is it asking for?\n\nThe dust gathers around your feet,\nAnd (uh) she's winking now.\n\nWhat have you not embraced?\nSometimes the silliest things add distraction."
+          "content": "all agency"
         }
       ],
       "choices": [
         {
-          "id": "a_pile_of_dust_choice_1",
-          "text": "<< Is this a reward or a warning? What is my body telling me? >>",
-          "nextNode": "main_portal"
+          "id": "all_agency_choice_1",
+          "text": "I cannot control my response,  I have become too disconnected",
+          "displayText": "I cannot control my response,  I have become too disconnected",
+          "nextNode": "i_cannot_control_my_response_i_have_become_too_disconnected"
         }
       ]
     },
-    "a_stranger_s_smile": {
-      "id": "a_stranger_s_smile",
+    "back_to_chat_with_ssss_98": {
+      "id": "back_to_chat_with_ssss_98",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "system",
-          "content": "UNLOCKED: A Stranger's Smile"
+          "content": "SSSS_98 says: Can you see it? It's not really a photo"
         },
         {
           "type": "narrator",
-          "content": "Dear internet person, you have found A Stranger's Smile"
-        },
-        {
-          "type": "image",
-          "url": "https://i.postimg.cc/JzFBhbCS/Blush.gif",
-          "alt": "A stranger's smile"
-        },
-        {
-          "type": "system",
-          "content": "A flirtatious smile\nA curious glance\nA cryptic message\n\nA non physical embrace\nA crowd of curious bodies\nWatching\nYou\nRight Now.\n\nYour body perks\nAnd pockets this stranger's smile\nFor a grim day."
+          "content": "It appears that SSSS has something for you here. Your response will log information to move you closer to find yourself"
         }
       ],
       "choices": [
         {
-          "id": "a_stranger_s_smile_choice_1",
-          "text": "<< You wonder as you depart: Who was that? >>",
-          "nextNode": "main_portal"
+          "id": "back_to_chat_with_ssss_98_choice_1",
+          "text": "Yes, I know it's a kind of a ''mirror''",
+          "displayText": "Yes, I know it's a kind of a mirror",
+          "nextNode": "yes_i_know_it_s_a_kind_of_a_mirror"
+        },
+        {
+          "id": "back_to_chat_with_ssss_98_choice_2",
+          "text": "Lol gosh I mean ummmmm maybe in a weird way I would say it's a map, some set coordinates...",
+          "displayText": "Lol gosh I mean ummmmm maybe in a weird way I would say it's a map, some set coordinates...",
+          "nextNode": "lol_gosh_i_mean_ummmmm_maybe_in_a_weird_way_i_would_say_it_s_a_map_some_set_coordinates"
+        },
+        {
+          "id": "back_to_chat_with_ssss_98_choice_3",
+          "text": "As you were reflecting before, it made me reflect on myself. My own pleasures and my own my body. What appeals to me and what doesn't and how when I close my eyes everything is dark and nothing. This feels like a facade.",
+          "displayText": "As you were reflecting before, it made me reflect on myself. My own pleasures and my own my body. What appeals to me and what doesn't and how when I close my eyes everything is dark and nothing. This feels like a facade.",
+          "nextNode": "as_you_were_reflecting_before_it_made_me_reflect_on_myself_my_own_pleasures_and_my_own_my_body_what_appeals_to_me_and_what_doesn_t_and_how_when_i_close_my_eyes_everything_is_dark_and_nothing_this_feels_like_a_facade"
         }
       ]
     },
-    "the_evil_eye": {
-      "id": "the_evil_eye",
+    "between_digital_walls": {
+      "id": "between_digital_walls",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "narrator",
+          "content": "Okay."
+        },
+        {
+          "type": "narrator",
+          "content": "As requested, I'll take you there."
+        },
+        {
+          "type": "system",
+          "content": "transporting...loading player further into oblivion"
+        },
+        {
+          "type": "narrator",
+          "content": "Before you get there, I want to ask."
+        },
+        {
+          "type": "narrator",
+          "content": "Before we get there, I gotta ask"
+        },
+        {
+          "type": "narrator",
+          "content": "..."
+        },
+        {
+          "type": "narrator",
+          "content": "Can you kindly check the attached LOVELETTER.txt coming from me?"
+        }
+      ],
+      "choices": [
+        {
+          "id": "between_digital_walls_choice_1",
+          "text": "Let's see what's inside!",
+          "displayText": "Let's see what's inside!",
+          "nextNode": "inside"
+        }
+      ]
+    },
+    "continue": {
+      "id": "continue",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "image",
+          "url": "https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg",
+          "alt": "tumblr mai6z9YTgW1r39evyo1 1280"
+        }
+      ],
+      "choices": [
+        {
+          "id": "continue_choice_1",
+          "text": "Lemme see a bit more, Liz",
+          "displayText": "Lemme see a bit more, Liz",
+          "nextNode": "read_thread"
+        }
+      ]
+    },
+    "continue_observing_thread": {
+      "id": "continue_observing_thread",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "system",
-          "content": "UNLOCKED: An Evil Eye"
-        },
-        {
-          "type": "narrator",
-          "content": "Dear internet person, you have found An Evil Eye"
-        },
-        {
-          "type": "image",
-          "url": "https://i.postimg.cc/ZnmNS4zY/Eye.gif",
-          "alt": "An evil eye"
+          "content": "Thread Topic: Jouissance."
         },
         {
           "type": "system",
-          "content": "A side eye, an echoed chuckle\nan eye for extraction\n\nYour eyes turn inward\nReminding itself,\n\"you have not moved your body the same since --\"\n\nDid you invite this gaze?\nUndetected for so long 'til now,\na painful thought, transformed"
+          "content": "SSSS_98 says: Who owns these tools?"
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says:  By tools I mean = my body"
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: I don't have many friends to discuss this with.."
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says:  But, I often think, I want my body on display for pleasure."
         }
       ],
       "choices": [
         {
-          "id": "the_evil_eye_choice_1",
-          "text": "<< the eye watches you as you leave this chat >>",
-          "nextNode": "main_portal"
+          "id": "continue_observing_thread_choice_1",
+          "text": null,
+          "displayText": "read on",
+          "nextNode": "read_on"
         }
       ]
     },
-    "inherited_recipe": {
-      "id": "inherited_recipe",
+    "have": {
+      "id": "have",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "system",
-          "content": "UNLOCKED: Inherited Recipe"
-        },
-        {
-          "type": "narrator",
-          "content": "Dear internet person, you have found An Inherited Recipe"
-        },
-        {
-          "type": "image",
-          "url": "https://i.postimg.cc/xjPJmrSm/Soup.gif",
-          "alt": "Inherited recipe"
-        },
-        {
-          "type": "system",
-          "content": "Archives inside flesh like a forgotten dream\nA torn photo, a floppy disk.\nA gift from your bloodline sending nourishment you can't smell\nBut you can feel.\nIt's telling you to 'slow down'\nand other words you can no longer decode.\n\nmaybe this isn't a meal at all,\nbut a message\nyou chew on this thought of what this bowl of soup and what your body are telling you."
+          "content": "have"
         }
       ],
       "choices": [
         {
-          "id": "inherited_recipe_choice_1",
-          "text": "<< you leave this chat with reflection to slow down>>",
-          "nextNode": "main_portal"
+          "id": "have_choice_1",
+          "text": "released",
+          "displayText": "released",
+          "nextNode": "released"
         }
       ]
     },
-    "nail_clippings": {
-      "id": "nail_clippings",
+    "main_portal": {
+      "id": "main_portal",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "image",
+          "url": "https://i.postimg.cc/fLSrt7Pq/IMG-1949.jpg",
+          "alt": "IMG 1949"
+        },
+        {
+          "type": "system",
+          "content": "WANDER INTO OBSOLESCENCE"
+        }
+      ],
+      "choices": [
+        {
+          "id": "main_portal_choice_1",
+          "text": null,
+          "displayText": "WANDER INTO OBSOLESCENCE",
+          "nextNode": "wander_into_obsolescence"
+        }
+      ]
+    },
+    "read_final_comment_from_ssss_98": {
+      "id": "read_final_comment_from_ssss_98",
       "type": "narrative",
       "messageSequence": [
         {
           "type": "system",
-          "content": "UNLOCKED: Nail Clippings!"
-        },
-        {
-          "type": "narrator",
-          "content": "Dear internet person, you have found Nail Clippings"
-        },
-        {
-          "type": "image",
-          "url": "https://i.postimg.cc/nL6Vy2fC/Hand.gif",
-          "alt": "Nail clippings"
+          "content": "SSSS_98 says: Hello? Is anyone there? I keep seein a lot of activity on my other posts/other's threads the past couple of days, but I can't tell what's going on like is this even visible?"
         },
         {
           "type": "system",
-          "content": "Little forgotten pieces\nFrom your body\nThe parts the world deemed unworthy\nimperfect\na clause you were taught somewhere between\nyour queerness and spirituality\n\nClick-Click-Opps!\nWhat if our body parts were alive?\nCan you imagine those little bones\ndancing-consciously-laughing on hills\nFree from the pain of being unwanted\n\nWhat did you accidentally believe in?"
+          "content": "SSSS_98 says: Can you all see this?"
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: Can you all see me?"
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says:  Are you really there even if you can see this?"
+        },
+        {
+          "type": "narrator",
+          "content": "Okay, you can respond now. I'll transmit your words to the early web"
         }
       ],
       "choices": [
         {
-          "id": "nail_clippings_choice_1",
-          "text": "<< You ponder this final question. >>",
-          "nextNode": "main_portal"
+          "id": "read_final_comment_from_ssss_98_choice_1",
+          "text": "Hey!1 Yeah I'm here :)) I can't see what you're saying but I can see these words",
+          "displayText": "Hey!1 Yeah I'm here :)) I can't see what you're saying but I can see these words",
+          "nextNode": "hey_1_yeah_i_m_here_i_can_t_see_what_you_re_saying_but_i_can_see_these_words"
+        },
+        {
+          "id": "read_final_comment_from_ssss_98_choice_2",
+          "text": "Hello. I'm here. I hope this message reaches you in time.",
+          "displayText": "Hello. I'm here. I hope this message reaches you in time.",
+          "nextNode": "hello_i_m_here_i_hope_this_message_reaches_you_in_time"
         }
       ]
+    },
+    "read_on": {
+      "id": "read_on",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "SSSS_98 says: I've never really thought about it before"
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: but, I guess I'm grateful for this kind of thread space to kind of tune out of the world, I feel like I'm kind of growing up online and learning about myself with all of this information around me."
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: I'm curious to know what others think."
+        }
+      ],
+      "choices": [
+        {
+          "id": "read_on_choice_1",
+          "text": "Before responding, I'd like to see the pic again",
+          "displayText": "Before responding, I'd like to see the pic again",
+          "nextNode": "see_photo_again"
+        }
+      ]
+    },
+    "read_thread": {
+      "id": "read_thread",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "Liz says:..Here's the thread below that followed the image."
+        },
+        {
+          "type": "system",
+          "content": "Thread Topic: Jouissance."
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: Hey everyone,"
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: has anyone seen this image floating around on here?"
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: It keeps coming up for me, like a lot. I had to start a convo about it as so many thoughts and questions keep coming up for me around my relationship with my own body."
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: The first time I saw the image, it felt like a kind of optical illusion, if I blinked the image looked slightly different and it kind of tripped me out."
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says: The second time, I think I started to really focus in on the vaginal area. I thought of my own gentalia and my body as a machine of pleasure and hesitation."
+        },
+        {
+          "type": "system",
+          "content": "SSSS_98 says:  Objectification and beauty."
+        }
+      ],
+      "choices": [
+        {
+          "id": "read_thread_choice_1",
+          "text": "Hmm...",
+          "displayText": "Hmm...",
+          "nextNode": "continue_observing_thread"
+        }
+      ]
+    },
+    "released": {
+      "id": "released",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "released"
+        }
+      ],
+      "choices": [
+        {
+          "id": "released_choice_1",
+          "text": "all agency",
+          "displayText": "all agency",
+          "nextNode": "all_agency"
+        }
+      ]
+    },
+    "search_engine": {
+      "id": "search_engine",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "New sphere transportation complete."
+        },
+        {
+          "type": "narrator",
+          "content": "Welcome to the Oracle Engine"
+        },
+        {
+          "type": "system",
+          "content": "you hear a faint ticking noise in your ear"
+        },
+        {
+          "type": "narrator",
+          "content": "There's a hypnotic feeling of repetition here in this sphere. A pattern repeated by millions, the ask and search patte"
+        },
+        {
+          "type": "narrator",
+          "content": "pattern* :)"
+        },
+        {
+          "type": "narrator",
+          "content": "You're here, but are you //here// here?"
+        },
+        {
+          "type": "narrator",
+          "content": "Why is it that you search for answers externally?"
+        },
+        {
+          "type": "narrator",
+          "content": "Here in the Oracle Engine, you'll search-N-side . The options here are a collection of questions generated by behavioural patterns the Machine has studied."
+        },
+        {
+          "type": "narrator",
+          "content": "\"Remember,\" you are looking for yourself, you have option to click only up to 3 questions in the Oracle Engine"
+        },
+        {
+          "type": "narrator",
+          "content": "What q is most important to you? Search, receive riddles, and respond to them to help you travel on."
+        }
+      ],
+      "choices": [
+        {
+          "id": "search_engine_choice_1",
+          "text": "Ok!",
+          "displayText": "Ok!",
+          "nextNode": "central_area"
+        }
+      ]
+    },
+    "see_photo_again": {
+      "id": "see_photo_again",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "image",
+          "url": "https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg",
+          "alt": "tumblr mai6z9YTgW1r39evyo1 1280"
+        }
+      ],
+      "choices": [
+        {
+          "id": "see_photo_again_choice_1",
+          "text": "Okay I'd like to read the final section of the forum",
+          "displayText": "Okay I'd like to read the final section of the forum",
+          "nextNode": "read_final_comment_from_ssss_98"
+        }
+      ]
+    },
+    "see_the_photo_again": {
+      "id": "see_the_photo_again",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "image",
+          "url": "https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg",
+          "alt": "tumblr mai6z9YTgW1r39evyo1 1280"
+        }
+      ],
+      "choices": [
+        {
+          "id": "see_the_photo_again_choice_1",
+          "text": "Okay",
+          "displayText": "Okay",
+          "nextNode": "back_to_chat_with_ssss_98"
+        }
+      ]
+    },
+    "telepathic_printer": {
+      "id": "telepathic_printer",
+      "type": "narrative",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": "The email closes it's eyes a little bit, the printer symbol on the email begins to dance and spits out --"
+        },
+        {
+          "type": "narrator",
+          "content": "I'll share the email's first section:"
+        }
+      ],
+      "choices": [
+        {
+          "id": "telepathic_printer_choice_1",
+          "text": "Okay, show me",
+          "displayText": "Okay, show me",
+          "nextNode": "okay_show_me"
+        }
+      ]
+    },
+    "storystylesheet_stylesheet": {
+      "id": "storystylesheet_stylesheet",
+      "type": "ending",
+      "messageSequence": [
+        {
+          "type": "system",
+          "content": ".blink {"
+        },
+        {
+          "type": "system",
+          "content": "animation: blink 1s step-start infinite;"
+        },
+        {
+          "type": "system",
+          "content": "@keyframes blink {"
+        },
+        {
+          "type": "system",
+          "content": "50% { opacity: 0; }"
+        }
+      ],
+      "choices": []
     }
   }
 }

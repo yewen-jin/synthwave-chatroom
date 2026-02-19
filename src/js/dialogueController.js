@@ -3,6 +3,7 @@
 
 import { DialogueSystem } from "./dialogueSystem.js";
 import { isPlayerRoom, isNarratorRoom } from "./roomDetection.js";
+import { scrollChatToBottom } from "./chatUI.js";
 
 let dialogueSystem = null;
 let socket = null;
@@ -181,8 +182,8 @@ function initPlayerRoom() {
           systemMsg.className = "system-message";
           systemMsg.textContent = currentNodeData.text;
           chatBody.appendChild(systemMsg);
-          chatBody.scrollTop = chatBody.scrollHeight;
           displayedSystemMessages.add(data.currentNode);
+          scrollChatToBottom();
         }
       }
 
@@ -196,7 +197,7 @@ function initPlayerRoom() {
       choices.forEach((choice) => {
         const btn = document.createElement("button");
         btn.className = "choice-btn";
-        btn.textContent = choice.text;
+        btn.textContent = choice.displayText || choice.text;
 
         btn.addEventListener("click", () => {
           handlePlayerChoice(choice);
@@ -208,6 +209,9 @@ function initPlayerRoom() {
 
         choicesInlineContainer.appendChild(btn);
       });
+
+      // Scroll to show new choices
+      scrollChatToBottom();
 
       // Clear typing status when choices arrive
       if (narratorStatusEl) {
@@ -239,8 +243,8 @@ function initPlayerRoom() {
           systemMsg.className = "system-message";
           systemMsg.textContent = currentNodeData.text;
           chatBody.appendChild(systemMsg);
-          chatBody.scrollTop = chatBody.scrollHeight;
           displayedSystemMessages.add(data.currentNode);
+          scrollChatToBottom();
         }
       }
 
@@ -302,9 +306,10 @@ function handlePlayerChoice(choice) {
   if (sendBtn) sendBtn.style.display = "block";
 
   // Send choice to server (will auto-post to chat and trigger narrator response)
+  // choice.text is the chat message (null if not player dialogue — just progresses story)
   socket.emit("player-choice", {
     choiceId: choice.id,
-    choiceText: choice.text,
+    choiceText: choice.text || null,
     username: username,
   });
 }
