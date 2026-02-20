@@ -588,6 +588,8 @@ function parsePassageContent(content, passageName) {
       .replace(/\(set:\s*[^)]*\)/g, "")
       .replace(/\(if:\s*[^)]*\)/g, "")
       .replace(/^\[(?!\[)/g, "") // Strip single leading [ (Harlowe block) but not [[
+      .replace(/^''+/g, "") // Strip leading Harlowe bold markers
+      .replace(/^\/\/+/g, "") // Strip leading Harlowe italic markers
       .trim();
     if (/^Liz\s*:/i.test(lizCheckLine) || /^Liz\s+.*says:/i.test(lizCheckLine)) {
       flushPendingSystemLines();

@@ -228,8 +228,12 @@
           "content": "Dear Internet Person, you searched: 'Is physical vulnerability a weakness in the world of the Machine?'"
         },
         {
+          "type": "narrator",
+          "content": "The Oracle Engine does it's magic'...'macho"
+        },
+        {
           "type": "system",
-          "content": "Liz says:The Oracle Engine does it's magic'...'macho<br>1928 (n.) \"tough guy,\" from Spanish macho \"male animal,\" noun use of adjective meaning \"masculine, virile,\" from Latin masculus (see masculine). As an adjective, \"ostensibly manly and virile,\" attested in English by 1943. Earlier it was used as in Spanish for male animals, especially hoofed creatures (1848).'"
+          "content": "1928 (n.) \"tough guy,\" from Spanish macho \"male animal,\" noun use of adjective meaning \"masculine, virile,\" from Latin masculus (see masculine). As an adjective, \"ostensibly manly and virile,\" attested in English by 1943. Earlier it was used as in Spanish for male animals, especially hoofed creatures (1848).'"
         }
       ],
       "choices": [
@@ -551,8 +555,8 @@
           "content": "Dear Internet Person, you searched: 'If surveillance becomes comforting is it Stockholm syndrome or customer loyalty?'"
         },
         {
-          "type": "system",
-          "content": "Liz says: The Oracle Engine result says, Stockholm syndrome refers to the occurrence of a positive emotional bond or psychological alliance from a victim of a crime,)."
+          "type": "narrator",
+          "content": "The Oracle Engine result says, Stockholm syndrome refers to the occurrence of a positive emotional bond or psychological alliance from a victim of a crime,)."
         },
         {
           "type": "narrator",
@@ -1070,8 +1074,8 @@
       "type": "narrative",
       "messageSequence": [
         {
-          "type": "system",
-          "content": "Liz says:...Transmitting...Thread...Loading....Pic and... Lonely Thread..."
+          "type": "narrator",
+          "content": "...Transmitting...Thread...Loading....Pic and... Lonely Thread..."
         }
       ],
       "choices": [
@@ -2951,8 +2955,12 @@
       "type": "narrative",
       "messageSequence": [
         {
+          "type": "narrator",
+          "content": "..Here's the thread below that followed the image."
+        },
+        {
           "type": "system",
-          "content": "Liz says:..Here's the thread below that followed the image.<br>Thread Topic: Jouissance."
+          "content": "Thread Topic: Jouissance."
         },
         {
           "type": "system",
