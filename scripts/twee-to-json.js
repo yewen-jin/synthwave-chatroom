@@ -467,8 +467,27 @@ function parsePassageContent(content, passageName) {
   // --- Line-by-line processing for messages ---
   let currentPos = 0;
   let pendingSystemLines = []; // Accumulate consecutive system lines to merge into one message
+  let pendingSpeaker = null; // Speaker title waiting for body lines (e.g. "The Evil Eye says:")
 
   function flushPendingSystemLines() {
+    if (pendingSpeaker && pendingSystemLines.length > 0) {
+      // Merge speaker title with accumulated body lines into one block
+      messageSequence.push({
+        type: "system",
+        speaker: pendingSpeaker.name,
+        content: pendingSpeaker.title + "<br>" + pendingSystemLines.join("<br>"),
+      });
+      pendingSpeaker = null;
+      pendingSystemLines = [];
+    } else if (pendingSpeaker) {
+      // Speaker title with no body — push as standalone
+      messageSequence.push({
+        type: "system",
+        speaker: pendingSpeaker.name,
+        content: pendingSpeaker.title,
+      });
+      pendingSpeaker = null;
+    }
     if (pendingSystemLines.length > 0) {
       messageSequence.push({
         type: "system",
@@ -611,16 +630,20 @@ function parsePassageContent(content, passageName) {
     // Check if it's a third-party speaker (e.g. "SSSS_98 says:", "The Email says:", "The Code says:")
     // These are NOT "Liz says:" or "You say:" — they are other characters speaking.
     // NOTE: These get a "speaker" property so they can receive special styling distinct from
-    // generic system messages. Each speaker line is kept separate (not merged with adjacent lines).
+    // generic system messages.
+    // - Speaker lines WITH content after "says:" → standalone message
+    // - Speaker lines with ONLY a title (e.g. "The Evil Eye says:") → pending, merged with
+    //   following system lines into one block (for poems/monologues)
     else if (
       /\bsays?:/i.test(cleanedLine) &&
       !/^Liz\b/i.test(cleanedLine) &&
       !/^You\b/i.test(cleanedLine)
     ) {
       flushPendingSystemLines();
-      // Extract the speaker name (everything before "says:" or "say:")
-      const speakerMatch = cleanedLine.match(/^(.+?)\s+says?:\s*/i);
+      // Extract the speaker name and verb form (everything before "says:" or "say:")
+      const speakerMatch = cleanedLine.match(/^(.+?)\s+(says?):\s*/i);
       const speaker = speakerMatch ? speakerMatch[1].trim() : null;
+      const verb = speakerMatch ? speakerMatch[2] : "says";
       const speakerContent = speakerMatch
         ? cleanedLine.slice(speakerMatch[0].length).trim()
         : cleanedLine;
@@ -631,13 +654,22 @@ function parsePassageContent(content, passageName) {
         if (linkContent.includes("|")) return linkContent.split("|")[0].trim();
         return linkContent.trim();
       });
-      messageSequence.push({
-        type: "system",
-        speaker: speaker,
-        content: cleanContent.length > 0
-          ? `${speaker} says: ${cleanContent}`
-          : `${speaker} says:`,
-      });
+      const speakerTitle = `${speaker} ${verb}:`;
+      if (cleanContent.length > 0) {
+        // Has content after "says:" — standalone speaker message
+        messageSequence.push({
+          type: "system",
+          speaker: speaker,
+          content: `${speakerTitle} ${cleanContent}`,
+        });
+      } else {
+        // Title only (e.g. "The Evil Eye says:") — store as pending,
+        // following plain lines will be merged into this block
+        pendingSpeaker = {
+          name: speaker,
+          title: speakerTitle,
+        };
+      }
       continue;
     }
     // Check if it's player dialogue (contains "You:", "You say:", or "You whisper:")

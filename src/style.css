@@ -362,7 +362,7 @@ button {
 
 .message > span {
   /* color: rgb(255, 0, 157); */
-  line-height: 0.5em;
+  line-height: 1em;
 }
 
 /* User's own messages - aligned right */
@@ -452,10 +452,12 @@ button {
 }
 
 /* Third-party speaker messages (e.g. "SSSS_98 says:", "The Email says:", "The Code says:")
-   These can be styled differently from generic system messages.
+   Aligned left like narrator messages, but keep system message background.
    Use [data-speaker="SSSS_98"] for per-speaker styling. */
 .speaker-message {
-  /* TODO: Add special styling for third-party speaker messages */
+  text-align: left;
+  float: left;
+  /* border-left: 2px solid var(--border-color); */
 }
 
 /* Image messages from messageSequence */
@@ -1051,7 +1053,7 @@ button:hover {
   /* Larger text for desktop readability */
   .message {
     font-size: var(--font-size-xl);
-    line-height: 1.5;
+    line-height: 1rem;
     padding: var(--spacing-md) var(--spacing-lg);
     margin: var(--spacing-lg) 0;
   }
