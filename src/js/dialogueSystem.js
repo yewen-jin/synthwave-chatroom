@@ -26,9 +26,24 @@ export class DialogueSystem {
   evaluateConditions(conditions) {
     if (!conditions) return true;
 
+    // New format: { variable, operator, value }
+    if (conditions.variable && conditions.operator) {
+      const val = this.variables[conditions.variable] ?? 0;
+      const target = conditions.value;
+      switch (conditions.operator) {
+        case ">=": return val >= target;
+        case "<=": return val <= target;
+        case ">":  return val > target;
+        case "<":  return val < target;
+        case "==": return val == target;
+        case "!=": return val != target;
+        default:   return false;
+      }
+    }
+
+    // Legacy format: { key: ">=3" } or { key: value }
     for (let [key, value] of Object.entries(conditions)) {
       if (typeof value === "string") {
-        // Handle comparison operators
         if (value.startsWith(">=")) {
           const threshold = parseFloat(value.substring(2));
           if ((this.variables[key] || 0) < threshold) return false;
@@ -43,7 +58,6 @@ export class DialogueSystem {
           if ((this.variables[key] || 0) >= threshold) return false;
         }
       } else {
-        // Handle equality
         if (this.variables[key] !== value) return false;
       }
     }

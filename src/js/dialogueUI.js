@@ -44,7 +44,7 @@ export function updateDialogueContent(nodeData, choices) {
     choices.forEach(choice => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
-        btn.textContent = choice.text;
+        btn.innerHTML = choice.displayText || choice.text;
         btn.dataset.choiceId = choice.id;
 
         btn.addEventListener('click', () => {

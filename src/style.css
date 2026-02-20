@@ -169,7 +169,7 @@ button {
   position: absolute;
   /* width: 800px; */
   width: 1000px;
-  height: 850px;
+  /* height: 850px; */
   background: var(--bg-primary);
   border: 3px solid var(--border-color);
   box-shadow: var(--shadow-window);
@@ -362,7 +362,7 @@ button {
 
 .message > span {
   /* color: rgb(255, 0, 157); */
-  line-height: 0.5em;
+  line-height: 1em;
 }
 
 /* User's own messages - aligned right */
@@ -449,6 +449,15 @@ button {
   white-space: pre-wrap;
   word-wrap: break-word;
   line-height: 1.5;
+}
+
+/* Third-party speaker messages (e.g. "SSSS_98 says:", "The Email says:", "The Code says:")
+   Aligned left like narrator messages, but keep system message background.
+   Use [data-speaker="SSSS_98"] for per-speaker styling. */
+.speaker-message {
+  text-align: left;
+  float: left;
+  /* border-left: 2px solid var(--border-color); */
 }
 
 /* Image messages from messageSequence */
@@ -1044,7 +1053,7 @@ button:hover {
   /* Larger text for desktop readability */
   .message {
     font-size: var(--font-size-xl);
-    line-height: 1.5;
+    line-height: 1rem;
     padding: var(--spacing-md) var(--spacing-lg);
     margin: var(--spacing-lg) 0;
   }

@@ -53,6 +53,22 @@ export function clearChatInput() {
 export function addMessageToChat(element) {
   chatBody.appendChild(element);
   chatBody.scrollTop = chatBody.scrollHeight;
+
+  // If the element contains images, scroll again after they load
+  const images = element.querySelectorAll("img");
+  images.forEach((img) => {
+    if (!img.complete) {
+      img.addEventListener("load", () => {
+        chatBody.scrollTop = chatBody.scrollHeight;
+      });
+    }
+  });
+}
+
+export function scrollChatToBottom() {
+  if (chatBody) {
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
 }
 
 export function showUsernamePopup() {

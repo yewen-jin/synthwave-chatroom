@@ -184,11 +184,21 @@ function applyEffects(effects, variables) {
   return newVars;
 }
 
+// Helper: Compute derived variables (e.g. ordinal from clicks)
+const ordinalWords = ["first", "second", "third"];
+function computeDerivedVariables(variables) {
+  const derived = { ...variables };
+  const clicks = derived.clicks || 0;
+  derived.ordinal = ordinalWords[clicks - 1] || `${clicks}th`;
+  return derived;
+}
+
 // Helper: Interpolate variables in text
 function interpolateText(text, variables) {
   if (!text || typeof text !== "string") return text;
+  const vars = computeDerivedVariables(variables);
   return text.replace(/\${(\w+)}/g, (match, variable) => {
-    return variables.hasOwnProperty(variable) ? variables[variable] : match;
+    return vars.hasOwnProperty(variable) ? vars[variable] : match;
   });
 }
 
@@ -339,6 +349,7 @@ io.on("connection", (socket) => {
                 username: "SYSTEM",
                 timestamp: Date.now(),
                 isSystem: true,
+                speaker: message.speaker || null, // Third-party speaker name for special styling
               });
               break;
 
@@ -402,6 +413,12 @@ io.on("connection", (socket) => {
   function processNode(room, playerUsername = null, choiceText = null) {
     const state = dialogueStates.get(room);
     if (!state || !state.active) return;
+
+    // Reset variables when returning to the start node
+    if (state.currentNode === state.dialogueData.metadata.startNode) {
+      console.log("Returned to start node — resetting variables to defaults");
+      state.variables = { ...state.dialogueData.variables };
+    }
 
     const currentNode = state.dialogueData.nodes[state.currentNode];
     console.log(
@@ -574,6 +591,8 @@ io.on("connection", (socket) => {
   // Helper: Handle dialogue end
   function handleDialogueEnd(room, state) {
     state.active = false;
+    // Reset all variables to default values
+    state.variables = { ...state.dialogueData.variables };
     io.emit("dialogue-end", {
       reason: "completed",
     });

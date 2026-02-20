@@ -53,7 +53,12 @@ function onChat(messageObj) {
 
   // Handle system messages (new messageSequence format)
   if (messageObj.isSystem) {
-    msgDiv.className = "message system-message-inline";
+    // Third-party speaker messages get an extra class for special styling
+    const speakerClass = messageObj.speaker ? " speaker-message" : "";
+    msgDiv.className = `message system-message-inline${speakerClass}`;
+    if (messageObj.speaker) {
+      msgDiv.dataset.speaker = messageObj.speaker;
+    }
     msgDiv.innerHTML = `<span class="text">${messageObj.text}</span>`;
     addMessageToChat(msgDiv);
     if (visuals) visuals.flash();

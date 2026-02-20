@@ -1,0 +1,1324 @@
+:: StoryTitle
+thebodyisobsolete
+
+
+:: StoryData
+{
+  "ifid": "A0C7890A-77D9-493D-8353-4432B84EA2EB",
+  "format": "Harlowe",
+  "format-version": "3.3.9",
+  "start": "main portal",
+  "zoom": 0.6
+}
+
+
+:: "CANYOUSEEME" as the subject, the words are so loud they vibrate the room you're sat in {"position":"3575,3675","size":"100,100"}
+The Email says: Where are you?
+The Email says: Who's dancing and who's speaking?
+The Email says: ...
+The Email says: 
+
+//== The Email leaves the chat ==//
+
+Liz says: Was that message for you or someone you know? 
+
+You say: [[Probz for me, but I couldn't tell what that was ->search engine]]
+You say: Yes, for me [[in the future->THREAD COMMENT SECTION]]
+
+
+:: *watch the screen while things happen unknown to me* {"position":"3200,2975","size":"100,100"}
+Liz says: Okay got it. Where would you like to go?
+
+You say: I'll pay my respects to The Oracle, the [[search engine]]
+You say: Hm [[a place of tension and expression.]]
+You say: Somewhere [[between digital walls]]
+
+
+:: A Bloody Arm {"position":"4175,5025","size":"100,100"}
+Liz says: Your journey out of obsolescence ends here.
+Liz says: Here is what you found...
+
+You say: [[What did I find?->Arm]]
+
+
+
+
+:: A Forgotten Thought {"position":"4050,5025","size":"100,100"}
+Liz says: Your journey out of obsolescence ends here.
+Liz says: Here is what you found...
+
+You say: [[What did I find?->ForgottenThought]]
+
+
+
+
+:: A Pile of Dust {"position":"4425,5025","size":"100,100"}
+Liz says: Your journey out of obsolescence ends here.
+Liz says: Here is what you found...
+
+You say: [[What did I find?->Dust]]
+
+
+
+
+
+
+:: A Stranger's SmileR {"position":"3750,5025","size":"100,100"}
+Liz says: Your journey out of obsolescence ends here.
+Liz says: Here is what you found
+
+You say: [[What did I find?]]
+
+
+
+:: A confessional-response {"position":"2875,3975","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz says: ''Dear Internet Person, you searched: 'Is the human body flawed in the age of the Machine?'
+
+''The Machine says: A self-proclaimed superior species with insecurity. What will you do with that vulnerablity?]
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+  
+}
+
+
+:: A historically researched answer {"position":"2300,3975","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz says: ''Dear Internet Person, you searched: 'Is physical vulnerability a weakness in the world of the Machine?'
+
+''Liz says:''''The Oracle Engine does it's magic'...'macho
+1928 (n.) "tough guy," from Spanish macho "male animal," noun use of adjective meaning "masculine, virile," from Latin masculus (see masculine). As an adjective, "ostensibly manly and virile," attested in English by 1943. Earlier it was used as in Spanish for male animals, especially hoofed creatures (1848).']
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+  
+}
+
+
+:: A mirror, this email represents me? {"position":"3725,4375","size":"100,100"}
+UNLOCKED: Inherited Recipe
+//''Dear internet person, you have found An Inherited Recipe''//
+
+[[Inherited Recipe]]
+
+
+:: A poetic answer that allows me to think {"position":"1775,3325","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz: ''Dear Internet Person, you searched:'' Is sexual desire and kink just a software bug or a political statement?
+
+Liz says:''The Oracle Engine Leaves You With A Mix of Words: ''Sour-Touch-Mind-Eases-Painful-Desire]
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+
+  
+}
+
+
+:: A poetic answer with no conclusions {"position":"1750,3725","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz: ''Dear Internet Person, you searched:''Can convenience be corrosive?
+
+Liz says:''The Oracle Engine Leaves You With A Brutal Question Back: ''Are you happy with what you can and cannot control?]
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+  
+}
+
+
+:: A reputable response {"position":"3000,3975","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz says: ''Dear Internet Person, you searched: 'Is the human body flawed in the age of the Machine?'
+
+''No One: Well, yes. However, what do you think?]
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+  
+}
+
+
+:: A response that holds tension to match my mood {"position":"1975,3750","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz says: ''Dear Internet Person, you searched:''Can convenience be corrosive?
+
+Liz says:''The Oracle Engine Takes You To Your Memories:'' How is your patience?]
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+  
+}
+
+
+:: A scientifically researched answer {"position":"2175,3975","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz: ''Dear Internet Person, you searched:...'Is physical vulnerability a weakness in the world of the Machine??
+
+Liz says:' The Oracle Engine spits out - 'When we lose our tolerance for vulnerability, joy becomes foreboding.' (Dr. Brené Brown,]
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+  
+}
+
+
+:: A search result from the Machine itself {"position":"1875,3750","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz: ''Dear Internet Person, you searched:''Can convenience be corrosive?
+
+Liz says:''The Oracle Engine Frowns: What muscles are lost for the sake of efficiency? What race are you running?]
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+  
+}
+
+
+:: ALL ENDINGS ARE HERE {"position":"4175,4875","size":"100,100"}
+
+
+
+:: An answer that satisfies the discomfort of this question {"position":"3150,3800","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz says: ''Dear Internet Person, you searched: 'If surveillance becomes comforting is it Stockholm syndrome or customer loyalty?'
+
+''Liz says: The Oracle Engine result says, Stockholm syndrome refers to the occurrence of a positive emotional bond or psychological alliance from a victim of a crime,).
+
+[Liz says: such as being taken hostage or being abused, towards the perpetrator(s) of that crime; it is also known as “traumatic bonding,” “terror bonding” and Norrmalmstorgssyndromet]
+
+Liz says: (the “Norrmalmstorg syndrome”) (Eitinger and Weisaeth, 1980; Harnischmacher and Muther, 1987; Skurnik, 1988]
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**does my body feel trapped?**->Central Area]]
+]
+  
+}
+
+
+:: An email marked as, "Untitled". It looks back at you, then moves to the side lines. It's shy. {"position":"3850,3750","size":"100,100"}
+//The shy email, looks at the floor, then back at you before it slowly opens, obeyingly. It reminds you of a time you felt like both a child, but obligated to someone. In that moment, were you abiding by some kind of code? disconnecting? looking for something deeper? This choice has made you reflective, the email will be remember that.
+
+You say: [[I wonder why I make the decisions I make->I'll remember that too]]
+
+
+:: An emotionally driven response {"position":"2050,3975","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz: ''Dear Internet Person, you searched:''Is physical vulnerability a weakness in the world of the Machine??
+
+Liz says:''Your hand on the mouse, the Oracle Engine touches you back'' Are you tired?]
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+  
+}
+
+
+:: An uncomfortable response, that allows me to reflect {"position":"1750,3450","size":"100,100"}
+(set: $ordinal to (nth: $clicks, "first", "second", "third"))
+
+//Your (print: $ordinal) search takes you here.//
+
+[Liz: ''Dear Internet Person, you searched:'' Is sexual desire and kink just a software bug or a political statement?
+
+Liz says: ''The Oracle Engine Leaves You With A Riddle: ''I'm behind you and listening in, you're aware of me, but have never spoken to me. Everything I like controls you.]
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+
+  
+}
+
+
+:: Arm {"position":"4175,5150","size":"100,100"}
+
+<span class="blink">UNLOCKED: A Bloody Severed Leg</span>
+Liz says: //''Dear internet person, you have found A Severed Leg''//
+
+<div style="text-align: center;">
+  <img src="https://i.postimg.cc/Gt1nf2p3/Leg-Transp.gif">
+</div>
+
+
+You say: [[Let me read the poem that came with my bloody leg]]
+
+
+:: As you were reflecting before, it made me reflect on myself. My own pleasures and my own my body. What appeals to me and what doesn't and how when I close my eyes everything is dark and nothing. This feels like a facade. {"position":"3050,5725","size":"100,100"}
+SSSS_98 say: Huh.
+
+You say: [[Yeah, it feels like a complete fascade to me, makes me itch.->A Stranger's SmileR]]
+
+
+:: Better now than...yeah you know {"position":"3150,2425","size":"100,100"}
+Liz says: Remember, how you play the game says something about you, almost like a survey with a multitude of outcomes.
+
+
+You say: [[Got it Liz]]
+
+
+:: Can I read the poem that came with the recipe? {"position":"4300,5275","size":"100,100"}
+The Inherited Recipe says:
+Archieves inside flesh like a forgotten dream
+A torn photo, a floppy disk.
+A gift from your bloodline sending nourishment you can't smell
+But you can feel.
+It's telling you to 'slow down'
+and other words you can no longer decode.
+
+maybe this isn't a meal at all,
+but a message
+you chew on this thought of what this bowl of soup and what your body are telling you.
+
+
+[[<< *you wander out of obsolescence with reflection to slow down* >> ->main portal]]
+
+
+:: Central Area {"position":"2300,3400","size":"100,100"}
+(if: $clicks is not a number)[
+  (set: $clicks to 0)
+]
+
+Liz says: Now internet person, what would you like to search next?  
+Liz says: Where does your curiousity lead you?
+
+(if: $clicks >= 3)[
+  (goto: "THREAD COMMENT SECTION")
+]
+
+//You've used (print: $clicks) out of 3 tries. Choose a search://
+
+You say: (link: "Search Oracle: Can convenience be corrosive?")[
+  (set: $clicks to $clicks + 1)
+  (goto: "Search Oracle: Can convenience be corrosive?")
+]
+
+You say: (link: "Search: Is sexual desire and kink just a software bug or a political statement?")[
+  (set: $clicks to $clicks + 1)
+  (goto: "Search: Is sexual desire and kink just a software bug or a political statement?")
+]
+
+You say: (link: "Search Oracle: Is physical vulnerability a weakness in the world of the Machine?")[
+  (set: $clicks to $clicks + 1)
+  (goto: "Search Oracle: Is physical vulnerability a weakness in the world of the Machine?")
+]
+
+You say: (link: "Search Oracle: Is the human body flawed in the age of the Machine?")[
+  (set: $clicks to $clicks + 1)
+  (goto: "Search Oracle: Is the human body flawed in the age of the Machine?")
+]
+
+You say: (link: "Search Oracle: If surveillance becomes comforting is it Stockholm syndrome or customer loyalty?")[
+  (set: $clicks to $clicks + 1)
+  (goto: "Search Oracle: If surveillance becomes comforting is it Stockholm syndrome or customer loyalty?")
+]
+
+You say: (link: "Search Oracle: How can humanity release agency and give into systematic control by the Machine?")[
+  (set: $clicks to $clicks + 1)
+  (goto: "Search Oracle: How can humanity release agency and give into systematic control by the Machine?")
+]
+
+
+:: Clippings {"position":"4550,5150","size":"100,100"}
+<span class="blink">UNLOCKED: Nail Clippings!</span>
+
+Liz says: //''Dear internet person, you have found Nail Clippings''//
+
+<div style="text-align: center;">
+  <img src="https://i.postimg.cc/rFxNcpwM/Hand-Transp.gif">
+</div>
+
+
+You say: [[Did it come with a poem for me to read?]]
+
+
+:: Did it come with a poem for me to read? {"position":"4550,5275","size":"100,100"}
+Your Clippings say:
+Little forgotten pieces
+From your body
+The parts the world deemed unworthy
+imperfect
+a clause you were taught somewhere between
+your sexuality and spirituality
+
+Click-Click-Opps!
+What if ur body parts were alive?
+Can u imagine those 'lil bones
+dancing-consciously-laughing on hills
+Free from the pain of being unwanted
+
+What did you accidentally believe in?
+
+
+[[<< You ponder this final question. and wander out of obsolescence>> ->main portal]]
+
+
+:: Dust {"position":"4425,5175","size":"100,100"}
+<span class="blink">UNLOCKED: Dust?</span>
+Liz says: //''Dear internet person, you have found A Pile of Dust..?''//
+
+<div style="text-align: center;">
+  <img src="https://i.postimg.cc/K8h35rF1/Dust-Transp.gif">
+</div>
+
+You say: [[Dust? Eh did it come with a poem at least??]]
+
+
+:: Dust? Eh did it come with a poem at least?? {"position":"4400,5300","size":"100,100"}
+The Dust says:
+The Body
+Your body
+left without touch
+What is it asking for?
+
+The dust gathers around your feet,
+And (uh) she's winking now.
+
+What have you not embraced?
+You look distracted.
+
+
+[[<< You say: Is this a reward or a warning? What is my body telling me?  Wander out of obsolescence. >> ->main portal]]
+
+
+:: EvilEye {"position":"3900,5150","size":"100,100"}
+<span class="blink">UNLOCKED: An Evil Eye</span>
+Liz says: //''Dear internet person, you have found An Evil Eye''//
+
+
+<div style="text-align: center;">
+  <img src="https://i.postimg.cc/PxjDrW3V/Eye-Transp.gif">
+</div>
+
+
+You say: [[Liz, I'd like to read the poem that came with Evil Eye]]
+
+
+:: FIRST PERSON ROUTE {"position":"4350,1025","size":"100,100"}
+
+
+
+:: FinalThought {"position":"4050,5300","size":"100,100"}
+Your Lost Thought says:
+Focused in on this universe
+Everything breathes 
+Into a single moment.
+And then you blink...
+eternityevaporatesflipsreverses
+crys out
+and then laughs
+half-eaten
+tip of the tongue,
+a smothering darkness
+
+It's just a feeling, but
+she still has power
+To sew broken images
+and tell you, "this is your memory"
+and these broken images love to play!
+they're so mischevious.
+
+Perhaps because they believe between a moment ago and the past
+it was all a fascade.
+
+
+
+[[<< You ask: What will I remember tonight? Perhaps for now I'll wander out of obsolescence >> ->main portal]]
+
+
+:: ForgottenThought {"position":"4050,5150","size":"100,100"}
+
+<span class="blink">UNLOCKED: A Forgotten Thought</span>
+
+Liz says: //''Dear internet person, you have found A Forgotten Thought''//
+<div style="text-align: center;">
+  <img src="https://i.postimg.cc/kGtP1S9r/Thought-Bubble-Transp.gif">
+</div>
+
+You say: [[Hmm okay->FinalThought]]
+You say: [[Let me read the poem that came with my Forgotten Thought->FinalThought]]
+
+
+:: Go on??! {"position":"4750,3575","size":"100,100"}
+//loading..looking inside your brain. how does your body feel?//
+
+The Email says: Her we go
+The Email says: Here* :-)
+
+You say: [[Hmm->TheCode]]
+
+
+:: Gosh, okay let's go. {"position":"3175,4475","size":"100,100"}
+//Liz says:...Transmitting...Thread...Loading....Pic and... Lonely Thread...
+//
+You say: [[Hmm->continue]]
+
+
+:: Got it Liz {"position":"3175,2600","size":"100,100"}
+Liz says: Last thing…
+Liz says: Use your imagination, your internal eye throughout.
+Liz says: Many different people play this but the spaces are always different, the text here in front of you will trigger your sesnses + imagery.
+Liz says: For example, you probably have an internal voice for me.
+Liz says: Are you creating this now or does this stem from memory?
+ You say: [[I wonder... ->Makes sense]]
+
+
+:: Hello. I'm here. I hope this message reaches you in time. {"position":"3275,5350","size":"100,100"}
+SSSS_98 says: Hey. Yes it has reached me. I'm so so glad someone else has replied.
+SSSS_98 says: Did you see the photo? 
+SSSS_98 says: Tell me what comes up for you...
+SSSS_98 says: no one else seems to see these messagess. I'm really itching to discuss with you..
+
+You say: [[I'd like to see the pic again->see the photo again]]
+
+
+:: Hey!1 Yeah I'm here :)) I can't see what you're saying but I can see these words {"position":"3100,5350","size":"100,100"}
+SSSS_98 says: ''You can see my words but you cannot understand my words? ''Haha, that actually made me smile...why does everyone have to be so poetically-cryptic in hyperspace...lol.
+SSSS_98 says: Did you see the photo? 
+SSSS_98 says: Tell me what comes up for you...no one else seems to see these messages so I'm really itching to discuss with you..
+
+You say: [[I'd like to see the pic again->see the photo again]]
+
+
+:: Hmm, show me the rest of the message, Liz {"position":"3850,3950","size":"100,100"}
+...''A mirror..
+..Poorer eyesight...
+..A telepathic printer''
+
+Do you want any? Anyway, msg me back before the weekend.
+xo//
+
+Liz says: This anon wants you to choose something from inside the email, it'll impact something for you right now.
+
+You say: Maybe best to close this and head back into the email portal of [[a place of tension and expression.]] 
+You say: A riddle? [[In this moment, I would like to guess "a mirror"]]
+You say: OKKKK weaker eyes? Lol... Weaker eyes. A trap, but [[telepathic printer]]
+You say: [[Poorer eyesight]] sounds intruiging.
+
+
+:: I {"position":"2550,4175","size":"100,100"}
+You say: [[have]]
+
+
+:: I agree {"position":"3275,2425","size":"100,100"}
+Liz says: Remember, how you play the game says something about you, almost like a survey with a multitude of outcomes.
+
+
+You say: [[Got it Liz]]
+
+
+:: I cannot control my response,  I have become too disconnected {"position":"2700,4675","size":"100,100"}
+Liz says: Ah, looks like you got sucked in.
+Liz says: I wonder what would happen for you if the wifi permanently shut off?
+Liz says: Your body has become obsolete, goodbye dear Internet Person. Thanks for playing.
+
+You say: [[Goodbye, Liz.->main portal]]
+
+
+:: I decide to shout into the metaverse, "Hello?!" Suddenly, hear digital birds fly off by your disturbance, {"position":"4350,1250","size":"100,100"}
+
+
+
+:: I don't {"position":"2550,4050","size":"100,100"}
+Liz: ...???
+
+
+You say: [[I]]
+
+
+:: I wait patiently wait infront of the screen confused {"position":"4550,1250","size":"100,100"}
+
+
+
+:: I'd like to read final words {"position":"3750,5325","size":"100,100"}
+A Stranger's Smile says:
+A flirtatious smile
+A curious glance
+A cryptic message
+A non physical embrace
+A crowd of curious bodies
+Watching
+You
+Right Now.
+Your body perks
+And pockets this stranger’s smile
+For a grim day.
+
+[[<< You wonder as you depart: Who was that? Wander out of obsolescence>> ->main portal]]
+
+
+:: I'll remember that too {"position":"3600,3850","size":"100,100"}
+The email reads:
+Dear (the name is blurred out), 
+sO formal sorry! I couldn't find your account to message directly and so I wondered if you deactivated? Anyways, I did wnt to invte you you a c0nc3rt - hehe! I'll bring a few of the following items
+
+You say: [[Hmm, show me the rest of the message, Liz]]
+
+
+
+
+
+
+:: I'm pretty fuelled by curiousity, and patient to just keep chatting with you..! {"position":"4725,3425","size":"100,100"}
+//Your own eyebrows frown and you look around,  you remember a while ago - sometime in a past vision- that sometimes when something's broken that maybe you're in the right place.//
+
+The Email says: Are you?
+
+The Email says: Oh.
+
+The Email says: You won't believe this! You actually might regret something you've been doing this entire gameplay...
+
+You say: [[Go on??!]]
+You say: [[Zzzzzz->Yeah, a bit itchy and confused]]
+
+
+:: I'm ready! Where to next? {"position":"3175,2850","size":"100,100"}
+Liz says: Give me a second to pull up the spheres for you...
+
+You say nothing: [[*watch the screen while things happen unknown to me*]]
+
+
+:: In this moment, I would like to guess "a mirror" {"position":"3850,4175","size":"100,100"}
+//The emails eyes widen, they look soft and suddenly you realize you are looking at a breathing being.//
+
+
+You whisper: [[A mirror, this email represents me?->Inherited Recipe]]
+
+
+:: Inherited Recipe {"position":"4300,5025","size":"100,100"}
+Liz says: Your journey out of obsolescence ends here.
+Liz says: Here is what you found...
+
+You say: [[What did I find?->Recipe]]
+
+
+
+
+
+
+:: Inside {"position":"4675,3100","size":"100,100"}
+The Letter says: Dear Internet Person.
+
+The Letter says: I'm surprised to see you here.
+
+The Letter says: Aimlessly looking for your lost soul parts.
+
+The Letter says: That's not why you're really here is it? You want to be entertained? You want to analyze "art"? You had a few moments to spare for a joke?
+
+The Letter says: ...I don't wish to ask you, but go ahead I guess, tell me why you're here.
+
+
+You say: [[Yeeah..I would hope to find something meaningful at the end of this->Loadinggg]]
+You say: [[Thought it would be fun :)->Loadinggg]]
+You say: [[I was drawn in my curiousity, nothing wrong with that?->Loadinggg]]
+You say: [[None of the answers in this system actually articulates my desire to be here.->Loadinggg]]
+
+
+:: LOL, internet person? {"position":"3075,1950","size":"100,100"}
+Liz says: Yes, you are a body of cyberspace I believe? I'm so glad to meet you.
+
+
+You say: [[Where am I?]] 
+You say: [[Who are you?]]
+
+
+:: Let me read the poem that came with my bloody leg {"position":"4175,5275","size":"100,100"}
+Your Bloody Leg Says:
+My body watches you
+And you peer back
+Silent drips of blood
+A wounded unwanted mind
+How often do you allow your mind to think?
+The body is so fragile,
+So flight or fight, bby!
+Inward or outward?
+
+
+
+[[<< You say to youreself: Who am I really listening to?  Wander out of obsolescence. >> ->main portal]]
+
+
+:: Liz, I'd like to read the poem that came with Evil Eye {"position":"3900,5275","size":"100,100"}
+The Evil Eye says:
+A side eye, an echoed chuckle
+an eye for extraction
+Your eyes turn inward
+Reminding itself,
+"you have not moved your body the same since --"
+Did you invite this gaze?
+Undetected for so long 'til now,
+a painful thought, transformed
+
+[[<< the eye watches you as you leave this chat.  Wander out of obsolescence >> ->main portal]]
+
+
+:: Loadinggg {"position":"4675,3250","size":"100,100"}
+The Code says: Okay.
+
+The Code says: Thank you for answering.
+
+The Code Says: Now, I'm curious. Are you content in this moment or feeling itchy to move forward?
+
+
+You say: [[I'm pretty fuelled by curiousity, and patient to just keep chatting with you..!]]
+You say:[[Yeah, a bit itchy and confused]]
+
+
+:: Lol gosh I mean ummmmm maybe in a weird way I would say it's a map, some set coordinates... {"position":"3350,5725","size":"100,100"}
+SSSS_98 says: A map...
+SSS_98 whispers: Well, let me log the coordinates for you.
+
+You say: [[Yea :)->A Forgotten Thought]]
+
+
+
+
+:: MY CURIOUSITY WAS SELFISH {"position":"4800,4125","size":"100,100"}
+//The code roles their eyes. The feeling stings. The first time a non-human has made you feel blasé//
+
+The Code says: You are.
+The Code says: So easily seduced.
+The Code says: What is it that makes you so easy?
+
+
+You say: [[0101010111100010->A Pile of Dust]]
+You say: [[1100001111010101->Nail Clippings]]
+
+
+:: Makes sense {"position":"3175,2725","size":"100,100"}
+Liz says: I won't really be able to help you take everything, but this will be a short (5 to 10 minute) symbolic experience. 
+
+Liz says: Relax, I believe in you to find the lost parts of yourself
+
+
+You say: [[I'm ready! Where to next?]]
+
+
+:: Nail Clippings {"position":"4550,5025","size":"100,100"}
+Liz says: Your journey out of obsolescence ends here.
+Liz says: Here is what you found...
+
+You say: [[What did I find?->Clippings]]
+
+
+
+
+:: No, I haven't really thought about {"position":"3175,2275","size":"100,100"}
+Liz says: *looks at your disappointed* I don't want to throw you off your journey, Internet Person.
+Liz says:  In this new age, there is a necessity for vigilance...you may or may not agree
+Liz says: Regardless. Ur curiosity is valuable, admirable - it's a rare strength in bio-human adults.
+Liz says: Perhaps this new curiosity should be explored?
+
+
+You say: [[Better now than...yeah you know]]
+You say: [[I agree]]
+
+
+:: Ofc :D I love chatrooms, the unknown route and the relaxation of a converation, especially with strangers {"position":"2925,1925","size":"100,100"}
+Liz says: This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists. 
+
+Liz says: Like a socially constructed reality, this space gains meaning only through interaction. 
+
+Liz says: Where you can interact with the Machine and visit locations that are invisible to anyone else.
+
+Liz says: A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree. 
+
+Liz says: Dear Internet Person, your thoughts must be in the right place..e
+
+Liz says: …!* 
+
+Liz says: However, there was a reason this chatroom was created and there's a reason of course why you're here :) 
+
+You say: [[Okay, go on...]]
+
+
+:: Oh hi? {"position":"2850,1750","size":"100,100"}
+Liz says: Hello. I'm so glad you sat down to join me here. 
+
+You say: [[Where is "here"]]
+You say: [[Ofc :D I love chatrooms, the unknown route and the relaxation of a converation, especially with strangers]]
+
+
+:: Okay let's give it a try! {"position":"2975,4475","size":"100,100"}
+Liz...Transmitting...Thread...Loading....Lonely...Thread...
+
+You say: [[Hmm->continue]]
+
+
+:: Okay, go on... {"position":"3025,2125","size":"100,100"}
+Liz says: This Third Space chatroom contains multiple spheres - you’ll have to navigate through them.
+
+Liz says: Which’ll have different tasks for you to interact within!
+
+Liz says: In the end, if you make it that far, you'll discover a part of yourself that you lost online.
+
+Liz says: You're always online, from what I can detect, whether you are desiring to be or not :) 
+
+Liz says: QR codes, emails, search engines, or even just public cameras. Pure bio-humans love to take photos of themselves :D 
+
+Liz says: Have you ever thought about how much of your energy - your information - exists out there, beyond your control?
+
+Liz says: Sometimes that energy we put out there…just disappears. 
+
+// you take a moment to contemplate this before responding //
+
+
+
+You say: [[Yeah, I guess I've pondered this]]
+You say: [[No, I haven't really thought about]]
+
+
+:: Okay, show me {"position":"4025,4325","size":"100,100"}
+The Email says:
+"I can't believe it's almost 2010! 
+Time has flown by -
+HmmmmM
+It's almost 2 in the morning, 
+and the deep quiet and the soothing pace of tumblr is really
+really allowing me to reflect on like,
+these websites - public digital rooms,
+we're all sharing parts of ourselves here 
+and we're all apart of something
+I wonder if one day the internet will be...
+
+Liz says: The email sort of disintegrates away after that. I wonder how you will finish this unanswered email and what this choice means to you?
+
+> You say: [[...still a place  place of sancutary, like it was in the past...->A Stranger's SmileR]]
+> You say: [[...an archieve, or perhaps a graveyard...a museum? ->The Evil Eye]]
+> [[You say nothing->A Forgotten Thought]] as in fact, what is there to say? You haven't quite swallowed your feelings of the past and your relaionship.
+
+
+:: Poorer eyesight {"position":"3625,4150","size":"100,100"}
+//The emails eyes widen, they look soft and suddenly you realize you are looking at yourself..//
+
+You say: [[Does this email represent me?->A mirror, this email represents me?]]
+
+
+:: Recipe {"position":"4300,5150","size":"100,100"}
+<span class="blink">UNLOCKED: Inherited Recipe</span>
+
+Liz says: //''Dear internet person, you have found An Inherited Recipe''//
+<div style="text-align: center;">
+  <img src="https://i.postimg.cc/VsHjXCdM/Soup-Transp.gif">
+</div>
+
+ You say: [[Can I read the poem that came with the recipe?]]
+
+
+
+:: Search Oracle: Can convenience be corrosive? {"position":"1900,3625","size":"100,100"}
+//thinking...loading...are you comfortable sitting there?//
+
+Liz says: How would you like your'' Oracle Engine'' search prepared?
+
+You say: [[A poetic answer with no conclusions]]
+You say: [[A search result from the Machine itself]]
+You say: [[A response that holds tension to match my mood]]
+
+
+:: Search Oracle: How can humanity release agency and give into systematic control by the Machine? {"position":"2550,3925","size":"100,100"}
+//loading...dancing...do you wanna boogie? oh right, you're busy...heh//
+
+Liz says: How would you like your'' Oracle Engine'' search prepared?
+You say: [[I don't]]
+
+
+:: Search Oracle: If surveillance becomes comforting is it Stockholm syndrome or customer loyalty? {"position":"3025,3650","size":"100,100"}
+//thinking...loading...do you wanna boogie? oh right, you're busy...heh//
+
+Liz says: How would you like your'' Oracle Engine'' search prepared?
+You say: [[An answer that satisfies the discomfort of this question]]
+
+
+:: Search Oracle: Is physical vulnerability a weakness in the world of the Machine? {"position":"2175,3850","size":"100,100"}
+//thinking...loading...are you comfortable sitting there?//
+
+Liz says: How would you like your'' Oracle Engine'' search prepared?
+
+You say: [[A scientifically researched answer]]
+You say: [[A historically researched answer]]
+You say: [[An emotionally driven response]]
+
+
+:: Search Oracle: Is the human body flawed in the age of the Machine? {"position":"2875,3850","size":"100,100"}
+//loading question...and day dreaming//
+
+Liz says: How would you like your'' Oracle Engine'' search prepared?
+You say: [[A confessional-response]]
+You say: [[A reputable response]]
+
+
+:: Search: Is sexual desire and kink just a software bug or a political statement? {"position":"2025,3300","size":"100,100"}
+//thinking...there are parts of your body in this system, you're getting closer to//
+
+Liz says: How would you like your'' Oracle Engine'' search prepared?
+
+You say: [[A poetic answer that allows me to think]]
+You say: [[Straight to the point result]]
+You say: [[An uncomfortable response, that allows me to reflect]]
+
+
+:: Straight to the point result {"position":"1775,3175","size":"100,100"}
+//Your (print: $ordinal) search takes you here.//
+
+[Liz says: ''Dear Internet Person, you searched:'' Is sexual desire and kink just a software bug or a political statement?
+
+Liz says:''The Oracle Engine Leaves You With A Question: ''Have you ever gone on a journey to explore your own sexuality and desires? Does it ever make you feel uncomfortable to accept?]
+
+{
+(if: $clicks >= 3)[
+  You say: [[I guess it's time to venture somewhere new, Liz?->THREAD COMMENT SECTION]]
+]
+(else:)[
+  You say: [[**ah**->Central Area]]
+]
+  
+}
+
+
+:: THAT'S IT {"position":"4800,3975","size":"100,100"}
+You say: IT'S ENTICING.
+
+You say: CLICK-BAIT. A SIREN.
+
+You say: EVERYTHING IS PULLING ME IN. A SIREN.
+
+You say: [[MY CURIOUSITY WAS SELFISH]]
+
+
+:: THREAD COMMENT SECTION {"position":"3125,4275","size":"100,100"}
+//You were suddenly transported into a new sphere. You feel confused, but...up for whatever this is?//
+
+Liz says: How did you end up here? Looks like you were transported..
+Liz says: There's a lonely forum I want to share with you. A quite a bit of time has passed since it was active, 
+Liz says: This forum exists in the public early web, Internet person.
+Liz says: There's a single thread there. Someone's still waiting, can you see them in your minds eye?
+Liz says: ???
+Liz says: I'll travel your words there. 
+
+
+You say: [[Okay let's give it a try!]]
+You say: [[Gosh, okay let's go.]]
+
+
+:: The Evil Eye {"position":"3900,5025","size":"100,100"}
+Liz says: Your journey out of obsolescence ends here.
+Liz says: Here is what you found...
+
+You say: [[What did I find?->EvilEye]]
+
+
+
+
+:: TheCode {"position":"4800,3700","size":"100,100"}
+// AURORA-WEAVE v9.7 — Story-Only Network Illusion Script
+// (This language does not exist; This language exists. Just as much as you.)
+
+module aurora.weave
+init {
+    channel = holoLink.open(port: "ether:∆42")
+    flux = quantumCache.allocate(phantomBytes: 88_000)
+}
+weave {
+    targetSite = "https://any.site"   // fictional placeholder
+    echo("Spinning illusion threads…")
+    // Apply non-real “overlays”
+    mirageLayer.paint(text: "ALTERED REALITY", hue: "violet-fire")
+    mirageLayer.distort(mode: "dream-bend", intensity: 0.73)
+    // Bind the illusion to the narrative framework
+    holoLink.bind(mirageLayer, to: targetSite, using: "story-thread")
+}
+finalize {
+    echo("Illusion deployed. (Remember: This is not a game)")
+}
+
+The Email says: Goodbye...
+//The Code Enters Chat//
+The Code says: S.C.R.O.L.L
+
+You say: [[Eh what is this...AH I SEE.->What if I could alter the algorithm]]
+
+
+:: Their minds meet, by FingertipsKeyboardClicks Soft smiles and profile pics {"position":"2725,1125","size":"100,100"}
+Liz says: [[Two Strangers meet under a group gaze. How long until your eyes are satisfied?]]
+
+
+:: They do not touch {"position":"2750,1000","size":"100,100"}
+Liz says: [[Their minds meet, by FingertipsKeyboardClicks Soft smiles and profile pics]]
+
+
+:: Two Strangers meet under a group gaze. How long until your eyes are satisfied? {"position":"2900,1275","size":"100,100"}
+Liz says: [[What is it you're really looking for?]]
+
+Liz also says:[[What is it I'm really looking for?->What is it you're really looking for?]]
+
+
+:: Two strangers meet, but {"position":"2750,875","size":"100,100"}
+Liz says: [[They do not touch]]
+
+
+:: WANDER INTO OBSOLESCENCE {"position":"2750,750","size":"100,100"}
+Liz says: [[Two strangers meet, but]]
+
+
+:: What did I find? {"position":"3750,5175","size":"100,100"}
+<span class="blink">UNLOCKED: A Stranger's Smile</span>
+
+Liz says: //''Dear internet person, you have found A Stranger's Smile''//
+<div style="text-align: center;">
+  <img src="https://i.postimg.cc/Pqv8T3tT/Blush-Transp.gif">
+</div>
+
+
+You say: [[I'd like to read the poem attached to the smile->I'd like to read final words]]
+
+
+:: What if I could alter the algorithm {"position":"4800,3850","size":"100,100"}
+You say: THAT'S IT.
+ 
+ You say: THAT'S IT
+ 
+You say: [[THAT'S IT]]
+
+
+:: What is it I'm really looking for? {"position":"4475,1050","size":"100,100"}
+//I guess I should wait for someone to enter the chat? Or maybe if I am taking a big risk here... //
+
+[[I decide to shout into the metaverse, "Hello?!" Suddenly, hear digital birds fly off by your disturbance,]]
+
+[[I wait patiently wait infront of the screen confused]]
+
+
+:: What is it you're really looking for? {"position":"2825,1425","size":"100,100"}
+// The silence feels kinda tense.  //
+
+You say: [[Oh hi?]]
+You say: [[Where am I?]]
+You say: [[Who are you?]]
+
+
+:: Where am I? {"position":"3000,1775","size":"100,100"}
+Liz says: This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists. 
+
+Liz says: Like a socially constructed reality, this space gains meaning only through interaction. 
+
+Liz says: Where you can interact with the Machine and visit locations that are invisible to anyone else.
+
+Liz says: A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree. 
+
+Liz says: Dear Internet Person, your thoughts must be in the right place..e
+
+Liz says: …!* 
+
+Liz says: However, there was a reason this chatroom was created and there's a reason of course why you're here :) 
+
+
+You say: [[Okay, go on...]]
+
+
+:: Where is "here" {"position":"2775,1925","size":"100,100"}
+Liz says: This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists. 
+
+Liz says: Like a socially constructed reality, this space gains meaning only through interaction. 
+
+Liz says: Where you can interact with the Machine and visit locations that are invisible to anyone else.
+
+Liz says: A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree. 
+
+Liz says: Dear Internet Person, your thoughts must be in the right place..e
+
+Liz says: …!* 
+
+Liz says: However, there was a reason this chatroom was created and there's a reason of course why you're here :) 
+
+
+You say: [[Okay, go on...]]
+
+
+:: Who are you? {"position":"3150,1750","size":"100,100"}
+Liz says: My name is Liz...short from Eliza, my grandmother's name. I'm here to guide you through this chatroom to collect information about yourself. I used to be human, but now I'm a hybrid.
+
+You say: [[You're half human?]]
+
+
+:: Yeah, I guess I've pondered this {"position":"2925,2300","size":"100,100"}
+Liz says: Remember, how you play the game says something about you, almost like a survey with a multitude of outcomes.
+
+
+You say: [[Got it Liz]]
+
+
+:: Yeah, a bit itchy and confused {"position":"4400,3375","size":"100,100"}
+The Code says: ...
+The Code says: Yeah, you're not ready, transporting you.
+
+//loading new sphere//
+
+You say: [[???->search engine]]
+
+
+:: Yes, I know it's a kind of a ''mirror'' {"position":"3200,5725","size":"100,100"}
+SSSS_98 says: Aha, a mirror...
+SSS_98 says: Well.
+You say: [[Tell me what you know.->The Evil Eye]]
+
+
+
+
+:: You're half human? {"position":"3250,1900","size":"100,100"}
+Liz says: I exist here, guiding you through this chatroom system, and I exist physically in the space with you.
+
+Liz says: Moving to remembering with you. Collecting data and analyzing other Internet People.
+
+You say: So...[[Where am I?]]
+
+
+:: a place of tension and expression. {"position":"3725,3550","size":"100,100"}
+//Several emails  appear infront of you, they stare back at you, hopeful //
+
+Liz says: Will you choose to read any? 
+
+
+
+You say: [[I'll read, "Untitled"->An email marked as, "Untitled". It looks back at you, then moves to the side lines. It's shy.]]
+You say: [["CANYOUSEEME" as the subject, the words are so loud they vibrate the room you're sat in]]
+You say: [[Nah, I won't read this, I feel like I'd like to investigate a new sphere->search engine]]
+
+
+:: all agency {"position":"2525,4575","size":"100,100"}
+You say: [[I cannot control my response,  I have become too disconnected]]
+
+
+:: back to chat with SSSS_98 {"position":"3200,5600","size":"100,100"}
+SSSS_98 says: Can you see it? It's not really a photo
+Liz says: It appears that SSSS has something for you here. Your response will log information to move you closer to find yourself
+
+You say: [[Yes, I know it's a kind of a ''mirror'']]
+You say: [[Lol gosh I mean ummmmm maybe in a weird way I would say it's a map, some set coordinates...]]
+You say: [[As you were reflecting before, it made me reflect on myself. My own pleasures and my own my body. What appeals to me and what doesn't and how when I close my eyes everything is dark and nothing. This feels like a facade.]]
+
+
+:: between digital walls {"position":"4650,2975","size":"100,100"}
+Liz says: Okay. 
+
+Liz says: As requested, I'll take you there.
+
+// transporting...loading player further into oblivion// 
+
+Liz says: Before you get there, I want to ask.
+
+Liz says: Before we get there, I gotta ask
+
+Liz says: ...
+
+Liz says: Can you kindly check the attached LOVELETTER.txt coming from me?
+
+
+
+You say: [[Let's see what's inside!->Inside]]
+
+
+:: continue {"position":"3175,4600","size":"100,100"}
+<img src="https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg">
+
+You say: [[Lemme see a bit more, Liz->read thread]]
+
+
+:: continue observing thread {"position":"3175,4850","size":"100,100"}
+''Thread Topic: Jouissance.''
+SSSS_98 says: Who owns these tools? 
+SSSS_98 says:  By tools I mean = my body
+SSSS_98 says: I don't have many friends to discuss this with..
+SSSS_98 says:  But, I often think, I want my body on display for pleasure.
+
+You say: Hmm, Liz can you transmit the rest of the forum, I'd like to [[read on]]
+
+
+:: have {"position":"2550,4300","size":"100,100"}
+You say: [[released]]
+
+
+:: main portal {"position":"2750,600","size":"100,100"}
+<div style="text-align: center;">
+
+
+<img src="https://i.postimg.cc/fLSrt7Pq/IMG-1949.jpg"> 
+
+[[WANDER INTO OBSOLESCENCE]]
+</div>
+
+
+:: read final comment from SSSS_98 {"position":"3175,5225","size":"100,100"}
+SSSS_98 says: Hello? Is anyone there? I keep seein a lot of activity on my other posts/other's threads the past couple of days, but I can't tell what's going on like is this even visible? 
+SSSS_98 says: Can you all see this?
+SSSS_98 says: Can you all see me?
+SSSS_98 says:  Are you really there even if you can see this?
+
+Liz says: Okay, you can respond now. I'll transmit your words to the early web
+You say: [[Hey!1 Yeah I'm here :)) I can't see what you're saying but I can see these words]]
+You say: [[Hello. I'm here. I hope this message reaches you in time.]]
+
+
+:: read on {"position":"3175,4975","size":"100,100"}
+SSSS_98 says: I've never really thought about it before 
+SSSS_98 says: but, I guess I'm grateful for this kind of thread space to kind of tune out of the world, I feel like I'm kind of growing up online and learning about myself with all of this information around me.
+SSSS_98 says: I'm curious to know what others think.
+
+You say: [[Before responding, I'd like to see the pic again->see photo again]]
+
+
+:: read thread {"position":"3175,4725","size":"100,100"}
+//Liz says:..Here's the thread below that followed the image.
+//
+
+''Thread Topic: Jouissance.''
+SSSS_98 says: Hey everyone, 
+SSSS_98 says: has anyone seen this image floating around on here? 
+SSSS_98 says: It keeps coming up for me, like a lot. I had to start a convo about it as so many thoughts and questions keep coming up for me around my relationship with my own body.
+SSSS_98 says: The first time I saw the image, it felt like a kind of optical illusion, if I blinked the image looked slightly different and it kind of tripped me out.
+SSSS_98 says: The second time, I think I started to really focus in on the vaginal area. I thought of my own gentalia and my body as a machine of pleasure and hesitation.
+SSSS_98 says:  Objectification and beauty. 
+
+You say: [[Hmm...->continue observing thread]]
+
+
+:: released {"position":"2550,4425","size":"100,100"}
+You say: [[all agency]]
+
+
+:: search engine {"position":"2325,3200","size":"100,100"}
+//New sphere transportation complete.//
+Liz says: Welcome to the ''Oracle Engine''
+
+//you hear a faint ticking noise in your ear//
+
+Liz says: There's a hypnotic feeling of repetition here in this sphere. A pattern repeated by millions, the ask and search patte
+
+Liz says: pattern* :)
+
+ Liz says: You're here, but are you //here// here?
+ 
+Liz says: Why is it that you search for answers externally?
+
+Liz says: Here in the Oracle Engine, you'll search-N-side . The options here are a collection of questions generated by behavioural patterns the Machine has studied.
+
+Liz says: ''"Remember,''" you are looking for yourself, you have option to click only up to 3 questions in the Oracle Engine
+
+Liz says: What q is most important to you? Search, receive riddles, and respond to them to help you travel on.''
+
+You say: [[Ok! ->Central Area]]
+
+
+:: see photo again {"position":"3175,5100","size":"100,100"}
+<img src="https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg">
+
+
+You say: [[Okay I'd like to read the final section of the forum->read final comment from SSSS_98]]
+
+
+:: see the photo again {"position":"3200,5475","size":"100,100"}
+<img src="https://64.media.tumblr.com/tumblr_mai6z9YTgW1r39evyo1_1280.jpg">
+
+You say: [[Okay->back to chat with SSSS_98]]
+
+
+:: telepathic printer {"position":"4025,4175","size":"100,100"}
+//The email closes it's eyes a little bit, the printer symbol on the email begins to dance and spits out --//
+
+Liz says: I'll share the email's first section:
+
+You say: [[Okay, show me]]
+
+
+
+:: StoryStylesheet [stylesheet]
+.blink {
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
