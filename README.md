@@ -1,126 +1,104 @@
-# Synthwave Chatroom - My body is obsolete
+# Synthwave Chatroom - My Body Is Obsolete
 
-Lightweight retro / synthwave chatroom with p5.js visuals, Socket.IO realtime, and an MSN-style UI. Built with Vite for frontend development and Express + Socket.IO for the backend. Ready for local dev and Render deployment.
+An interactive narrative chatroom with synthwave aesthetics. Players join a retro MSN-style chat interface where a narrator (Liz) delivers a branching story in real time through Socket.IO. Stories are authored in Twine/Twee (Harlowe format) and converted to a custom JSON dialogue format for playback.
 
 ## Key features
-- Real-time chat with Socket.IO
-- p5.js synthwave / glitch visuals
-- Classic MSN-style chat UI with toolbar
-- Multi-page build (index / control / room1 / room2)
-- Production build via Vite, served by Express
-- Optional story integration (Twine iframe or inkjs)
+- Two-room architecture: narrator triggers the story, player interacts with choices
+- Branching dialogue with conditional logic, variables, and multiple speakers
+- Twine/Twee (Harlowe) to JSON converter for story authoring
+- Real-time message delivery with Socket.IO
+- p5.js synthwave visuals with controllable glitch effects
+- Classic MSN Messenger-style UI with draggable windows
 
 ## Tech stack
-- Frontend: Vite, vanilla JS, p5.js
-- Backend: Node.js, Express, Socket.IO
-- Build/test: Vite (dev server: 5173), Node server (3000)
-- Deployment: Render (recommended)
+- **Frontend:** Vite, vanilla JS (ES modules), p5.js
+- **Backend:** Node.js (>=18), Express 5, Socket.IO
+- **Build:** Vite with Terser minification and vendor chunk splitting
+- **Testing:** Jest
+- **Deployment:** Render (recommended)
 
 ## Project layout
-- src/
-  - index.html, control.html, room1.html, room2.html
-  - style.css
-  - assets/ (fonts, images)
-  - js/ (main.js, socket.js, chatUI.js, visuals.js, chatDrag.js)
-- dist/ (generated build output — do not commit)
-- server.js (Express + Socket.IO)
-- vite.config.js
-- package.json
-- .gitignore
-- .gitattributes
-- render.yaml (optional)
+```
+src/                          # Source (Vite root)
+  index.html                  # Main chatroom entry
+  player-room.html            # Interactive story player
+  narrator-room.html          # Story narrator control
+  control.html                # Visual effects control panel
+  docs.html                   # Navigation hub
+  room1.html, room2.html      # General / host chatrooms
+  style.css
+  assets/                     # Fonts, images, cursors
+  js/
+    main.js                   # App bootstrap, message routing
+    socket.js                 # Socket.IO client wrapper
+    dialogueSystem.js         # Dialogue state engine (conditions, variables)
+    dialogueController.js     # Dialogue flow & socket event handling
+    chatUI.js                 # Chat input, message display, scrolling
+    dialogueUI.js             # Dialogue popup rendering
+    visuals.js                # p5.js synthwave background & glitch effects
+    chatDrag.js               # Window drag & maximize
+    roomDetection.js          # Room-aware logic flags
+public/
+  data/dialogues/             # Generated dialogue JSON files
+shared/
+  gameParameters.js           # Shared constants (usernames, delays)
+scripts/
+  twee-to-json.js             # Twine/Harlowe to JSON converter
+server.js                     # Express + Socket.IO server
+vite.config.js                # Multi-page Vite build config
+```
 
-## Quickstart (Windows)
-1. Install deps:
+## Quickstart
+
+1. Install dependencies:
+   ```
    npm install
+   ```
 
-2. Dev (two terminals):
-   - Frontend (Vite): npm run vite:dev  -> browse http://localhost:5173
-   - Backend (Express/Socket.IO): npm run dev  -> server on http://localhost:3000
+2. Development (two terminals):
+   ```
+   npm run vite:dev     # Frontend on http://localhost:5173
+   npm run dev          # Backend on http://localhost:3000
+   ```
+   Vite proxies `/socket.io` to the backend automatically.
 
-3. Build production:
+3. Production build:
+   ```
    npm run build
-   npm start
-   -> browse http://localhost:3000
+   npm start            # Serves from dist/ on http://localhost:3000
+   ```
 
-Notes:
-- To remove old build folder (Windows CMD): rd /s /q dist
-- PowerShell: Remove-Item -Path dist -Recurse -Force
-- Git Bash: rm -rf dist
+## How the dialogue system works
 
-## Socket.IO client config (recommended)
-Use runtime detection so same code works in dev/prod:
+1. **Author** a story in Twine (Harlowe format) and export as `.twee`
+2. **Convert** with `node scripts/twee-to-json.js` (see `scripts/README.md` for details)
+3. **Place** the output JSON in `public/data/dialogues/`
+4. **Play**: narrator opens `narrator-room.html` and clicks "Initiate Transmission"; player opens `player-room.html` to receive the story and make choices
 
-const socket = io(
-  window.location.hostname === 'localhost'
-    ? 'http://localhost:3000'
-    : window.location.origin,
-  { withCredentials: true, transports: ['websocket','polling'] }
-);
+Messages types in the dialogue: `narrator` (Liz's lines), `system` (stage directions), `image` (inline images), `speaker` (third-party characters), and `pause` (timed delays).
 
-If deploying to a custom domain on Render, add that domain to server CORS config or use an env var (CUSTOM_DOMAIN) in server.js.
+## Converting Twee stories
 
-## Fonts & assets
-- Place static assets under `src/assets` (dev) or ensure build copies to `dist/assets`.
-- Use absolute paths in CSS/HTML, e.g. `/assets/fonts/Windows-Regular.ttf`
-- Add preload in index.html for critical fonts:
-  <link rel="preload" href="/assets/fonts/Windows-Regular.ttf" as="font" type="font/ttf" crossorigin>
-
-## Building & Deployment to Render
-- Add `render.yaml` or configure the Render web service:
-  - Build command: npm install && npm run build
-  - Start command: node server.js
-  - Set NODE_ENV=production on Render
-- Ensure server.js CORS origin includes your Render domain or uses process.env.CUSTOM_DOMAIN
-
-## Git workflow (recommended)
-- Develop on feature/dev branch (e.g. `vite-switch`).
-- Merge into `production` as target branch:
-  git checkout production
-  git pull origin production
-  git merge vite-switch
-- Keep `dist/` and `node_modules/` in .gitignore.
-- Use `.gitattributes` to protect config files (vite.config.js, server.js, render.yaml) with merge=ours if you want to keep production-specific config.
-
-Example .gitignore essentials:
 ```
-node_modules/
-dist/
-build/
-.env
-*.log
-.vscode/
+node scripts/twee-to-json.js <input.twee> [output.json]
 ```
 
-To stop tracking previously committed folders:
-git rm -r --cached node_modules dist
-git commit -m "Remove tracked build / deps"
-git push
+Supported Harlowe macros: `(set:)`, `(if:)`, `(else-if:)`, `(else:)`, `(link:)`, `(print:)`, `(nth:)`. See `scripts/README.md` for the full authoring guide.
 
-## Common issues & fixes
-- "require is not defined" — server.js must use ES module imports when package.json contains "type":"module".
-- Minified React error (#130) — remove React-specific plugins or ensure no React devtools injection; check vite.config.js optimizeDeps / plugins.
-- Terser missing — install terser as dev dependency for Vite minify: npm install --save-dev terser
-- CORS errors in production — verify client connects to correct server URL and server CORS origins include the deployed domain.
-- Large chunk warnings — add manualChunks in vite.config.js or use dynamic import() to split code.
-- Chrome extension errors (chrome-extension://...) — usually caused by extensions; test in incognito / disable extensions.
+## Deployment (Render)
 
-## Story/branching integration options
-- Twine iframe + postMessage: easiest; story runs isolated, communicates via postMessage.
-- Embed Twine runtime: heavier, format-dependent.
-- Recommended for inline chat-based branching: Ink + inkjs — author in Ink, load JSON with inkjs, render passages as chat messages and choices as inline buttons; easy to sync via Socket.IO.
-
-## Where to change visuals and UI
-- visuals.js: p5 sketch, adjust gradient rect translation/size:
-  - translate(x, y, z) controls position
-  - p.rect(...) width/height control size
-- Toolbar markup: src/room1.html (toolbar markup & class names), CSS in src/style.css to adjust size/spacing
+Configure the web service with:
+- **Build command:** `npm install && npm run build`
+- **Start command:** `node server.js`
+- **Environment:** `NODE_ENV=production`
+- Set `CUSTOM_DOMAIN` env var if using a custom domain (for CORS).
 
 ## Helpful commands
-- Install deps: npm install
-- Dev Vite: npm run vite:dev
-- Dev server: npm run dev
-- Build: npm run build
-- Start prod server: npm start
-- Clean dist (Win CMD): rd /s /q dist
-
+| Command | Description |
+|---------|-------------|
+| `npm install` | Install dependencies |
+| `npm run vite:dev` | Start Vite dev server (port 5173) |
+| `npm run dev` | Start backend with nodemon (port 3000) |
+| `npm run build` | Production build to dist/ |
+| `npm start` | Start production server |
+| `npm run preview` | Preview built site via Vite |

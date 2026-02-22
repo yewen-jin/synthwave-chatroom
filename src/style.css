@@ -469,6 +469,10 @@ button {
     /* border-left: 2px solid var(--border-color); */
 }
 
+.speaker-name {
+    color: rgba(90, 90, 90, 0.8);
+}
+
 /* Image messages from messageSequence */
 .image-message {
     text-align: center;

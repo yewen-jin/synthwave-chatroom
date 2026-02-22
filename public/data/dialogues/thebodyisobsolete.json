@@ -17,22 +17,26 @@
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says: Where are you?"
+          "content": "Where are you?"
         },
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says: Who's dancing and who's speaking?"
+          "content": "Who's dancing and who's speaking?"
         },
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says: ..."
+          "content": "..."
         },
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says:<br>== The Email leaves the chat =="
+          "content": ""
+        },
+        {
+          "type": "system",
+          "content": "== The Email leaves the chat =="
         },
         {
           "type": "narrator",
@@ -187,7 +191,7 @@
         {
           "type": "system",
           "speaker": "The Machine",
-          "content": "The Machine says: A self-proclaimed superior species with insecurity. What will you do with that vulnerablity?"
+          "content": "A self-proclaimed superior species with insecurity. What will you do with that vulnerablity?"
         }
       ],
       "choices": [
@@ -728,7 +732,7 @@
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 say: Huh."
+          "content": "Huh."
         }
       ],
       "choices": [
@@ -765,7 +769,7 @@
         {
           "type": "system",
           "speaker": "The Inherited Recipe",
-          "content": "The Inherited Recipe says:<br>Archieves inside flesh like a forgotten dream<br>A torn photo, a floppy disk.<br>A gift from your bloodline sending nourishment you can't smell<br>But you can feel.<br>It's telling you to 'slow down'<br>and other words you can no longer decode.<br>maybe this isn't a meal at all,<br>but a message<br>you chew on this thought of what this bowl of soup and what your body are telling you."
+          "content": "Archieves inside flesh like a forgotten dream<br>A torn photo, a floppy disk.<br>A gift from your bloodline sending nourishment you can't smell<br>But you can feel.<br>It's telling you to 'slow down'<br>and other words you can no longer decode.<br>maybe this isn't a meal at all,<br>but a message<br>you chew on this thought of what this bowl of soup and what your body are telling you."
         }
       ],
       "choices": [
@@ -893,7 +897,7 @@
         {
           "type": "system",
           "speaker": "Your Clippings",
-          "content": "Your Clippings say:<br>Little forgotten pieces<br>From your body<br>The parts the world deemed unworthy<br>imperfect<br>a clause you were taught somewhere between<br>your sexuality and spirituality<br>Click-Click-Opps!<br>What if ur body parts were alive?<br>Can u imagine those 'lil bones<br>dancing-consciously-laughing on hills<br>Free from the pain of being unwanted<br>What did you accidentally believe in?"
+          "content": "Little forgotten pieces<br>From your body<br>The parts the world deemed unworthy<br>imperfect<br>a clause you were taught somewhere between<br>your sexuality and spirituality<br>Click-Click-Opps!<br>What if ur body parts were alive?<br>Can u imagine those 'lil bones<br>dancing-consciously-laughing on hills<br>Free from the pain of being unwanted<br>What did you accidentally believe in?"
         }
       ],
       "choices": [
@@ -939,7 +943,7 @@
         {
           "type": "system",
           "speaker": "The Dust",
-          "content": "The Dust says:<br>The Body<br>Your body<br>left without touch<br>What is it asking for?<br>The dust gathers around your feet,<br>And (uh) she's winking now.<br>What have you not embraced?<br>You look distracted."
+          "content": "The Body<br>Your body<br>left without touch<br>What is it asking for?<br>The dust gathers around your feet,<br>And (uh) she's winking now.<br>What have you not embraced?<br>You look distracted."
         }
       ],
       "choices": [
@@ -996,7 +1000,7 @@
         {
           "type": "system",
           "speaker": "Your Lost Thought",
-          "content": "Your Lost Thought says:<br>Focused in on this universe<br>Everything breathes<br>Into a single moment.<br>And then you blink...<br>eternityevaporatesflipsreverses<br>crys out<br>and then laughs<br>half-eaten<br>tip of the tongue,<br>a smothering darkness<br>It's just a feeling, but<br>she still has power<br>To sew broken images<br>and tell you, \"this is your memory\"<br>and these broken images love to play!<br>they're so mischevious.<br>Perhaps because they believe between a moment ago and the past<br>it was all a fascade."
+          "content": "Focused in on this universe<br>Everything breathes<br>Into a single moment.<br>And then you blink...<br>eternityevaporatesflipsreverses<br>crys out<br>and then laughs<br>half-eaten<br>tip of the tongue,<br>a smothering darkness<br>It's just a feeling, but<br>she still has power<br>To sew broken images<br>and tell you, \"this is your memory\"<br>and these broken images love to play!<br>they're so mischevious.<br>Perhaps because they believe between a moment ago and the past<br>it was all a fascade."
         }
       ],
       "choices": [
@@ -1052,12 +1056,12 @@
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says: Her we go"
+          "content": "Her we go"
         },
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says: Here* :-)"
+          "content": "Here* :-)"
         }
       ],
       "choices": [
@@ -1128,22 +1132,22 @@
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Hey. Yes it has reached me. I'm so so glad someone else has replied."
+          "content": "Hey. Yes it has reached me. I'm so so glad someone else has replied."
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Did you see the photo?"
+          "content": "Did you see the photo?"
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Tell me what comes up for you..."
+          "content": "Tell me what comes up for you..."
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: no one else seems to see these messagess. I'm really itching to discuss with you.."
+          "content": "no one else seems to see these messagess. I'm really itching to discuss with you.."
         }
       ],
       "choices": [
@@ -1162,17 +1166,17 @@
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: <strong>You can see my words but you cannot understand my words? </strong>Haha, that actually made me smile...why does everyone have to be so poetically-cryptic in hyperspace...lol."
+          "content": "<strong>You can see my words but you cannot understand my words? </strong>Haha, that actually made me smile...why does everyone have to be so poetically-cryptic in hyperspace...lol."
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Did you see the photo?"
+          "content": "Did you see the photo?"
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Tell me what comes up for you...no one else seems to see these messages so I'm really itching to discuss with you.."
+          "content": "Tell me what comes up for you...no one else seems to see these messages so I'm really itching to discuss with you.."
         }
       ],
       "choices": [
@@ -1328,7 +1332,7 @@
         {
           "type": "system",
           "speaker": "A Stranger's Smile",
-          "content": "A Stranger's Smile says:<br>A flirtatious smile<br>A curious glance<br>A cryptic message<br>A non physical embrace<br>A crowd of curious bodies<br>Watching<br>You<br>Right Now.<br>Your body perks<br>And pockets this stranger’s smile<br>For a grim day."
+          "content": "A flirtatious smile<br>A curious glance<br>A cryptic message<br>A non physical embrace<br>A crowd of curious bodies<br>Watching<br>You<br>Right Now.<br>Your body perks<br>And pockets this stranger’s smile<br>For a grim day."
         }
       ],
       "choices": [
@@ -1369,17 +1373,17 @@
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says: Are you?"
+          "content": "Are you?"
         },
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says: Oh."
+          "content": "Oh."
         },
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says: You won't believe this! You actually might regret something you've been doing this entire gameplay..."
+          "content": "You won't believe this! You actually might regret something you've been doing this entire gameplay..."
         }
       ],
       "choices": [
@@ -1462,27 +1466,27 @@
         {
           "type": "system",
           "speaker": "The Letter",
-          "content": "The Letter says: Dear Internet Person."
+          "content": "Dear Internet Person."
         },
         {
           "type": "system",
           "speaker": "The Letter",
-          "content": "The Letter says: I'm surprised to see you here."
+          "content": "I'm surprised to see you here."
         },
         {
           "type": "system",
           "speaker": "The Letter",
-          "content": "The Letter says: Aimlessly looking for your lost soul parts."
+          "content": "Aimlessly looking for your lost soul parts."
         },
         {
           "type": "system",
           "speaker": "The Letter",
-          "content": "The Letter says: That's not why you're really here is it? You want to be entertained? You want to analyze \"art\"? You had a few moments to spare for a joke?"
+          "content": "That's not why you're really here is it? You want to be entertained? You want to analyze \"art\"? You had a few moments to spare for a joke?"
         },
         {
           "type": "system",
           "speaker": "The Letter",
-          "content": "The Letter says: ...I don't wish to ask you, but go ahead I guess, tell me why you're here."
+          "content": "...I don't wish to ask you, but go ahead I guess, tell me why you're here."
         }
       ],
       "choices": [
@@ -1543,7 +1547,7 @@
         {
           "type": "system",
           "speaker": "Your Bloody Leg",
-          "content": "Your Bloody Leg Says:<br>My body watches you<br>And you peer back<br>Silent drips of blood<br>A wounded unwanted mind<br>How often do you allow your mind to think?<br>The body is so fragile,<br>So flight or fight, bby!<br>Inward or outward?"
+          "content": "My body watches you<br>And you peer back<br>Silent drips of blood<br>A wounded unwanted mind<br>How often do you allow your mind to think?<br>The body is so fragile,<br>So flight or fight, bby!<br>Inward or outward?"
         }
       ],
       "choices": [
@@ -1562,7 +1566,7 @@
         {
           "type": "system",
           "speaker": "The Evil Eye",
-          "content": "The Evil Eye says:<br>A side eye, an echoed chuckle<br>an eye for extraction<br>Your eyes turn inward<br>Reminding itself,<br>\"you have not moved your body the same since --\"<br>Did you invite this gaze?<br>Undetected for so long 'til now,<br>a painful thought, transformed"
+          "content": "A side eye, an echoed chuckle<br>an eye for extraction<br>Your eyes turn inward<br>Reminding itself,<br>\"you have not moved your body the same since --\"<br>Did you invite this gaze?<br>Undetected for so long 'til now,<br>a painful thought, transformed"
         }
       ],
       "choices": [
@@ -1581,17 +1585,17 @@
         {
           "type": "system",
           "speaker": "The Code",
-          "content": "The Code says: Okay."
+          "content": "Okay."
         },
         {
           "type": "system",
           "speaker": "The Code",
-          "content": "The Code says: Thank you for answering."
+          "content": "Thank you for answering."
         },
         {
           "type": "system",
           "speaker": "The Code",
-          "content": "The Code Says: Now, I'm curious. Are you content in this moment or feeling itchy to move forward?"
+          "content": "Now, I'm curious. Are you content in this moment or feeling itchy to move forward?"
         }
       ],
       "choices": [
@@ -1616,7 +1620,7 @@
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: A map..."
+          "content": "A map..."
         },
         {
           "type": "system",
@@ -1643,17 +1647,17 @@
         {
           "type": "system",
           "speaker": "The Code",
-          "content": "The Code says: You are."
+          "content": "You are."
         },
         {
           "type": "system",
           "speaker": "The Code",
-          "content": "The Code says: So easily seduced."
+          "content": "So easily seduced."
         },
         {
           "type": "system",
           "speaker": "The Code",
-          "content": "The Code says: What is it that makes you so easy?"
+          "content": "What is it that makes you so easy?"
         }
       ],
       "choices": [
@@ -1894,7 +1898,7 @@
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says:<br>\"I can't believe it's almost 2010!<br>Time has flown by -<br>HmmmmM<br>It's almost 2 in the morning,<br>and the deep quiet and the soothing pace of tumblr is really<br>really allowing me to reflect on like,<br>these websites - public digital rooms,<br>we're all sharing parts of ourselves here<br>and we're all apart of something<br>I wonder if one day the internet will be..."
+          "content": "\"I can't believe it's almost 2010!<br>Time has flown by -<br>HmmmmM<br>It's almost 2 in the morning,<br>and the deep quiet and the soothing pace of tumblr is really<br>really allowing me to reflect on like,<br>these websites - public digital rooms,<br>we're all sharing parts of ourselves here<br>and we're all apart of something<br>I wonder if one day the internet will be..."
         },
         {
           "type": "narrator",
@@ -1903,12 +1907,12 @@
         {
           "type": "system",
           "speaker": "> You",
-          "content": "> You say: [[...still a place  place of sancutary, like it was in the past...->A Stranger's SmileR"
+          "content": "[[...still a place  place of sancutary, like it was in the past...->A Stranger's SmileR"
         },
         {
           "type": "system",
           "speaker": "> You",
-          "content": "> You say: [[...an archieve, or perhaps a graveyard...a museum? ->The Evil Eye"
+          "content": "[[...an archieve, or perhaps a graveyard...a museum? ->The Evil Eye"
         },
         {
           "type": "system",
@@ -2291,7 +2295,7 @@
         {
           "type": "system",
           "speaker": "The Email",
-          "content": "The Email says: Goodbye..."
+          "content": "Goodbye..."
         },
         {
           "type": "system",
@@ -2300,7 +2304,7 @@
         {
           "type": "system",
           "speaker": "The Code",
-          "content": "The Code says: S.C.R.O.L.L"
+          "content": "S.C.R.O.L.L"
         }
       ],
       "choices": [
@@ -2597,12 +2601,12 @@
         {
           "type": "system",
           "speaker": "The Code",
-          "content": "The Code says: ..."
+          "content": "..."
         },
         {
           "type": "system",
           "speaker": "The Code",
-          "content": "The Code says: Yeah, you're not ready, transporting you."
+          "content": "Yeah, you're not ready, transporting you."
         },
         {
           "type": "system",
@@ -2625,12 +2629,12 @@
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Aha, a mirror..."
+          "content": "Aha, a mirror..."
         },
         {
           "type": "system",
           "speaker": "SSS_98",
-          "content": "SSS_98 says: Well."
+          "content": "Well."
         }
       ],
       "choices": [
@@ -2718,7 +2722,7 @@
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Can you see it? It's not really a photo"
+          "content": "Can you see it? It's not really a photo"
         },
         {
           "type": "narrator",
@@ -2818,22 +2822,22 @@
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Who owns these tools?"
+          "content": "Who owns these tools?"
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: By tools I mean = my body"
+          "content": "By tools I mean = my body"
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: I don't have many friends to discuss this with.."
+          "content": "I don't have many friends to discuss this with.."
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: But, I often think, I want my body on display for pleasure."
+          "content": "But, I often think, I want my body on display for pleasure."
         }
       ],
       "choices": [
@@ -2884,22 +2888,22 @@
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Hello? Is anyone there? I keep seein a lot of activity on my other posts/other's threads the past couple of days, but I can't tell what's going on like is this even visible?"
+          "content": "Hello? Is anyone there? I keep seein a lot of activity on my other posts/other's threads the past couple of days, but I can't tell what's going on like is this even visible?"
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Can you all see this?"
+          "content": "Can you all see this?"
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Can you all see me?"
+          "content": "Can you all see me?"
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Are you really there even if you can see this?"
+          "content": "Are you really there even if you can see this?"
         },
         {
           "type": "narrator",
@@ -2928,17 +2932,17 @@
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: I've never really thought about it before"
+          "content": "I've never really thought about it before"
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: but, I guess I'm grateful for this kind of thread space to kind of tune out of the world, I feel like I'm kind of growing up online and learning about myself with all of this information around me."
+          "content": "but, I guess I'm grateful for this kind of thread space to kind of tune out of the world, I feel like I'm kind of growing up online and learning about myself with all of this information around me."
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: I'm curious to know what others think."
+          "content": "I'm curious to know what others think."
         }
       ],
       "choices": [
@@ -2965,32 +2969,32 @@
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Hey everyone,"
+          "content": "Hey everyone,"
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: has anyone seen this image floating around on here?"
+          "content": "has anyone seen this image floating around on here?"
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: It keeps coming up for me, like a lot. I had to start a convo about it as so many thoughts and questions keep coming up for me around my relationship with my own body."
+          "content": "It keeps coming up for me, like a lot. I had to start a convo about it as so many thoughts and questions keep coming up for me around my relationship with my own body."
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: The first time I saw the image, it felt like a kind of optical illusion, if I blinked the image looked slightly different and it kind of tripped me out."
+          "content": "The first time I saw the image, it felt like a kind of optical illusion, if I blinked the image looked slightly different and it kind of tripped me out."
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: The second time, I think I started to really focus in on the vaginal area. I thought of my own gentalia and my body as a machine of pleasure and hesitation."
+          "content": "The second time, I think I started to really focus in on the vaginal area. I thought of my own gentalia and my body as a machine of pleasure and hesitation."
         },
         {
           "type": "system",
           "speaker": "SSSS_98",
-          "content": "SSSS_98 says: Objectification and beauty."
+          "content": "Objectification and beauty."
         }
       ],
       "choices": [
