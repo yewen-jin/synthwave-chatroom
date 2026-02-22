@@ -58,11 +58,8 @@ function onChat(messageObj) {
     msgDiv.className = `message system-message-inline${speakerClass}`;
     if (messageObj.speaker) {
       msgDiv.dataset.speaker = messageObj.speaker;
-      // Speaker name and text come from server-controlled dialogue JSON, not user input
-      msgDiv.innerHTML = `<span class="speaker-name">${messageObj.speaker}:</span> <span class="text">${messageObj.text}</span>`;
-    } else {
-      msgDiv.innerHTML = `<span class="text">${messageObj.text}</span>`;
     }
+    msgDiv.innerHTML = `<span class="text">${messageObj.text}</span>`;
     addMessageToChat(msgDiv);
     if (visuals) visuals.flash();
     return;
