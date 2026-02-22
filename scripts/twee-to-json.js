@@ -471,20 +471,20 @@ function parsePassageContent(content, passageName) {
 
   function flushPendingSystemLines() {
     if (pendingSpeaker && pendingSystemLines.length > 0) {
-      // Merge speaker title with accumulated body lines into one block
+      // Merge speaker body lines into one block (speaker name is in `speaker` field)
       messageSequence.push({
         type: "system",
         speaker: pendingSpeaker.name,
-        content: pendingSpeaker.title + "<br>" + pendingSystemLines.join("<br>"),
+        content: pendingSystemLines.join("<br>"),
       });
       pendingSpeaker = null;
       pendingSystemLines = [];
     } else if (pendingSpeaker) {
-      // Speaker title with no body — push as standalone
+      // Speaker with no body — push with empty content
       messageSequence.push({
         type: "system",
         speaker: pendingSpeaker.name,
-        content: pendingSpeaker.title,
+        content: "",
       });
       pendingSpeaker = null;
     }
@@ -656,20 +656,19 @@ function parsePassageContent(content, passageName) {
         if (linkContent.includes("|")) return linkContent.split("|")[0].trim();
         return linkContent.trim();
       });
-      const speakerTitle = `${speaker} ${verb}:`;
       if (cleanContent.length > 0) {
         // Has content after "says:" — standalone speaker message
+        // Content excludes the "says:" prefix — speaker name is in the `speaker` field
         messageSequence.push({
           type: "system",
           speaker: speaker,
-          content: `${speakerTitle} ${cleanContent}`,
+          content: cleanContent,
         });
       } else {
         // Title only (e.g. "The Evil Eye says:") — store as pending,
         // following plain lines will be merged into this block
         pendingSpeaker = {
           name: speaker,
-          title: speakerTitle,
         };
       }
       continue;
