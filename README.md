@@ -61,7 +61,7 @@ const socket = io(
 If deploying to a custom domain on Render, add that domain to server CORS config or use an env var (CUSTOM_DOMAIN) in server.js.
 
 ## Fonts & assets
-- Place static assets under `public/assets` (dev) or ensure build copies to `dist/assets`.
+- Place static assets under `src/assets` (dev) or ensure build copies to `dist/assets`.
 - Use absolute paths in CSS/HTML, e.g. `/assets/fonts/Windows-Regular.ttf`
 - Add preload in index.html for critical fonts:
   <link rel="preload" href="/assets/fonts/Windows-Regular.ttf" as="font" type="font/ttf" crossorigin>
