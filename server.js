@@ -149,6 +149,7 @@ async function startDialogue(room, dialogueId) {
     currentNode: dialogueData.metadata.startNode,
     variables: { ...dialogueData.variables },
     dialogueData,
+    pendingTimers: [],
   };
 
   dialogueStates.set(room, state);
@@ -200,6 +201,30 @@ function interpolateText(text, variables) {
   return text.replace(/\${(\w+)}/g, (match, variable) => {
     return vars.hasOwnProperty(variable) ? vars[variable] : match;
   });
+}
+
+// Helper: Clear all pending timers for a dialogue state
+function clearPendingTimers(state) {
+  if (state.pendingTimers) {
+    state.pendingTimers.forEach((id) => clearTimeout(id));
+    state.pendingTimers = [];
+  }
+}
+
+// Helper: Calculate delay for a message based on DELAY_MODE
+function calculateMessageDelay(message) {
+  if (GameParameters.DELAY_MODE === "test") return 0;
+  if (GameParameters.DELAY_MODE === "fallback") return GameParameters.MESSAGE_DELAY_MS;
+
+  // Dynamic mode
+  if (message && message.type === "narrator" && message.content) {
+    const charCount = message.content.length;
+    const delay = GameParameters.NARRATOR_DELAY_BASE_MS + charCount * GameParameters.NARRATOR_DELAY_PER_CHAR_MS;
+    return Math.max(GameParameters.NARRATOR_DELAY_MIN_MS, Math.min(delay, GameParameters.NARRATOR_DELAY_MAX_MS));
+  }
+
+  // System, image, pause messages use fixed delay
+  return GameParameters.SYSTEM_MESSAGE_DELAY_MS;
 }
 
 // Helper: Evaluate condition
@@ -333,13 +358,18 @@ io.on("connection", (socket) => {
   // Helper: Handle new messageSequence format
   function handleMessageSequence(room, node, playerUsername) {
     const state = dialogueStates.get(room);
+    if (!state) return;
     const sequence = node.messageSequence;
 
-    let delay = playerUsername ? GameParameters.MESSAGE_DELAY_MS : 0; // Wait after player choice
+    // Cumulative delay: starts with initial gap after player choice
+    let cumulativeDelay = playerUsername ? calculateMessageDelay(sequence[0]) : 0;
 
     sequence.forEach((message, index) => {
-      setTimeout(
+      const timerId = setTimeout(
         () => {
+          // Check if state is still active (may have been cleared by restart/end)
+          if (!state.active) return;
+
           const content = interpolateText(message.content, state.variables);
 
           switch (message.type) {
@@ -349,7 +379,7 @@ io.on("connection", (socket) => {
                 username: "SYSTEM",
                 timestamp: Date.now(),
                 isSystem: true,
-                speaker: message.speaker || null, // Third-party speaker name for special styling
+                speaker: message.speaker || null,
               });
               break;
 
@@ -384,8 +414,9 @@ io.on("connection", (socket) => {
             const hasChoices = node.choices && node.choices.length > 0;
 
             if (!hasChoices) {
-              // Auto-advance to next node
-              setTimeout(() => {
+              const advanceDelay = calculateMessageDelay(message);
+              const advanceTimerId = setTimeout(() => {
+                if (!state.active) return;
                 if (node.type === "ending") {
                   handleDialogueEnd(room, state);
                 } else if (node.nextNode) {
@@ -397,15 +428,23 @@ io.on("connection", (socket) => {
                     "Warning: No nextNode specified for auto-advancing node",
                   );
                 }
-              }, GameParameters.MESSAGE_DELAY_MS);
+              }, advanceDelay);
+              state.pendingTimers.push(advanceTimerId);
             } else {
               // Show choices to player
               io.emit("dialogue-sync", buildSyncPayload(state));
             }
           }
         },
-        delay + index * GameParameters.MESSAGE_DELAY_MS,
+        cumulativeDelay,
       );
+      state.pendingTimers.push(timerId);
+
+      // Add delay for the next message based on the current message
+      const nextMessage = sequence[index + 1];
+      if (nextMessage) {
+        cumulativeDelay += calculateMessageDelay(nextMessage);
+      }
     });
   }
 
@@ -475,8 +514,9 @@ io.on("connection", (socket) => {
       // Send each narrator message with delay
       let delay = playerUsername ? GameParameters.MESSAGE_DELAY_MS : 0;
       currentNode.narratorMessages.forEach((message, index) => {
-        setTimeout(
+        const timerId = setTimeout(
           () => {
+            if (!state.active) return;
             const msgText = interpolateText(message, state.variables);
             io.emit("chat", {
               text: msgText,
@@ -491,11 +531,11 @@ io.on("connection", (socket) => {
                 console.log(
                   "No choices, auto-advancing after narrator messages",
                 );
-                setTimeout(() => {
+                const advanceId = setTimeout(() => {
+                  if (!state.active) return;
                   if (currentNode.type === "ending") {
                     handleDialogueEnd(room, state);
                   } else if (currentNode.nextNode) {
-                    // Auto-advance to the specified next node
                     console.log(
                       `Auto-advancing to next node: ${currentNode.nextNode}`,
                     );
@@ -507,6 +547,7 @@ io.on("connection", (socket) => {
                     );
                   }
                 }, GameParameters.MESSAGE_DELAY_MS);
+                state.pendingTimers.push(advanceId);
               } else {
                 // Has choices, send them to player
                 io.emit("dialogue-sync", buildSyncPayload(state));
@@ -515,6 +556,7 @@ io.on("connection", (socket) => {
           },
           delay + index * GameParameters.MESSAGE_DELAY_MS,
         );
+        state.pendingTimers.push(timerId);
       });
       return;
     }
@@ -534,7 +576,8 @@ io.on("connection", (socket) => {
       io.emit("dialogue-sync", { ...buildSyncPayload(state), nodeData });
 
       // Auto-advance after a delay
-      setTimeout(() => {
+      const sysTimerId = setTimeout(() => {
+        if (!state.active) return;
         if (currentNode.type === "ending") {
           handleDialogueEnd(room, state);
         } else if (currentNode.nextNode) {
@@ -545,6 +588,7 @@ io.on("connection", (socket) => {
           console.log("Warning: No nextNode specified for system message node");
         }
       }, GameParameters.SYSTEM_MESSAGE_DELAY_MS);
+      state.pendingTimers.push(sysTimerId);
       return;
     }
 
@@ -578,9 +622,11 @@ io.on("connection", (socket) => {
       io.emit("dialogue-sync", { ...buildSyncPayload(state), nodeData });
       // If has text, display it (handled by client)
       // End dialogue after delay
-      setTimeout(() => {
+      const endTimerId = setTimeout(() => {
+        if (!state.active) return;
         handleDialogueEnd(room, state);
       }, GameParameters.ENDING_DELAY_MS);
+      state.pendingTimers.push(endTimerId);
       return;
     }
 
@@ -646,6 +692,32 @@ io.on("connection", (socket) => {
 
     // Process the new node (this handles all node types)
     processNode(room, data.username, data.choiceText);
+  });
+
+  // Handle dialogue restart (from narrator room)
+  socket.on("dialogue-restart", () => {
+    const room = "player-room";
+    const state = dialogueStates.get(room);
+    if (!state || !state.active) return;
+
+    console.log("Dialogue restart requested");
+    clearPendingTimers(state);
+    state.currentNode = state.dialogueData.metadata.startNode;
+    state.variables = { ...state.dialogueData.variables };
+
+    io.emit("dialogue-restart");
+    processNode(room);
+  });
+
+  // Handle manual dialogue end (from narrator room)
+  socket.on("dialogue-end-manual", () => {
+    const room = "player-room";
+    const state = dialogueStates.get(room);
+    if (!state || !state.active) return;
+
+    console.log("Manual dialogue end requested");
+    clearPendingTimers(state);
+    handleDialogueEnd(room, state);
   });
 
   // Handle narrator continue (DEPRECATED - kept for backward compatibility)

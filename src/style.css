@@ -919,6 +919,102 @@ button:hover {
     font-size: var(--font-size-xl);
 }
 
+/* Dialogue control buttons (restart/end) */
+.dialogue-control-btns {
+    display: flex;
+    gap: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+}
+
+.dialogue-ctrl-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-base);
+    border: 2px solid var(--border-color);
+    transition: all var(--transition-fast);
+}
+
+.restart-btn {
+    background: rgba(255, 165, 0, 0.1) !important;
+    color: #ffa500 !important;
+    border-color: #ffa500 !important;
+}
+
+.restart-btn:hover {
+    background: rgba(255, 165, 0, 0.25) !important;
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.4);
+}
+
+.end-btn {
+    background: rgba(255, 50, 50, 0.1) !important;
+    color: #ff4444 !important;
+    border-color: #ff4444 !important;
+}
+
+.end-btn:hover {
+    background: rgba(255, 50, 50, 0.25) !important;
+    box-shadow: 0 0 10px rgba(255, 50, 50, 0.4);
+}
+
+/* Confirmation popup */
+.confirm-style {
+    width: 350px;
+    max-width: 90vw;
+    background: #000000;
+    border: 2px solid var(--border-color);
+    box-shadow: 0 0 20px var(--border-glow);
+}
+
+.confirm-content {
+    padding: var(--spacing-xl);
+    text-align: center;
+    color: #ffffff;
+    font-size: var(--font-size-lg);
+}
+
+.confirm-content p {
+    margin: var(--spacing-xl) 0;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-top: var(--spacing-xl);
+}
+
+.confirm-btn {
+    padding: var(--spacing-sm) var(--spacing-xl);
+    font-size: var(--font-size-base);
+    border: 2px solid var(--border-color);
+    min-width: 100px;
+    transition: all var(--transition-fast);
+}
+
+.confirm-yes {
+    background: rgba(0, 255, 0, 0.15) !important;
+    color: #00ff00 !important;
+    border-color: #00ff00 !important;
+}
+
+.confirm-yes:hover {
+    background: rgba(0, 255, 0, 0.3) !important;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.4);
+}
+
+.confirm-cancel {
+    background: rgba(150, 150, 150, 0.15) !important;
+    color: var(--text-color) !important;
+}
+
+.confirm-cancel:hover {
+    background: rgba(150, 150, 150, 0.3) !important;
+}
+
 /* Button icon with pulse animation */
 .btn-icon {
     font-size: var(--font-size-lg);

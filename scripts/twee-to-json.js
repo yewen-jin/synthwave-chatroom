@@ -140,12 +140,20 @@ storyPassages.forEach((passage) => {
     }),
     choices: parsed.choices.map((choice, index) => {
       const displayText = cleanDisplayText(choice.text);
+      // If there's leading text before the link, bold the link portion in displayText
+      let formattedDisplayText;
+      if (choice.linkText) {
+        const cleanLeading = cleanDisplayText(choice.text.replace(choice.linkText, "")).trim();
+        formattedDisplayText = formatInlineMarkup(cleanLeading) + " <strong>" + cleanDisplayText(choice.linkText) + "</strong>";
+      } else {
+        formattedDisplayText = formatInlineMarkup(displayText);
+      }
       const choiceObj = {
         id: `${nodeId}_choice_${index + 1}`,
         // text = what gets sent to chat (null if not player dialogue)
         text: choice.isPlayerDialogue ? formatInlineMarkup(choice.text) : null,
         // displayText = what shows on the choice button
-        displayText: formatInlineMarkup(displayText),
+        displayText: formattedDisplayText,
         nextNode: convertToId(choice.destination),
       };
       if (choice.effects && Object.keys(choice.effects).length > 0) {
@@ -758,26 +766,42 @@ function parsePassageContent(content, passageName) {
 
   // Only extract standard [[links]] if we didn't already find choices via macros
   if (choices.length === 0) {
-    // Use a regex that also captures "You say:" prefix before the link
-    const stdLinkRegex = /(You\s+(?:say\s+nothing|whisper|say)\s*:\s*)?\[\[([^\]]+)\]\]/g;
+    // Capture "You say:" prefix, any leading text before [[link]], and the link itself
+    // e.g. "You say: I'll pay my respects to The Oracle, the [[search engine]]"
+    //       group 1 = "You say: ", group 2 = "I'll pay my respects to The Oracle, the ", group 3 = "search engine"
+    const stdLinkRegex = /(You\s+(?:say\s+nothing|whisper|say)\s*:\s*)(.*?)\[\[([^\]]+)\]\]|\[\[([^\]]+)\]\]/g;
     while ((match = stdLinkRegex.exec(content)) !== null) {
+      // Two alternatives: with prefix (groups 1,2,3) or bare link (group 4)
+      const hasPrefix = match[1] !== undefined;
+      const prefix = hasPrefix ? match[1] : "";
+      const leadingText = hasPrefix ? (match[2] || "").trim() : "";
+      const linkContent = hasPrefix ? match[3] : match[4];
+
       // Check narrator link positions using the offset of the [[ part
-      const bracketIndex = match.index + (match[1] ? match[1].length : 0);
+      const bracketOffset = match[0].indexOf("[[");
+      const bracketIndex = match.index + bracketOffset;
       if (narratorLinkPositions.has(bracketIndex)) continue;
 
       // Skip links inside handled ranges (conditional blocks)
       if (isInHandledRange(match.index)) continue;
 
-      const parsed = parseLinkContent(match[2]);
-      // "You say:" and "You whisper:" send to chat, "You say nothing:" does not
-      const prefix = match[1] || "";
+      const parsed = parseLinkContent(linkContent);
       const isSilent = /say\s+nothing/i.test(prefix);
+
+      // If there's leading text before the link, combine it with the link text
+      // The link text portion gets bolded in the display
+      let choiceText = parsed.text;
+      if (leadingText) {
+        choiceText = leadingText + " " + parsed.text;
+      }
+
       choices.push({
-        text: parsed.text,
+        text: choiceText,
         destination: parsed.destination,
         effects: null,
         conditions: null,
-        isPlayerDialogue: !!match[1] && !isSilent,
+        isPlayerDialogue: hasPrefix && !isSilent,
+        linkText: leadingText ? parsed.text : null,
       });
     }
   }

@@ -53,10 +53,18 @@
               <span class="btn-icon">📡</span>
               <span class="btn-text">Initiate Transmission</span>
             </button>
-            <button
-              class="dialogue-trigger-btn"
-              id="dialogue-trigger-btn"
-            ></button>
+
+            <!-- Dialogue control buttons (visible during active dialogue) -->
+            <div id="dialogue-control-btns" class="dialogue-control-btns" style="display: none;">
+              <button class="dialogue-ctrl-btn restart-btn" id="restart-btn">
+                <span class="btn-icon">↺</span>
+                <span class="btn-text">Restart</span>
+              </button>
+              <button class="dialogue-ctrl-btn end-btn" id="end-btn">
+                <span class="btn-icon">■</span>
+                <span class="btn-text">End</span>
+              </button>
+            </div>
           </div>
 
           <div class="message-input-area">
@@ -165,6 +173,27 @@
               <span class="btn-icon">→</span>
               <span class="btn-text">Continue</span>
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Popup -->
+    <div id="confirm-popup" class="popup" style="display: none">
+      <div class="popup-content confirm-style">
+        <div class="title-bar">
+          <img
+            src="assets/images/icons/chat-room-icon.svg"
+            alt="icon"
+            class="msn-icon"
+          />
+          <span class="window-title">Confirm</span>
+        </div>
+        <div class="confirm-content">
+          <p id="confirm-message">Are you sure?</p>
+          <div class="confirm-actions">
+            <button id="confirm-yes" class="confirm-btn confirm-yes">Yes</button>
+            <button id="confirm-cancel" class="confirm-btn confirm-cancel">Cancel</button>
           </div>
         </div>
       </div>

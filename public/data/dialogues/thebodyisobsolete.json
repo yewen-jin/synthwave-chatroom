@@ -52,8 +52,8 @@
         },
         {
           "id": "canyouseeme_as_the_subject_the_words_are_so_loud_they_vibrate_the_room_you_re_sat_in_choice_2",
-          "text": null,
-          "displayText": "in the future",
+          "text": "Yes, for me in the future",
+          "displayText": "Yes, for me <strong>in the future</strong>",
           "nextNode": "thread_comment_section"
         }
       ]
@@ -70,20 +70,20 @@
       "choices": [
         {
           "id": "watch_the_screen_while_things_happen_unknown_to_me_choice_1",
-          "text": null,
-          "displayText": "search engine",
+          "text": "I'll pay my respects to The Oracle, the search engine",
+          "displayText": "I'll pay my respects to The Oracle, the <strong>search engine</strong>",
           "nextNode": "search_engine"
         },
         {
           "id": "watch_the_screen_while_things_happen_unknown_to_me_choice_2",
-          "text": null,
-          "displayText": "a place of tension and expression.",
+          "text": "Hm a place of tension and expression.",
+          "displayText": "Hm <strong>a place of tension and expression.</strong>",
           "nextNode": "a_place_of_tension_and_expression"
         },
         {
           "id": "watch_the_screen_while_things_happen_unknown_to_me_choice_3",
-          "text": null,
-          "displayText": "between digital walls",
+          "text": "Somewhere between digital walls",
+          "displayText": "Somewhere <strong>between digital walls</strong>",
           "nextNode": "between_digital_walls"
         }
       ]
@@ -1204,20 +1204,20 @@
       "choices": [
         {
           "id": "hmm_show_me_the_rest_of_the_message_liz_choice_1",
-          "text": null,
-          "displayText": "a place of tension and expression.",
+          "text": "Maybe best to close this and head back into the email portal of a place of tension and expression.",
+          "displayText": "Maybe best to close this and head back into the email portal of <strong>a place of tension and expression.</strong>",
           "nextNode": "a_place_of_tension_and_expression"
         },
         {
           "id": "hmm_show_me_the_rest_of_the_message_liz_choice_2",
-          "text": null,
-          "displayText": "In this moment, I would like to guess \"a mirror\"",
+          "text": "A riddle? In this moment, I would like to guess \"a mirror\"",
+          "displayText": "A riddle? <strong>In this moment, I would like to guess \"a mirror\"</strong>",
           "nextNode": "in_this_moment_i_would_like_to_guess_a_mirror"
         },
         {
           "id": "hmm_show_me_the_rest_of_the_message_liz_choice_3",
-          "text": null,
-          "displayText": "telepathic printer",
+          "text": "OKKKK weaker eyes? Lol... Weaker eyes. A trap, but telepathic printer",
+          "displayText": "OKKKK weaker eyes? Lol... Weaker eyes. A trap, but <strong>telepathic printer</strong>",
           "nextNode": "telepathic_printer"
         },
         {
@@ -2662,8 +2662,8 @@
       "choices": [
         {
           "id": "you_re_half_human_choice_1",
-          "text": null,
-          "displayText": "Where am I?",
+          "text": "So... Where am I?",
+          "displayText": "So... <strong>Where am I?</strong>",
           "nextNode": "where_am_i"
         }
       ]
@@ -2843,8 +2843,8 @@
       "choices": [
         {
           "id": "continue_observing_thread_choice_1",
-          "text": null,
-          "displayText": "read on",
+          "text": "Hmm, Liz can you transmit the rest of the forum, I'd like to read on",
+          "displayText": "Hmm, Liz can you transmit the rest of the forum, I'd like to <strong>read on</strong>",
           "nextNode": "read_on"
         }
       ]

@@ -31,12 +31,52 @@ export function initDialogueController(socketInstance, user, onFlashCallback) {
   );
 }
 
+// Helper: Show confirmation popup and return a promise
+function showConfirmPopup(message) {
+  return new Promise((resolve) => {
+    const popup = document.getElementById("confirm-popup");
+    const msgEl = document.getElementById("confirm-message");
+    const yesBtn = document.getElementById("confirm-yes");
+    const cancelBtn = document.getElementById("confirm-cancel");
+
+    if (!popup || !yesBtn || !cancelBtn) {
+      resolve(false);
+      return;
+    }
+
+    msgEl.textContent = message;
+    popup.style.display = "flex";
+
+    function cleanup() {
+      popup.style.display = "none";
+      yesBtn.removeEventListener("click", onYes);
+      cancelBtn.removeEventListener("click", onCancel);
+    }
+
+    function onYes() {
+      cleanup();
+      resolve(true);
+    }
+
+    function onCancel() {
+      cleanup();
+      resolve(false);
+    }
+
+    yesBtn.addEventListener("click", onYes);
+    cancelBtn.addEventListener("click", onCancel);
+  });
+}
+
 // ========== NARRATOR (narrator-room) ==========
 function initNarratorRoom() {
   const triggerBtn = document.getElementById("dialogue-trigger-btn");
   const narratorPopup = document.getElementById("narrator-popup");
   const narratorText = document.getElementById("narrator-text");
   const continueBtn = document.getElementById("narrator-continue-btn");
+  const controlBtns = document.getElementById("dialogue-control-btns");
+  const restartBtn = document.getElementById("restart-btn");
+  const endBtn = document.getElementById("end-btn");
 
   if (!triggerBtn || !narratorPopup || !narratorText || !continueBtn) {
     console.warn("Narrator UI elements not found");
@@ -54,7 +94,32 @@ function initNarratorRoom() {
     triggerBtn.disabled = true;
     const btnText = triggerBtn.querySelector(".btn-text");
     if (btnText) btnText.textContent = "Transmission Active...";
+
+    // Show control buttons
+    if (controlBtns) controlBtns.style.display = "flex";
   });
+
+  // Restart button with confirmation
+  if (restartBtn) {
+    restartBtn.addEventListener("click", async () => {
+      const confirmed = await showConfirmPopup("Restart the dialogue from the beginning?");
+      if (confirmed) {
+        console.log("Narrator: Restarting dialogue");
+        socket.emit("dialogue-restart");
+      }
+    });
+  }
+
+  // End button with confirmation
+  if (endBtn) {
+    endBtn.addEventListener("click", async () => {
+      const confirmed = await showConfirmPopup("End the dialogue now?");
+      if (confirmed) {
+        console.log("Narrator: Ending dialogue manually");
+        socket.emit("dialogue-end-manual");
+      }
+    });
+  }
 
   // Listen for player choices (for monitoring only - server auto-sends responses)
   socket.on("player-choice-made", (data) => {
@@ -86,6 +151,13 @@ function initNarratorRoom() {
     console.log("Continue button clicked (currently in monitoring mode only)");
   });
 
+  // Listen for dialogue restart
+  socket.on("dialogue-restart", () => {
+    console.log("Narrator: Dialogue restarted");
+    narratorPopup.style.display = "none";
+    // Keep control buttons visible — dialogue is still active
+  });
+
   // Listen for dialogue end
   socket.on("dialogue-end", () => {
     console.log("Narrator: Dialogue ended");
@@ -94,6 +166,9 @@ function initNarratorRoom() {
     triggerBtn.disabled = false;
     const btnText = triggerBtn.querySelector(".btn-text");
     if (btnText) btnText.textContent = "Initiate Transmission";
+
+    // Hide control buttons
+    if (controlBtns) controlBtns.style.display = "none";
   });
 }
 
@@ -258,6 +333,17 @@ function initPlayerRoom() {
 
     // Flash visual effect
     if (flashCallback) flashCallback();
+  });
+
+  // Listen for dialogue restart
+  socket.on("dialogue-restart", () => {
+    console.log("Player: Dialogue restarted");
+    displayedSystemMessages.clear();
+    if (dialogueSystem) {
+      dialogueSystem.reset();
+    }
+    choicesInlineContainer.style.display = "none";
+    // Keep isActive true — dialogue continues from start
   });
 
   // Listen for dialogue end
