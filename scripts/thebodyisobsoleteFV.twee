@@ -16,11 +16,11 @@ thebodyisobsolete
 The Email says: Where are you?
 The Email says: Who's dancing and who's speaking?
 The Email says: ...
-The Email says: 
+The Email says:
 
 //== The Email leaves the chat ==//
 
-Liz says: Was that message for you or someone you know? 
+Liz says: Was that message for you or someone you know?
 
 You say: [[Probz for me, but I couldn't tell what that was ->search engine]]
 You say: Yes, for me [[in the future->THREAD COMMENT SECTION]]
@@ -86,7 +86,7 @@ You say: [[What did I find?]]
 (else:)[
   You say: [[**ah**->Central Area]]
 ]
-  
+
 }
 
 
@@ -107,7 +107,7 @@ You say: [[What did I find?]]
 (else:)[
   You say: [[**ah**->Central Area]]
 ]
-  
+
 }
 
 
@@ -135,7 +135,7 @@ Liz says:''The Oracle Engine Leaves You With A Mix of Words: ''Sour-Touch-Mind-E
   You say: [[**ah**->Central Area]]
 ]
 
-  
+
 }
 
 
@@ -155,7 +155,7 @@ Liz says:''The Oracle Engine Leaves You With A Brutal Question Back: ''Are you h
 (else:)[
   You say: [[**ah**->Central Area]]
 ]
-  
+
 }
 
 
@@ -175,7 +175,7 @@ Liz says:''The Oracle Engine Leaves You With A Brutal Question Back: ''Are you h
 (else:)[
   You say: [[**ah**->Central Area]]
 ]
-  
+
 }
 
 
@@ -195,7 +195,7 @@ Liz says:''The Oracle Engine Takes You To Your Memories:'' How is your patience?
 (else:)[
   You say: [[**ah**->Central Area]]
 ]
-  
+
 }
 
 
@@ -215,7 +215,7 @@ Liz says:' The Oracle Engine spits out - 'When we lose our tolerance for vulnera
 (else:)[
   You say: [[**ah**->Central Area]]
 ]
-  
+
 }
 
 
@@ -235,7 +235,7 @@ Liz says:''The Oracle Engine Frowns: What muscles are lost for the sake of effic
 (else:)[
   You say: [[**ah**->Central Area]]
 ]
-  
+
 }
 
 
@@ -263,7 +263,7 @@ Liz says: (the “Norrmalmstorg syndrome”) (Eitinger and Weisaeth, 1980; Harni
 (else:)[
   You say: [[**does my body feel trapped?**->Central Area]]
 ]
-  
+
 }
 
 
@@ -289,7 +289,7 @@ Liz says:''Your hand on the mouse, the Oracle Engine touches you back'' Are you 
 (else:)[
   You say: [[**ah**->Central Area]]
 ]
-  
+
 }
 
 
@@ -310,7 +310,7 @@ Liz says: ''The Oracle Engine Leaves You With A Riddle: ''I'm behind you and lis
   You say: [[**ah**->Central Area]]
 ]
 
-  
+
 }
 
 
@@ -362,7 +362,7 @@ you chew on this thought of what this bowl of soup and what your body are tellin
   (set: $clicks to 0)
 ]
 
-Liz says: Now internet person, what would you like to search next?  
+Liz says: Now internet person, what would you like to search next?
 Liz says: Where does your curiousity lead you?
 
 (if: $clicks >= 3)[
@@ -484,7 +484,7 @@ You say: [[Liz, I'd like to read the poem that came with Evil Eye]]
 :: FinalThought {"position":"4050,5300","size":"100,100"}
 Your Lost Thought says:
 Focused in on this universe
-Everything breathes 
+Everything breathes
 Into a single moment.
 And then you blink...
 eternityevaporatesflipsreverses
@@ -548,7 +548,7 @@ Liz says: Are you creating this now or does this stem from memory?
 
 :: Hello. I'm here. I hope this message reaches you in time. {"position":"3275,5350","size":"100,100"}
 SSSS_98 says: Hey. Yes it has reached me. I'm so so glad someone else has replied.
-SSSS_98 says: Did you see the photo? 
+SSSS_98 says: Did you see the photo?
 SSSS_98 says: Tell me what comes up for you...
 SSSS_98 says: no one else seems to see these messagess. I'm really itching to discuss with you..
 
@@ -557,7 +557,7 @@ You say: [[I'd like to see the pic again->see the photo again]]
 
 :: Hey!1 Yeah I'm here :)) I can't see what you're saying but I can see these words {"position":"3100,5350","size":"100,100"}
 SSSS_98 says: ''You can see my words but you cannot understand my words? ''Haha, that actually made me smile...why does everyone have to be so poetically-cryptic in hyperspace...lol.
-SSSS_98 says: Did you see the photo? 
+SSSS_98 says: Did you see the photo?
 SSSS_98 says: Tell me what comes up for you...no one else seems to see these messages so I'm really itching to discuss with you..
 
 You say: [[I'd like to see the pic again->see the photo again]]
@@ -573,7 +573,7 @@ xo//
 
 Liz says: This anon wants you to choose something from inside the email, it'll impact something for you right now.
 
-You say: Maybe best to close this and head back into the email portal of [[a place of tension and expression.]] 
+You say: Maybe best to close this and head back into the email portal of [[a place of tension and expression.]]
 You say: A riddle? [[In this moment, I would like to guess "a mirror"]]
 You say: OKKKK weaker eyes? Lol... Weaker eyes. A trap, but [[telepathic printer]]
 You say: [[Poorer eyesight]] sounds intruiging.
@@ -615,6 +615,7 @@ You say: [[I]]
 
 :: I'd like to read final words {"position":"3750,5325","size":"100,100"}
 A Stranger's Smile says:
+
 A flirtatious smile
 A curious glance
 A cryptic message
@@ -632,7 +633,7 @@ For a grim day.
 
 :: I'll remember that too {"position":"3600,3850","size":"100,100"}
 The email reads:
-Dear (the name is blurred out), 
+Dear (the name is blurred out),
 sO formal sorry! I couldn't find your account to message directly and so I wondered if you deactivated? Anyways, I did wnt to invte you you a c0nc3rt - hehe! I'll bring a few of the following items
 
 You say: [[Hmm, show me the rest of the message, Liz]]
@@ -701,7 +702,7 @@ You say: [[None of the answers in this system actually articulates my desire to 
 Liz says: Yes, you are a body of cyberspace I believe? I'm so glad to meet you.
 
 
-You say: [[Where am I?]] 
+You say: [[Where am I?]]
 You say: [[Who are you?]]
 
 
@@ -769,7 +770,7 @@ You say: [[1100001111010101->Nail Clippings]]
 
 
 :: Makes sense {"position":"3175,2725","size":"100,100"}
-Liz says: I won't really be able to help you take everything, but this will be a short (5 to 10 minute) symbolic experience. 
+Liz says: I won't really be able to help you take everything, but this will be a short (5 to 10 minute) symbolic experience.
 
 Liz says: Relax, I believe in you to find the lost parts of yourself
 
@@ -798,25 +799,25 @@ You say: [[I agree]]
 
 
 :: Ofc :D I love chatrooms, the unknown route and the relaxation of a converation, especially with strangers {"position":"2925,1925","size":"100,100"}
-Liz says: This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists. 
+Liz says: This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists.
 
-Liz says: Like a socially constructed reality, this space gains meaning only through interaction. 
+Liz says: Like a socially constructed reality, this space gains meaning only through interaction.
 
 Liz says: Where you can interact with the Machine and visit locations that are invisible to anyone else.
 
-Liz says: A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree. 
+Liz says: A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree.
 
 Liz says: Dear Internet Person, your thoughts must be in the right place..e
 
-Liz says: …!* 
+Liz says: …!*
 
-Liz says: However, there was a reason this chatroom was created and there's a reason of course why you're here :) 
+Liz says: However, there was a reason this chatroom was created and there's a reason of course why you're here :)
 
 You say: [[Okay, go on...]]
 
 
 :: Oh hi? {"position":"2850,1750","size":"100,100"}
-Liz says: Hello. I'm so glad you sat down to join me here. 
+Liz says: Hello. I'm so glad you sat down to join me here.
 
 You say: [[Where is "here"]]
 You say: [[Ofc :D I love chatrooms, the unknown route and the relaxation of a converation, especially with strangers]]
@@ -835,13 +836,13 @@ Liz says: Which’ll have different tasks for you to interact within!
 
 Liz says: In the end, if you make it that far, you'll discover a part of yourself that you lost online.
 
-Liz says: You're always online, from what I can detect, whether you are desiring to be or not :) 
+Liz says: You're always online, from what I can detect, whether you are desiring to be or not :)
 
-Liz says: QR codes, emails, search engines, or even just public cameras. Pure bio-humans love to take photos of themselves :D 
+Liz says: QR codes, emails, search engines, or even just public cameras. Pure bio-humans love to take photos of themselves :D
 
 Liz says: Have you ever thought about how much of your energy - your information - exists out there, beyond your control?
 
-Liz says: Sometimes that energy we put out there…just disappears. 
+Liz says: Sometimes that energy we put out there…just disappears.
 
 // you take a moment to contemplate this before responding //
 
@@ -853,14 +854,14 @@ You say: [[No, I haven't really thought about]]
 
 :: Okay, show me {"position":"4025,4325","size":"100,100"}
 The Email says:
-"I can't believe it's almost 2010! 
+"I can't believe it's almost 2010!
 Time has flown by -
 HmmmmM
-It's almost 2 in the morning, 
+It's almost 2 in the morning,
 and the deep quiet and the soothing pace of tumblr is really
 really allowing me to reflect on like,
 these websites - public digital rooms,
-we're all sharing parts of ourselves here 
+we're all sharing parts of ourselves here
 and we're all apart of something
 I wonder if one day the internet will be...
 
@@ -955,7 +956,7 @@ Liz says:''The Oracle Engine Leaves You With A Question: ''Have you ever gone on
 (else:)[
   You say: [[**ah**->Central Area]]
 ]
-  
+
 }
 
 
@@ -973,11 +974,11 @@ You say: [[MY CURIOUSITY WAS SELFISH]]
 //You were suddenly transported into a new sphere. You feel confused, but...up for whatever this is?//
 
 Liz says: How did you end up here? Looks like you were transported..
-Liz says: There's a lonely forum I want to share with you. A quite a bit of time has passed since it was active, 
+Liz says: There's a lonely forum I want to share with you. A quite a bit of time has passed since it was active,
 Liz says: This forum exists in the public early web, Internet person.
 Liz says: There's a single thread there. Someone's still waiting, can you see them in your minds eye?
 Liz says: ???
-Liz says: I'll travel your words there. 
+Liz says: I'll travel your words there.
 
 
 You say: [[Okay let's give it a try!]]
@@ -1058,9 +1059,9 @@ You say: [[I'd like to read the poem attached to the smile->I'd like to read fin
 
 :: What if I could alter the algorithm {"position":"4800,3850","size":"100,100"}
 You say: THAT'S IT.
- 
+
  You say: THAT'S IT
- 
+
 You say: [[THAT'S IT]]
 
 
@@ -1081,38 +1082,38 @@ You say: [[Who are you?]]
 
 
 :: Where am I? {"position":"3000,1775","size":"100,100"}
-Liz says: This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists. 
+Liz says: This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists.
 
-Liz says: Like a socially constructed reality, this space gains meaning only through interaction. 
+Liz says: Like a socially constructed reality, this space gains meaning only through interaction.
 
 Liz says: Where you can interact with the Machine and visit locations that are invisible to anyone else.
 
-Liz says: A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree. 
+Liz says: A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree.
 
 Liz says: Dear Internet Person, your thoughts must be in the right place..e
 
-Liz says: …!* 
+Liz says: …!*
 
-Liz says: However, there was a reason this chatroom was created and there's a reason of course why you're here :) 
+Liz says: However, there was a reason this chatroom was created and there's a reason of course why you're here :)
 
 
 You say: [[Okay, go on...]]
 
 
 :: Where is "here" {"position":"2775,1925","size":"100,100"}
-Liz says: This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists. 
+Liz says: This chatroom is a Third Space in Cyberspace, a non-space that exist and does not exists.
 
-Liz says: Like a socially constructed reality, this space gains meaning only through interaction. 
+Liz says: Like a socially constructed reality, this space gains meaning only through interaction.
 
 Liz says: Where you can interact with the Machine and visit locations that are invisible to anyone else.
 
-Liz says: A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree. 
+Liz says: A place that can only be seen if you’re wearing the right pair of glasses. Tilting your head at the exact degree.
 
 Liz says: Dear Internet Person, your thoughts must be in the right place..e
 
-Liz says: …!* 
+Liz says: …!*
 
-Liz says: However, there was a reason this chatroom was created and there's a reason of course why you're here :) 
+Liz says: However, there was a reason this chatroom was created and there's a reason of course why you're here :)
 
 
 You say: [[Okay, go on...]]
@@ -1159,7 +1160,7 @@ You say: So...[[Where am I?]]
 :: a place of tension and expression. {"position":"3725,3550","size":"100,100"}
 //Several emails  appear infront of you, they stare back at you, hopeful //
 
-Liz says: Will you choose to read any? 
+Liz says: Will you choose to read any?
 
 
 
@@ -1182,11 +1183,11 @@ You say: [[As you were reflecting before, it made me reflect on myself. My own p
 
 
 :: between digital walls {"position":"4650,2975","size":"100,100"}
-Liz says: Okay. 
+Liz says: Okay.
 
 Liz says: As requested, I'll take you there.
 
-// transporting...loading player further into oblivion// 
+// transporting...loading player further into oblivion//
 
 Liz says: Before you get there, I want to ask.
 
@@ -1209,7 +1210,7 @@ You say: [[Lemme see a bit more, Liz->read thread]]
 
 :: continue observing thread {"position":"3175,4850","size":"100,100"}
 ''Thread Topic: Jouissance.''
-SSSS_98 says: Who owns these tools? 
+SSSS_98 says: Who owns these tools?
 SSSS_98 says:  By tools I mean = my body
 SSSS_98 says: I don't have many friends to discuss this with..
 SSSS_98 says:  But, I often think, I want my body on display for pleasure.
@@ -1225,14 +1226,14 @@ You say: [[released]]
 <div style="text-align: center;">
 
 
-<img src="https://i.postimg.cc/fLSrt7Pq/IMG-1949.jpg"> 
+<img src="https://i.postimg.cc/fLSrt7Pq/IMG-1949.jpg">
 
 [[WANDER INTO OBSOLESCENCE]]
 </div>
 
 
 :: read final comment from SSSS_98 {"position":"3175,5225","size":"100,100"}
-SSSS_98 says: Hello? Is anyone there? I keep seein a lot of activity on my other posts/other's threads the past couple of days, but I can't tell what's going on like is this even visible? 
+SSSS_98 says: Hello? Is anyone there? I keep seein a lot of activity on my other posts/other's threads the past couple of days, but I can't tell what's going on like is this even visible?
 SSSS_98 says: Can you all see this?
 SSSS_98 says: Can you all see me?
 SSSS_98 says:  Are you really there even if you can see this?
@@ -1243,7 +1244,7 @@ You say: [[Hello. I'm here. I hope this message reaches you in time.]]
 
 
 :: read on {"position":"3175,4975","size":"100,100"}
-SSSS_98 says: I've never really thought about it before 
+SSSS_98 says: I've never really thought about it before
 SSSS_98 says: but, I guess I'm grateful for this kind of thread space to kind of tune out of the world, I feel like I'm kind of growing up online and learning about myself with all of this information around me.
 SSSS_98 says: I'm curious to know what others think.
 
@@ -1255,12 +1256,12 @@ You say: [[Before responding, I'd like to see the pic again->see photo again]]
 //
 
 ''Thread Topic: Jouissance.''
-SSSS_98 says: Hey everyone, 
-SSSS_98 says: has anyone seen this image floating around on here? 
+SSSS_98 says: Hey everyone,
+SSSS_98 says: has anyone seen this image floating around on here?
 SSSS_98 says: It keeps coming up for me, like a lot. I had to start a convo about it as so many thoughts and questions keep coming up for me around my relationship with my own body.
 SSSS_98 says: The first time I saw the image, it felt like a kind of optical illusion, if I blinked the image looked slightly different and it kind of tripped me out.
 SSSS_98 says: The second time, I think I started to really focus in on the vaginal area. I thought of my own gentalia and my body as a machine of pleasure and hesitation.
-SSSS_98 says:  Objectification and beauty. 
+SSSS_98 says:  Objectification and beauty.
 
 You say: [[Hmm...->continue observing thread]]
 
@@ -1280,7 +1281,7 @@ Liz says: There's a hypnotic feeling of repetition here in this sphere. A patter
 Liz says: pattern* :)
 
  Liz says: You're here, but are you //here// here?
- 
+
 Liz says: Why is it that you search for answers externally?
 
 Liz says: Here in the Oracle Engine, you'll search-N-side . The options here are a collection of questions generated by behavioural patterns the Machine has studied.

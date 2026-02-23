@@ -9,7 +9,9 @@ export const ENDING_DELAY_MS = 2000;
 export const STATE_CLEANUP_MS = 5 * 60 * 1000;
 
 // Delay modes: "dynamic" (narrator length-based), "fallback" (fixed 2000ms), "test" (0ms instant)
-export const DELAY_MODE = "dynamic";
+// export const DELAY_MODE = "dynamic";
+export const DELAY_MODE = "test";
+// export const DELAY_MODE = "fallback";
 
 // Dynamic mode constants (narrator only)
 export const NARRATOR_DELAY_BASE_MS = 500;

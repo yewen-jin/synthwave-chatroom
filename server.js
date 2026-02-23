@@ -216,14 +216,16 @@ function calculateMessageDelay(message) {
   if (GameParameters.DELAY_MODE === "test") return 0;
   if (GameParameters.DELAY_MODE === "fallback") return GameParameters.MESSAGE_DELAY_MS;
 
-  // Dynamic mode
-  if (message && message.type === "narrator" && message.content) {
+  // Dynamic mode — narrator and speaker messages scale with text length
+  const isDynamic = (message && message.content) &&
+    (message.type === "narrator" || (message.type === "system" && message.speaker));
+  if (isDynamic) {
     const charCount = message.content.length;
     const delay = GameParameters.NARRATOR_DELAY_BASE_MS + charCount * GameParameters.NARRATOR_DELAY_PER_CHAR_MS;
     return Math.max(GameParameters.NARRATOR_DELAY_MIN_MS, Math.min(delay, GameParameters.NARRATOR_DELAY_MAX_MS));
   }
 
-  // System, image, pause messages use fixed delay
+  // Plain system, image, pause messages use fixed delay
   return GameParameters.SYSTEM_MESSAGE_DELAY_MS;
 }
 

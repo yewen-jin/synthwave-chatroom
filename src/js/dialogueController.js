@@ -354,9 +354,11 @@ function initPlayerRoom() {
     normalInputContainer.style.display = "block";
     sendBtn.style.display = "block";
 
-    // Reset dialogue system variables to defaults
+    // Fully reset dialogue system so next dialogue loads fresh
     if (dialogueSystem) {
-      dialogueSystem.reset();
+      dialogueSystem.dialogueData = null;
+      dialogueSystem.currentNodeId = null;
+      dialogueSystem.variables = {};
     }
 
     // Clear displayed system messages tracker for next dialogue
@@ -365,7 +367,6 @@ function initPlayerRoom() {
     // Clear typing status and request actual narrator status
     if (narratorStatusEl) {
       narratorStatusEl.classList.remove("typing");
-      // Request actual narrator status now that dialogue ended
       socket.emit("request-narrator-status");
     }
   });

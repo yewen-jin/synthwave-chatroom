@@ -480,10 +480,13 @@ function parsePassageContent(content, passageName) {
   function flushPendingSystemLines() {
     if (pendingSpeaker && pendingSystemLines.length > 0) {
       // Merge speaker body lines into one block (speaker name is in `speaker` field)
+      // Multiline speaker messages (poems) start with a linebreak for formatting
+      const joined = pendingSystemLines.join("<br>");
+      const content = pendingSystemLines.length > 1 ? "<br>" + joined : joined;
       messageSequence.push({
         type: "system",
         speaker: pendingSpeaker.name,
-        content: pendingSystemLines.join("<br>"),
+        content,
       });
       pendingSpeaker = null;
       pendingSystemLines = [];
