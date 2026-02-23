@@ -51,6 +51,7 @@ function showConfirmPopup(message) {
       popup.style.display = "none";
       yesBtn.removeEventListener("click", onYes);
       cancelBtn.removeEventListener("click", onCancel);
+      document.removeEventListener("keydown", onKey);
     }
 
     function onYes() {
@@ -63,8 +64,19 @@ function showConfirmPopup(message) {
       resolve(false);
     }
 
+    function onKey(e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        onYes();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        onCancel();
+      }
+    }
+
     yesBtn.addEventListener("click", onYes);
     cancelBtn.addEventListener("click", onCancel);
+    document.addEventListener("keydown", onKey);
   });
 }
 

@@ -40,6 +40,16 @@ export function initChatUI(onSend, onUsernameSubmit) {
       onUsernameSubmit();
     }
   });
+
+  // For hidden inputs (narrator-room "Are you Liz?"), allow Enter to submit
+  if (usernameInput.type === "hidden") {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && usernamePopup.style.display !== "none") {
+        e.preventDefault();
+        onUsernameSubmit();
+      }
+    });
+  }
 }
 
 export function getChatInput() {
