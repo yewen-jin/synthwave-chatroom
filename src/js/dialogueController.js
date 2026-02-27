@@ -9,7 +9,6 @@ let dialogueSystem = null;
 let socket = null;
 let username = null;
 let flashCallback = null;
-let isActive = false;
 let displayedSystemMessages = new Set(); // Track which nodes have shown their system message
 
 export function initDialogueController(socketInstance, user, onFlashCallback) {
@@ -82,6 +81,7 @@ function showConfirmPopup(message) {
 
 // ========== NARRATOR (narrator-room) ==========
 function initNarratorRoom() {
+  let isActive = false;
   const triggerBtn = document.getElementById("dialogue-trigger-btn");
   const narratorPopup = document.getElementById("narrator-popup");
   const narratorText = document.getElementById("narrator-text");
@@ -158,27 +158,24 @@ function initNarratorRoom() {
 
   // Listen for player choices (for monitoring only - server auto-sends responses)
   socket.on("player-choice-made", (data) => {
-    console.log("Narrator: Player made choice (monitoring mode)");
-    console.log("Player choice:", data.playerChoice);
-    console.log("Narrator response:", data.narratorResponse);
-    console.log("Is ending:", data.isEnding);
+    console.log("Narrator: Player made choice — node:", data.currentNode, "ending:", data.isEnding);
 
     isActive = true;
 
-    // Store the narrator response text for monitoring
-    narratorText.textContent = data.narratorResponse;
+    // Show monitoring popup with current node info
+    narratorText.textContent = data.isEnding
+      ? `Ending: ${data.currentNode}`
+      : `Node: ${data.currentNode}`;
 
-    // Show popup briefly so narrator can see what's being sent by server
     narratorPopup.style.display = "flex";
-    continueBtn.disabled = true; // Disable button since server handles sending
+    continueBtn.disabled = true;
     continueBtn.textContent = "Server Sending...";
 
-    // Auto-hide popup after showing the response (server handles actual sending)
     setTimeout(() => {
       narratorPopup.style.display = "none";
       continueBtn.disabled = false;
       continueBtn.textContent = "Continue";
-    }, 2000); // Show for 2 seconds for monitoring
+    }, 2000);
   });
 
   // Continue button is disabled during auto-send mode
@@ -209,6 +206,7 @@ function initNarratorRoom() {
 
 // ========== PLAYER (player-room) ==========
 function initPlayerRoom() {
+  let isActive = false;
   const normalInputContainer = document.getElementById(
     "normal-input-container",
   );

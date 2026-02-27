@@ -148,15 +148,24 @@ textarea {
    4. LAYOUT - Body & Window
    ============================================================================ */
 
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     background-color: var(--bg-primary);
     color: var(--text-color);
     margin: 0;
     padding: var(--spacing-xl);
+    box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow: hidden;
     cursor: url("/assets/images/cursors/pointer_64.png"), auto;
 }
 

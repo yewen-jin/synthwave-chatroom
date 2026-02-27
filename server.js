@@ -78,12 +78,6 @@ function isNarratorOnline() {
   );
 }
 
-function isHostOnline() {
-  return Array.from(activeUsers.values()).includes(
-    GameParameters.HOST_USERNAME,
-  );
-}
-
 // Helper: Broadcast narrator status to all clients
 function broadcastNarratorStatus() {
   io.emit("narrator-status", { online: isNarratorOnline() });
@@ -150,6 +144,7 @@ async function startDialogue(room, dialogueId) {
     variables: { ...dialogueData.variables },
     dialogueData,
     pendingTimers: [],
+    dialogueDataSynced: false,
   };
 
   dialogueStates.set(room, state);
@@ -157,15 +152,19 @@ async function startDialogue(room, dialogueId) {
 }
 
 // Helper: Build sync payload for clients
-function buildSyncPayload(state) {
-  return {
+// includeDialogueData: only true for first sync of a game or late-joining clients
+function buildSyncPayload(state, includeDialogueData = false) {
+  const payload = {
     active: state.active,
     currentNode: state.currentNode,
     variables: state.variables,
     dialogueId: state.dialogueId,
-    dialogueData: state.dialogueData,
     nodeData: state.dialogueData.nodes[state.currentNode],
   };
+  if (includeDialogueData) {
+    payload.dialogueData = state.dialogueData;
+  }
+  return payload;
 }
 
 // Helper: Apply effects to variables
@@ -231,7 +230,7 @@ function calculateMessageDelay(message) {
 
 // Helper: Evaluate condition
 function evaluateCondition(condition, variables) {
-  const val = variables[condition.variable];
+  const val = variables[condition.variable] ?? 0;
   const target = condition.value;
   switch (condition.operator) {
     case "==":
@@ -285,7 +284,6 @@ io.on("connection", (socket) => {
     const playerRoomState = dialogueStates.get("player-room");
     const isDialogueActive = playerRoomState && playerRoomState.active;
     const isNarrator = username === GameParameters.NARRATOR_USERNAME;
-    const isHost = username === GameParameters.HOST_USERNAME;
 
     // Suppress all join messages during active dialogue
     if (!isDialogueActive) {
@@ -302,7 +300,7 @@ io.on("connection", (socket) => {
     // If there's an active dialogue in player-room, sync the new player
     if (isDialogueActive) {
       console.log(`Syncing active dialogue to newly joined user: ${username}`);
-      socket.emit("dialogue-sync", buildSyncPayload(playerRoomState));
+      socket.emit("dialogue-sync", buildSyncPayload(playerRoomState, true));
     }
   });
 
@@ -352,6 +350,14 @@ io.on("connection", (socket) => {
   // Handle dialogue start (from narrator in narrator-room)
   socket.on("dialogue-start", async (data) => {
     const targetRoom = data.targetRoom || "player-room";
+
+    // Guard against starting a second dialogue while one is active
+    const existingState = dialogueStates.get(targetRoom);
+    if (existingState && existingState.active) {
+      console.log(`Dialogue already active in ${targetRoom}, ignoring start`);
+      return;
+    }
+
     console.log(`Starting dialogue ${data.dialogueId} in ${targetRoom}`);
 
     // Notify player that dialogue is starting (for typing indicator)
@@ -444,7 +450,9 @@ io.on("connection", (socket) => {
               state.pendingTimers.push(advanceTimerId);
             } else {
               // Show choices to player
-              io.emit("dialogue-sync", buildSyncPayload(state));
+              const includeData = !state.dialogueDataSynced;
+              io.emit("dialogue-sync", buildSyncPayload(state, includeData));
+              if (includeData) state.dialogueDataSynced = true;
             }
           }
         },
@@ -461,9 +469,14 @@ io.on("connection", (socket) => {
   }
 
   // Helper: Process a node and auto-advance if needed
-  function processNode(room, playerUsername = null, choiceText = null) {
+  function processNode(room, playerUsername = null, choiceText = null, depth = 0) {
     const state = dialogueStates.get(room);
     if (!state || !state.active) return;
+
+    if (depth > 50) {
+      console.error(`processNode exceeded max depth (50) at node: ${state.currentNode} — possible circular condition`);
+      return;
+    }
 
     // Reset variables when returning to the start node
     if (state.currentNode === state.dialogueData.metadata.startNode) {
@@ -481,169 +494,48 @@ io.on("connection", (socket) => {
       for (const condition of currentNode.conditions) {
         if (evaluateCondition(condition, state.variables)) {
           state.currentNode = condition.nextNode;
-          processNode(room);
+          processNode(room, null, null, depth + 1);
           return;
         }
       }
     }
 
-    // Send notification to narrator room for monitoring
-    io.emit("player-choice-made", {
-      currentNode: state.currentNode,
-      isEnding: currentNode.type === "ending",
-    });
-
-    // If player made a choice, broadcast it to chat first
-    if (playerUsername && choiceText) {
-      io.emit("chat", {
-        text: choiceText,
-        username: playerUsername,
-        timestamp: Date.now(),
+    // If player made a choice, notify narrator room and broadcast to chat
+    if (playerUsername) {
+      io.emit("player-choice-made", {
+        currentNode: state.currentNode,
+        isEnding: currentNode.type === "ending",
       });
+
+      if (choiceText) {
+        io.emit("chat", {
+          text: choiceText,
+          username: playerUsername,
+          timestamp: Date.now(),
+        });
+      }
     }
 
-    // NEW FORMAT: Check if node uses messageSequence
+    // Process messageSequence format
     if (currentNode.messageSequence && currentNode.messageSequence.length > 0) {
-      console.log("Using new messageSequence format");
       handleMessageSequence(room, currentNode, playerUsername);
       return;
     }
 
-    // OLD FORMAT: Legacy handling for nodes without messageSequence
-
-    // Determine node type and handle accordingly
-    const hasNarratorMessages =
-      currentNode.narratorMessages && currentNode.narratorMessages.length > 0;
+    // Node has no messageSequence — handle as bare choice/ending/advance node
     const hasChoices = currentNode.choices && currentNode.choices.length > 0;
-    const hasText = currentNode.text && currentNode.text.trim().length > 0;
-
-    // TYPE 1: NARRATOR MESSAGE NODE (has narratorMessages, may or may not have choices)
-    if (hasNarratorMessages) {
-      console.log(
-        `Node type: Narrator message (${currentNode.narratorMessages.length} messages)`,
-      );
-
-      // Send each narrator message with delay
-      let delay = playerUsername ? GameParameters.MESSAGE_DELAY_MS : 0;
-      currentNode.narratorMessages.forEach((message, index) => {
-        const timerId = setTimeout(
-          () => {
-            if (!state.active) return;
-            const msgText = interpolateText(message, state.variables);
-            io.emit("chat", {
-              text: msgText,
-              username: GameParameters.NARRATOR_USERNAME,
-              timestamp: Date.now(),
-            });
-
-            // After last narrator message, check if we should auto-advance
-            if (index === currentNode.narratorMessages.length - 1) {
-              // If no choices, auto-advance to next node
-              if (!hasChoices) {
-                console.log(
-                  "No choices, auto-advancing after narrator messages",
-                );
-                const advanceId = setTimeout(() => {
-                  if (!state.active) return;
-                  if (currentNode.type === "ending") {
-                    handleDialogueEnd(room, state);
-                  } else if (currentNode.nextNode) {
-                    console.log(
-                      `Auto-advancing to next node: ${currentNode.nextNode}`,
-                    );
-                    state.currentNode = currentNode.nextNode;
-                    processNode(room);
-                  } else {
-                    console.log(
-                      "Warning: No nextNode specified for auto-advancing node",
-                    );
-                  }
-                }, GameParameters.MESSAGE_DELAY_MS);
-                state.pendingTimers.push(advanceId);
-              } else {
-                // Has choices, send them to player
-                io.emit("dialogue-sync", buildSyncPayload(state));
-              }
-            }
-          },
-          delay + index * GameParameters.MESSAGE_DELAY_MS,
-        );
-        state.pendingTimers.push(timerId);
-      });
-      return;
-    }
-
-    // TYPE 2: SYSTEM MESSAGE NODE (has text, no narratorMessages, no choices)
-    if (hasText && !hasNarratorMessages && !hasChoices) {
-      console.log("Node type: System message (auto-advancing)");
-
-      // Interpolate text for system message
-      const nodeData = {
-        ...currentNode,
-        text: interpolateText(currentNode.text, state.variables),
-      };
-
-      // System messages are just displayed in the text area (handled by client)
-      // Send sync first so client can display the text
-      io.emit("dialogue-sync", { ...buildSyncPayload(state), nodeData });
-
-      // Auto-advance after a delay
-      const sysTimerId = setTimeout(() => {
-        if (!state.active) return;
-        if (currentNode.type === "ending") {
-          handleDialogueEnd(room, state);
-        } else if (currentNode.nextNode) {
-          console.log(`Auto-advancing to next node: ${currentNode.nextNode}`);
-          state.currentNode = currentNode.nextNode;
-          processNode(room);
-        } else {
-          console.log("Warning: No nextNode specified for system message node");
-        }
-      }, GameParameters.SYSTEM_MESSAGE_DELAY_MS);
-      state.pendingTimers.push(sysTimerId);
-      return;
-    }
-
-    // TYPE 3: PLAYER CHOICE NODE (has choices)
     if (hasChoices) {
-      console.log(
-        `Node type: Player choice (${currentNode.choices.length} choices)`,
-      );
-
-      // Interpolate text if present
-      const nodeData = {
-        ...currentNode,
-        text: interpolateText(currentNode.text, state.variables),
-      };
-
-      // If there's text, it's displayed (handled by client)
-      // Send choices to player and wait for selection
-      io.emit("dialogue-sync", { ...buildSyncPayload(state), nodeData });
-      return;
+      const includeData = !state.dialogueDataSynced;
+      io.emit("dialogue-sync", buildSyncPayload(state, includeData));
+      if (includeData) state.dialogueDataSynced = true;
+    } else if (currentNode.type === "ending") {
+      handleDialogueEnd(room, state);
+    } else if (currentNode.nextNode) {
+      state.currentNode = currentNode.nextNode;
+      processNode(room, null, null, depth + 1);
+    } else {
+      console.warn(`Node ${state.currentNode} has no messageSequence, choices, or nextNode`);
     }
-
-    // TYPE 4: ENDING NODE
-    if (currentNode.type === "ending") {
-      console.log("Node type: Ending");
-
-      // Interpolate text
-      const nodeData = {
-        ...currentNode,
-        text: interpolateText(currentNode.text, state.variables),
-      };
-      io.emit("dialogue-sync", { ...buildSyncPayload(state), nodeData });
-      // If has text, display it (handled by client)
-      // End dialogue after delay
-      const endTimerId = setTimeout(() => {
-        if (!state.active) return;
-        handleDialogueEnd(room, state);
-      }, GameParameters.ENDING_DELAY_MS);
-      state.pendingTimers.push(endTimerId);
-      return;
-    }
-
-    // Fallback: just sync the node
-    io.emit("dialogue-sync", buildSyncPayload(state));
   }
 
   // Helper: Handle dialogue end
@@ -716,6 +608,7 @@ io.on("connection", (socket) => {
     clearPendingTimers(state);
     state.currentNode = state.dialogueData.metadata.startNode;
     state.variables = { ...state.dialogueData.variables };
+    state.dialogueDataSynced = false;
 
     io.emit("dialogue-restart");
     processNode(room);
@@ -730,15 +623,6 @@ io.on("connection", (socket) => {
     console.log("Manual dialogue end requested");
     clearPendingTimers(state);
     handleDialogueEnd(room, state);
-  });
-
-  // Handle narrator continue (DEPRECATED - kept for backward compatibility)
-  // The server now automatically sends responses, but this remains for monitoring
-  socket.on("narrator-continue", () => {
-    console.log(
-      "narrator-continue event received (deprecated - server handles responses automatically)",
-    );
-    // This handler is now a no-op since server automatically sends responses
   });
 
   // Handle client disconnection
