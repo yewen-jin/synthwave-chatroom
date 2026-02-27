@@ -106,11 +106,15 @@ function initNarratorRoom() {
       triggerBtn.disabled = true;
       const btnText = triggerBtn.querySelector(".btn-text");
       if (btnText) btnText.textContent = "Transmission Active...";
+      // Show control buttons when game is active
+      if (controlBtns) controlBtns.style.display = "flex";
     } else {
       isActive = false;
       triggerBtn.disabled = false;
       const btnText = triggerBtn.querySelector(".btn-text");
       if (btnText) btnText.textContent = "Initiate Transmission";
+      // Hide control buttons when game is not active
+      if (controlBtns) controlBtns.style.display = "none";
     }
   });
 

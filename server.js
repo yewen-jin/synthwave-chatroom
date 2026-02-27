@@ -281,18 +281,18 @@ io.on("connection", (socket) => {
     console.log(`User joined: ${username}`);
     console.log("Active users:", Array.from(activeUsers.values()));
 
-    // Check if dialogue is active and user is narrator
+    // Check if dialogue is active
     const playerRoomState = dialogueStates.get("player-room");
     const isDialogueActive = playerRoomState && playerRoomState.active;
     const isNarrator = username === GameParameters.NARRATOR_USERNAME;
     const isHost = username === GameParameters.HOST_USERNAME;
 
-    // Only broadcast join message if NOT (narrator joining during active dialogue)
-    if (!(isDialogueActive && isNarrator)) {
+    // Suppress all join messages during active dialogue
+    if (!isDialogueActive) {
       io.emit("user joined", { username, isPlayer });
     } else {
       console.log(
-        `Suppressing join message for narrator during active dialogue`,
+        `Suppressing join message for ${username} during active dialogue`,
       );
     }
 
@@ -753,20 +753,20 @@ io.on("connection", (socket) => {
       activeUsers.delete(socket.id);
       console.log("Remaining users:", Array.from(activeUsers.values()));
 
-      // Check if dialogue is active and user is narrator
+      // Check if dialogue is active
       const playerRoomState = dialogueStates.get("player-room");
       const isDialogueActive = playerRoomState && playerRoomState.active;
       const isNarrator = username === GameParameters.NARRATOR_USERNAME;
 
-      // Only broadcast leave message if NOT (narrator leaving during active dialogue)
-      if (!(isDialogueActive && isNarrator)) {
+      // Suppress all leave messages during active dialogue
+      if (!isDialogueActive) {
         io.emit("user left", username);
       } else {
         console.log(
-          `Suppressing leave message for narrator during active dialogue`,
+          `Suppressing leave message for ${username} during active dialogue`,
         );
         // Store that narrator left during dialogue so we can notify after it ends
-        if (playerRoomState) {
+        if (playerRoomState && isNarrator) {
           playerRoomState.narratorLeftDuringDialogue = true;
         }
       }
