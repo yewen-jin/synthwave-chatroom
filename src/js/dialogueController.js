@@ -95,6 +95,25 @@ function initNarratorRoom() {
     return;
   }
 
+  // Request current game status on init to sync button state
+  socket.emit("request-game-status");
+
+  // Listen for game status response
+  socket.on("game-status", (data) => {
+    console.log("Narrator: Received game status:", data);
+    if (data.active) {
+      isActive = true;
+      triggerBtn.disabled = true;
+      const btnText = triggerBtn.querySelector(".btn-text");
+      if (btnText) btnText.textContent = "Transmission Active...";
+    } else {
+      isActive = false;
+      triggerBtn.disabled = false;
+      const btnText = triggerBtn.querySelector(".btn-text");
+      if (btnText) btnText.textContent = "Initiate Transmission";
+    }
+  });
+
   // Trigger button starts dialogue in player-room
   triggerBtn.addEventListener("click", () => {
     console.log("Narrator: Starting dialogue in player-room");

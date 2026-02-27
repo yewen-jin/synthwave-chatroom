@@ -7,6 +7,11 @@ let chatBody,
   usernamePopup,
   usernameInput,
   usernameSubmit,
+  usernameNo,
+  customUsernameInput,
+  customUsernameSubmit,
+  nameInputContainer,
+  yesNoButtons,
   errorMessage;
 
 export function initChatUI(onSend, onUsernameSubmit) {
@@ -16,6 +21,11 @@ export function initChatUI(onSend, onUsernameSubmit) {
   usernamePopup = document.getElementById("username-popup");
   usernameInput = document.getElementById("username-input");
   usernameSubmit = document.getElementById("username-submit");
+  usernameNo = document.getElementById("username-no");
+  customUsernameInput = document.getElementById("custom-username-input");
+  customUsernameSubmit = document.getElementById("custom-username-submit");
+  nameInputContainer = document.getElementById("name-input-container");
+  yesNoButtons = document.getElementById("yes-no-buttons");
 
   // Error message for username
   errorMessage = document.createElement("p");
@@ -32,6 +42,39 @@ export function initChatUI(onSend, onUsernameSubmit) {
     }
   });
   usernameSubmit.addEventListener("click", onUsernameSubmit);
+
+  // Handle "No" button - show custom name input
+  if (usernameNo) {
+    usernameNo.addEventListener("click", () => {
+      yesNoButtons.style.display = "none";
+      document.getElementById("login-question").style.display = "none";
+      nameInputContainer.style.display = "block";
+      hideErrorMessage();
+    });
+  }
+
+  // Handle custom username submit
+  if (customUsernameSubmit) {
+    customUsernameSubmit.addEventListener("click", () => {
+      if (customUsernameInput && customUsernameInput.value.trim()) {
+        usernameInput.value = customUsernameInput.value.trim();
+        onUsernameSubmit();
+      }
+    });
+  }
+
+  // Handle Enter key on custom username input
+  if (customUsernameInput) {
+    customUsernameInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (customUsernameInput.value.trim()) {
+          usernameInput.value = customUsernameInput.value.trim();
+          onUsernameSubmit();
+        }
+      }
+    });
+  }
 
   // For visible inputs (room1, index), listen on the input field
   usernameInput.addEventListener("keypress", (e) => {

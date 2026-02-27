@@ -148,9 +148,17 @@
           <span class="window-title">Sign In</span>
         </div>
         <div class="login-content">
-          <p>Are you Liz?</p>
+          <p id="login-question">Are you Liz?</p>
           <input type="hidden" id="username-input" value="Liz" />
-          <button id="username-submit">Yes</button>
+          <div id="yes-no-buttons">
+            <button id="username-submit">Yes</button>
+            <button id="username-no">No</button>
+          </div>
+          <div id="name-input-container" style="display: none;">
+            <p>Enter your name:</p>
+            <input type="text" id="custom-username-input" placeholder="Your name" />
+            <button id="custom-username-submit">Join</button>
+          </div>
         </div>
       </div>
     </div>

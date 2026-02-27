@@ -311,6 +311,16 @@ io.on("connection", (socket) => {
     socket.emit("narrator-status", { online: isNarratorOnline() });
   });
 
+  // Send current game status to narrator room on request
+  socket.on("request-game-status", () => {
+    const playerRoomState = dialogueStates.get("player-room");
+    const isActive = playerRoomState && playerRoomState.active;
+    socket.emit("game-status", {
+      active: isActive,
+      currentNode: isActive ? playerRoomState.currentNode : null,
+    });
+  });
+
   // Listen for chat messages from clients
   socket.on("chat", (messageObj) => {
     // Verify message structure and active user
