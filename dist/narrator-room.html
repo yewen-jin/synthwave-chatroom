@@ -15,8 +15,8 @@
     <script type="module" crossorigin src="/assets/vendor-BoNos3Xz.js"></script>
     <script type="module" crossorigin src="/assets/vendor-socket-C4-tnvru.js"></script>
     <script type="module" crossorigin src="/assets/vendor-p5-C9pDfyzF.js"></script>
-    <script type="module" crossorigin src="/assets/main-CUufoVwL.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/main-Chh3D22I.css">
+    <script type="module" crossorigin src="/assets/main-DqmRG4bA.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/style-C5m5t67L.css">
   </head>
   <body>
     <!-- MSN-style Window Container -->
@@ -58,10 +58,18 @@
               <span class="btn-icon">📡</span>
               <span class="btn-text">Initiate Transmission</span>
             </button>
-            <button
-              class="dialogue-trigger-btn"
-              id="dialogue-trigger-btn"
-            ></button>
+
+            <!-- Dialogue control buttons (visible during active dialogue) -->
+            <div id="dialogue-control-btns" class="dialogue-control-btns" style="display: none;">
+              <button class="dialogue-ctrl-btn restart-btn" id="restart-btn">
+                <span class="btn-icon">↺</span>
+                <span class="btn-text">Restart</span>
+              </button>
+              <button class="dialogue-ctrl-btn end-btn" id="end-btn">
+                <span class="btn-icon">■</span>
+                <span class="btn-text">End</span>
+              </button>
+            </div>
           </div>
 
           <div class="message-input-area">
@@ -123,7 +131,7 @@
           <!-- User Avatar Side Panel -->
           <div class="user-avatar-panel">
             <img
-              src="/assets/avatar1-CUtlGyV6.jpg"
+              src="assets/images/avatar1.jpg"
               alt="Your Avatar"
               class="avatar user-avatar"
             />
@@ -145,9 +153,17 @@
           <span class="window-title">Sign In</span>
         </div>
         <div class="login-content">
-          <p>Are you Liz?</p>
+          <p id="login-question">Are you Liz?</p>
           <input type="hidden" id="username-input" value="Liz" />
-          <button id="username-submit">Yes</button>
+          <div id="yes-no-buttons">
+            <button id="username-submit">Yes</button>
+            <button id="username-no">No</button>
+          </div>
+          <div id="name-input-container" style="display: none;">
+            <p>Enter your name:</p>
+            <input type="text" id="custom-username-input" placeholder="Your name" />
+            <button id="custom-username-submit">Join</button>
+          </div>
         </div>
       </div>
     </div>
@@ -170,6 +186,27 @@
               <span class="btn-icon">→</span>
               <span class="btn-text">Continue</span>
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Popup -->
+    <div id="confirm-popup" class="popup" style="display: none">
+      <div class="popup-content confirm-style">
+        <div class="title-bar">
+          <img
+            src="data:image/svg+xml,%3csvg%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%3e%3cstyle%3e%20.pixel%20{%20fill:%20%2300ff00;%20/*%20Matches%20your%20neon%20green%20theme%20*/%20shape-rendering:%20crispEdges;%20/*%20Creates%20sharp%20pixels%20*/%20}%20%3c/style%3e%3c!--%208-bit%20chat%20bubble%20outline%20--%3e%3cpath%20class='pixel'%20d='%20M8,4%20h16%20v2%20h2%20v14%20h-2%20v2%20h-12%20v2%20h-2%20v2%20h-4%20v-4%20h2%20v-2%20h-2%20v-14%20h2%20z%20M10,6%20v12%20h12%20v-12%20z%20'/%3e%3c!--%20Optional:%20Add%208-bit%20dots%20inside%20bubble%20--%3e%3crect%20class='pixel'%20x='12'%20y='10'%20width='2'%20height='2'/%3e%3crect%20class='pixel'%20x='16'%20y='10'%20width='2'%20height='2'/%3e%3crect%20class='pixel'%20x='20'%20y='10'%20width='2'%20height='2'/%3e%3c/svg%3e"
+            alt="icon"
+            class="msn-icon"
+          />
+          <span class="window-title">Confirm</span>
+        </div>
+        <div class="confirm-content">
+          <p id="confirm-message">Are you sure?</p>
+          <div class="confirm-actions">
+            <button id="confirm-yes" class="confirm-btn confirm-yes">Yes</button>
+            <button id="confirm-cancel" class="confirm-btn confirm-cancel">Cancel</button>
           </div>
         </div>
       </div>
