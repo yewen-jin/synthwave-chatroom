@@ -1,4 +1,4 @@
-# Synthwave Chatroom - My Body Is Obsolete
+# Synthwave Chatroom and Choice-based Interactive Fiction Game, for The B0dy_is_0bs0let3
 
 An interactive narrative chatroom with synthwave aesthetics. Players join a retro MSN-style chat interface where a narrator (Liz) delivers a branching story in real time through Socket.IO. Stories are authored in Twine/Twee (Harlowe format) and converted to a custom JSON dialogue format for playback.
 
