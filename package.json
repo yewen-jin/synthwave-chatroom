@@ -6,7 +6,10 @@
     "dev": "nodemon server.js",
     "vite:dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check:dialogue": "node scripts/check-dialogue.js",
+    "build:dialogue": "node scripts/twee-to-json.js src/data/twine/thebodyisobsolete.twee public/data/dialogues/thebodyisobsolete.json",
+    "test": "npm run check:dialogue"
   },
   "type": "module",
   "engines": {
