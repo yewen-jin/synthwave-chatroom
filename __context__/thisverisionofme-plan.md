@@ -212,14 +212,25 @@ end). One trap found and fixed en route: `res.sendFile` 404s under `.claude/` wo
 
 ### Phase 1 — routing & renames (agent: mechanical / Sonnet-tier)
 
-- [ ] 1.1 `git mv src/index.html src/chatroom.html`, then `git mv src/docs.html src/index.html`
+- [x] 1.1 `git mv src/index.html src/chatroom.html`, then `git mv src/docs.html src/index.html`
       (that order — the target name is occupied)
-- [ ] 1.2 `vite.config.js`: point `main` input at the new index (docs), add `chatroom` input
-- [ ] 1.3 `server.js`: add `app.get("/chatroom")`; delete dead `app.get("/")` (server.js:60) and
+- [x] 1.2 `vite.config.js`: point `main` input at the new index (docs), add `chatroom` input
+- [x] 1.3 `server.js`: add `app.get("/chatroom")`; delete dead `app.get("/")` (server.js:60) and
       `app.get("/docs")`; keep the 404 catch-all (now correctly lands on docs)
-- [ ] 1.4 Front page (former docs): add links for `/chatroom` and `/room`
+- [x] 1.4 Front page (former docs): add links for `/chatroom` and `/room`
 - **Acceptance:** build passes; `/` = docs, `/chatroom` = old chat UI, all 5 legacy routes
   byte-identical behaviour; `npm test` still green.
+
+**Phase 1 outcome (15 Jul):** done in the `thisverisionofme` worktree, one commit. Renames in
+the specified order; `vite.config.js` `docs` input dropped, `chatroom` added. Server: `/chatroom`
+route added, dead `/` and `/docs` removed, 404 catch-all now serves the docs page. Front page
+got a `/room` card-game entry (top) and the "General Chatroom" link repointed from `/room1.html`
+to `/chatroom` (the designated generic-chat route — `chatroom.html`, `room1.html`, `room2.html`
+are all variants of the same generic chat UI, so `/room1` is still reachable via its unchanged
+URL, just no longer the front-page's featured chat link). Front-page `<h1>` left as
+`The B0dy_is_0bs0let3` — branding pending Symone's answer to open question 4. Verified: build
+clean, `npm test` in sync, `/` → docs, `/chatroom` → old chat UI, all 5 legacy routes 200,
+`/docs` and mistyped URLs 404 → docs page.
 
 ### Phase 2 — `/rooms` namespace + room page (agent: fork — inherits verified context)
 

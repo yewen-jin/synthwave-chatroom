@@ -56,13 +56,8 @@ app.get("/player-room", (req, res) => {
 app.get("/narrator-room", (req, res) => {
   res.sendFile(join(__dirname, "dist/narrator-room.html"), SENDFILE_OPTS);
 });
-app.get("/docs", (req, res) => {
-  res.sendFile(join(__dirname, "dist/docs.html"), SENDFILE_OPTS);
-  // res.sendFile(join(__dirname, "src/documents.html"));
-});
-// Catch-all route to serve index.html
-app.get("/", (req, res) => {
-  res.sendFile(join(__dirname, "dist/index.html"), SENDFILE_OPTS);
+app.get("/chatroom", (req, res) => {
+  res.sendFile(join(__dirname, "dist/chatroom.html"), SENDFILE_OPTS);
 });
 
 // Handle 404s:  send all invalid endpoint to index page
