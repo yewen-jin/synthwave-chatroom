@@ -193,13 +193,22 @@ atomic commit per numbered step. All work on branch `thisverisionofme` — `main
 
 ### Phase 0 — prep (main session, no agent)
 
-- [ ] 0.1 Commit the pending dialogue-reorg work from this morning's audit (staged twee
+- [x] 0.1 Commit the pending dialogue-reorg work from this morning's audit (staged twee
       canonicalisation + deletions, plus `package.json` scripts, `scripts/README.md`,
       `scripts/check-dialogue.js`, `AGENTS.md`, `CLAUDE.md`, audit doc) — one commit.
       Commit this plan doc separately.
-- [ ] 0.2 `git switch -c thisverisionofme`
-- [ ] 0.3 Baseline: `npm install` (no `node_modules` locally), `npm test` (dialogue drift),
+- [x] 0.2 `git switch -c thisverisionofme`
+- [x] 0.3 Baseline: `npm install` (no `node_modules` locally), `npm test` (dialogue drift),
       `npm run build`, boot both servers, confirm TBIO transmission works **before** changes.
+
+**Phase 0 outcome (15 Jul):** 0.1 turned out mostly done already — the dialogue-reorg was
+merged as PR #1 (`70b26b5`) and the dirty duplicates in the main checkout had been resolved;
+only the plan doc needed committing (`9468b1a` on `main`). 0.2 became `EnterWorktree` per the
+new CLAUDE.md workflow — branch `worktree-thisverisionofme` from `9468b1a`. 0.3 all green:
+`npm test` in sync, build clean, all 7 routes 200, scripted narrator→player transmission
+verified (dialogue-started → opening image message → sync at `main_portal`, 1 choice → manual
+end). One trap found and fixed en route: `res.sendFile` 404s under `.claude/` worktrees
+(dotfiles default) — fixed in `a047ab5`, documented as worktree trap 6 in CLAUDE.md.
 
 ### Phase 1 — routing & renames (agent: mechanical / Sonnet-tier)
 
