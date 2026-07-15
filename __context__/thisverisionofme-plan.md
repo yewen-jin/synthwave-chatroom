@@ -307,6 +307,10 @@ test` in sync. **Actual audio through headphones, autoplay on real browsers/phon
 left for Yewen** (per "what agents cannot verify") — autoplay should hold because both players have
 a prior user gesture (Sign In) before `audio-play` arrives, but verify on iOS Safari.
 
+**Yewen-verified 15 Jul (browser, two-window):** 3 audio files play, refresh button resets both
+clients back to name entry. Full 15-min runtime not exercised (placeholders are 3 s); real-device
+autoplay (iOS Safari) and venue wifi still to confirm before the show.
+
 ### Phase 4 — rebrand + mobile (rebrand: main session inline; mobile: agent)
 
 - [ ] 4.1 Rebrand: grep `B0dy_is_0bs0let3` / `Symone` across `src/`; retitle `chatroom.html`
