@@ -4,6 +4,7 @@ import { createServer } from "http";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { readFile } from "fs/promises";
+import { readdirSync, existsSync } from "fs";
 import * as GameParameters from "./shared/gameParameters.js";
 
 // Fix for __dirname in ES modules
@@ -35,6 +36,28 @@ const io = new Server(server, {
 app.use(express.static(join(__dirname, "dist")));
 // Serve static assets (fonts, images) from built assets folder
 app.use("/assets", express.static(join(__dirname, "dist/assets")));
+
+// Card-game audio — served from audio-assets/ (outside dist, gitignored, so
+// Symone's re-exports never enter git and Vite's emptyOutDir never wipes them).
+app.use("/audio", express.static(join(__dirname, "audio-assets")));
+
+// Track list is DATA, not code: read whatever audio files are present at boot.
+// Count is unbounded — 1, 3, 5, whatever Symone drops in. Final count is still
+// open; see __context__/thisverisionofme-plan.md.
+const AUDIO_DIR = join(__dirname, "audio-assets");
+const AUDIO_EXTS = [".mp3", ".wav", ".ogg", ".m4a"];
+const audioTracks = existsSync(AUDIO_DIR)
+  ? readdirSync(AUDIO_DIR)
+      .filter((f) =>
+        AUDIO_EXTS.includes(f.slice(f.lastIndexOf(".")).toLowerCase()),
+      )
+      .sort()
+  : [];
+console.log(
+  audioTracks.length
+    ? `[/rooms] serving ${audioTracks.length} audio track(s): ${audioTracks.join(", ")}`
+    : "[/rooms] WARNING: no audio tracks found in audio-assets/ — run `npm run make:audio`",
+);
 
 // send() treats any dot-segment in the path as a dotfile and 404s it by
 // default — worktree checkouts live under .claude/, so allow explicitly.
@@ -751,9 +774,16 @@ roomsNsp.on("connection", (socket) => {
 
     // Confirm the join to the joining client so it can leave name-entry.
     socket.emit("room-joined", { roomName, username });
+    // Send the current track list (data-driven count) to the joiner.
+    socket.emit("audio-tracks", { tracks: audioTracks });
 
     // Broadcast join to the room only.
     roomsNsp.to(roomName).emit("user joined", { username });
+    // Room status so every client knows player count + any already-selected track.
+    roomsNsp.to(roomName).emit("room-status", {
+      playerCount: state.usernames.size,
+      selectedTrack: state.selectedTrack,
+    });
   });
 
   // Chat — broadcast to the room only.
@@ -768,6 +798,35 @@ roomsNsp.on("connection", (socket) => {
     ) {
       roomsNsp.to(socket.roomName).emit("chat", messageObj);
     }
+  });
+
+  // Track selection — music is picked once at session start by either player
+  // and is per-room. First pick wins; later picks are ignored until a reset
+  // empties the room and clears selectedTrack. The chosen track lives in room
+  // state so a reconnecting/reloading client re-syncs to the same track.
+  socket.on("audio-select", ({ track } = {}) => {
+    if (!socket.roomName || !track) return;
+    const state = getRoomState(socket.roomName);
+    if (!audioTracks.includes(track)) return;
+
+    if (!state.selectedTrack) {
+      state.selectedTrack = track;
+      console.log(
+        `[/rooms] track "${track}" selected in room "${socket.roomName}"`,
+      );
+    } else if (state.selectedTrack !== track) {
+      // Already locked to a different track — honour the first pick.
+      socket.emit("audio-play", { track: state.selectedTrack });
+      return;
+    }
+
+    roomsNsp
+      .to(socket.roomName)
+      .emit("audio-play", { track: state.selectedTrack });
+    roomsNsp.to(socket.roomName).emit("room-status", {
+      playerCount: state.usernames.size,
+      selectedTrack: state.selectedTrack,
+    });
   });
 
   // Refresh button — broadcast reset to the room; both clients reload, which

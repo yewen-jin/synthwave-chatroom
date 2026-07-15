@@ -40,3 +40,8 @@ Drafts/
 # (it carries the shared worktree config), so do not ignore .claude/ wholesale.
 .claude/settings.local.json
 .claude/worktrees/
+
+# Card-game audio — served from audio-assets/, kept out of git so Symone
+# re-exports never enter history. Dev placeholders are regenerated via
+# `npm run make:audio` (see scripts/make-placeholder-audio.js).
+/audio-assets/

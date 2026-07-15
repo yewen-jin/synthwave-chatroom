@@ -173,6 +173,121 @@ window._socket.on("room-full", ({ capacity } = {}) => {
   );
 });
 
+// ----- audio: data-driven track selection + per-room playback -----
+let tracks = [];
+const audioCache = new Map(); // track filename -> HTMLAudioElement
+const trackReady = new Set(); // tracks that have fired canplaythrough
+let currentTrack = null;
+let trackSelected = false;
+
+const trackSelectionEl = document.getElementById("track-selection");
+const trackListEl = document.getElementById("track-list");
+const trackWaitingEl = document.getElementById("track-waiting");
+let nowPlayingEl = null;
+
+function trackLabel(name, i) {
+  return `Track ${i + 1}`;
+}
+
+function buildTrackButtons() {
+  if (!trackListEl) return;
+  trackListEl.innerHTML = "";
+  tracks.forEach((name, i) => {
+    const btn = document.createElement("button");
+    btn.className = "track-btn";
+    btn.type = "button";
+    btn.textContent = trackLabel(name, i);
+    btn.title = name;
+    btn.dataset.track = name;
+    btn.disabled = !trackReady.has(name);
+    btn.addEventListener("click", () => {
+      if (btn.disabled || trackSelected) return;
+      window._socket.emit("audio-select", { track: name });
+    });
+    trackListEl.appendChild(btn);
+  });
+}
+
+function preloadTrack(name) {
+  if (audioCache.has(name)) return;
+  const audio = new Audio(`/audio/${encodeURIComponent(name)}`);
+  audio.preload = "auto";
+  audio.addEventListener("canplaythrough", () => {
+    trackReady.add(name);
+    const btn = trackListEl?.querySelector(
+      `[data-track="${CSS.escape(name)}"]`,
+    );
+    if (btn) btn.disabled = false;
+  });
+  audioCache.set(name, audio);
+}
+
+window._socket.on("audio-tracks", ({ tracks: list } = {}) => {
+  tracks = Array.isArray(list) ? list : [];
+  tracks.forEach(preloadTrack);
+  buildTrackButtons();
+});
+
+function showNowPlaying(name) {
+  if (nowPlayingEl?.parentNode) nowPlayingEl.remove();
+  nowPlayingEl = document.createElement("div");
+  nowPlayingEl.className = "now-playing";
+  nowPlayingEl.textContent = `♪ now playing: ${name}`;
+  const chatArea = document.querySelector(".chat-area");
+  chatArea?.insertBefore(nowPlayingEl, chatArea.firstChild);
+}
+
+function playTrack(name) {
+  currentTrack = name;
+  trackSelected = true;
+  // Stop any other track that was playing.
+  for (const [fname, audio] of audioCache) {
+    if (fname !== name) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }
+  const audio = audioCache.get(name) ?? preloadTrackAndReturn(name);
+  audio.currentTime = 0;
+  const start = () =>
+    audio.play().catch((err) => console.warn("audio play blocked:", err));
+  if (trackReady.has(name)) {
+    start();
+  } else {
+    audio.addEventListener("canplaythrough", start, { once: true });
+  }
+  if (trackSelectionEl) trackSelectionEl.style.display = "none";
+  showNowPlaying(name);
+}
+
+function preloadTrackAndReturn(name) {
+  preloadTrack(name);
+  return audioCache.get(name);
+}
+
+window._socket.on("room-status", ({ playerCount, selectedTrack } = {}) => {
+  if (selectedTrack) {
+    // A track was already chosen (e.g. this client joined mid-session) — sync.
+    playTrack(selectedTrack);
+    return;
+  }
+  if (playerCount >= 2) {
+    // Both players named — show the selection, hide the waiting hint.
+    if (trackWaitingEl) trackWaitingEl.style.display = "none";
+    if (trackListEl) trackListEl.style.display = "flex";
+    if (trackSelectionEl) trackSelectionEl.style.display = "block";
+  } else {
+    // Waiting for the second player.
+    if (trackSelectionEl) trackSelectionEl.style.display = "block";
+    if (trackListEl) trackListEl.style.display = "none";
+    if (trackWaitingEl) trackWaitingEl.style.display = "block";
+  }
+});
+
+window._socket.on("audio-play", ({ track } = {}) => {
+  if (track) playTrack(track);
+});
+
 // Refresh button — server broadcasts room-reset to the room; both clients
 // reload, disconnecting sockets and freeing names + room state for the next pair.
 window._socket.on("room-reset", () => {

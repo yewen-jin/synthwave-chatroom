@@ -10,6 +10,55 @@
       href="/assets/images/icons/favicon.svg"
     />
     <link rel="stylesheet" href="style.css" />
+    <style>
+      .track-selection {
+        padding: 10px 12px;
+        border-bottom: 2px solid #0f0;
+        background: rgba(0, 0, 0, 0.35);
+      }
+      .track-selection__title {
+        margin: 0 0 8px;
+        font-size: 0.9rem;
+        color: #0f0;
+      }
+      .track-selection__hint {
+        margin: 6px 0 0;
+        font-size: 0.8rem;
+        color: #888;
+      }
+      .track-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .track-btn {
+        padding: 6px 12px;
+        background: #000;
+        color: #0f0;
+        border: 1px solid #0f0;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.85rem;
+      }
+      .track-btn:disabled {
+        color: #555;
+        border-color: #555;
+        cursor: not-allowed;
+      }
+      .track-btn:not(:disabled):hover {
+        background: #0f0;
+        color: #000;
+      }
+      .now-playing {
+        padding: 6px 12px;
+        border-bottom: 1px solid #0f0;
+        background: rgba(0, 255, 0, 0.08);
+        color: #0f0;
+        font-size: 0.8rem;
+        font-style: italic;
+      }
+    </style>
   </head>
   <body>
     <!-- MSN-style Window Container -->
@@ -34,6 +83,21 @@
 
       <!-- Chat Area -->
       <div class="chat-area">
+        <!-- Track selection (shown once the room has 2 named players and no
+             track is selected yet; buttons are injected by roomMain.js and
+             disabled until each track has preloaded). -->
+        <div id="track-selection" class="track-selection" style="display: none">
+          <p class="track-selection__title">Choose a track for this room</p>
+          <div id="track-list" class="track-list"></div>
+          <p
+            id="track-waiting"
+            class="track-selection__hint"
+            style="display: none"
+          >
+            Waiting for the other player to join…
+          </p>
+        </div>
+
         <!-- Messages Container -->
         <div class="chat-body" id="chatBody"></div>
 
@@ -57,7 +121,7 @@
     <!-- Username Popup (kept before the room-entry popup in the DOM so
          chatUI.js's querySelector('.login-content') attaches the username
          error here, not in the room-entry popup) -->
-    <div id="username-popup" class="popup" style="display: none;">
+    <div id="username-popup" class="popup" style="display: none">
       <div class="popup-content msn-style">
         <div class="title-bar">
           <img
@@ -81,7 +145,7 @@
     </div>
 
     <!-- Room-name entry popup (shown only when there is no room in the URL hash) -->
-    <div id="room-entry-popup" class="popup" style="display: none;">
+    <div id="room-entry-popup" class="popup" style="display: none">
       <div class="popup-content msn-style">
         <div class="title-bar">
           <img

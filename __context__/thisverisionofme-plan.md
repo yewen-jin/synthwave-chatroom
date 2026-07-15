@@ -270,18 +270,42 @@ prod server and Vite. Browser smoke of `/room/#...` left for Yewen (real two-cli
 
 ### Phase 3 — audio (agent: fork)
 
-- [ ] 3.1 Server: `app.use("/audio", express.static("audio-assets"))` — a directory **outside**
+- [x] 3.1 Server: `app.use("/audio", express.static("audio-assets"))` — a directory **outside**
       `dist` and **gitignored** (so Vite's `emptyOutDir` never wipes it and Symone's re-exports
       never enter git history; deploy = `rsync` separate from `git pull`). Server reads the dir
       and emits the track list to room clients on join — **track count becomes data, not code**,
       which un-blocks the "1–5 tracks?" question entirely.
-- [ ] 3.2 Commit 2–3 tiny placeholder MP3s (seconds long, a few KB) for dev.
-- [ ] 3.3 Client: when the room reaches 2 named players, show track selection; either player
+- [x] 3.2 Commit 2–3 tiny placeholder MP3s (seconds long, a few KB) for dev.
+- [x] 3.3 Client: when the room reaches 2 named players, show track selection; either player
       picks; preload (`canplaythrough`) gates the play button; `audio-select` → server
       broadcasts `audio-play` to the room; selected track lives in room state, cleared on
       reset/empty.
 - **Acceptance:** two browser clients in one room hear the same track; second room independent;
   reset returns both to name entry with track cleared.
+
+**Phase 3 outcome (15 Jul):** done in the worktree, one commit. **Track count is open — `?`** —
+the mechanism is data-driven so 1, 3, or 5 all work with no code change; currently 3 placeholder
+tracks generated for dev. Final count awaiting Symone's answer (open question 2). Server serves
+`/audio` from `audio-assets/` (outside `dist`, gitignored), reads the dir at boot into
+`audioTracks` (any audio extension, sorted), and emits `audio-tracks` to each joiner plus
+`room-status` (playerCount + selectedTrack) to the room on every join. `audio-select` sets
+`state.selectedTrack` (first pick wins, locked until reset), broadcasts `audio-play` + updated
+`room-status` to the room only; a late/reconnecting client re-syncs via `room-status`. Selected
+track is cleared on reset/empty because `freeRoomSlot` deletes the whole room state when the
+room empties (the reloads from `room-reset` disconnect both sockets). Client: `room.html` adds a
+`#track-selection` panel (buttons injected by JS from the track list — count is dynamic);
+`roomMain.js` preloads every track (`new Audio`, `canplaythrough` enables its button), shows
+selection at 2 players, plays on `audio-play`, shows a "now playing" banner, locks after pick.
+Placeholder audio: no ffmpeg on the machine, so `scripts/make-placeholder-audio.js` (committed)
+generates 3 short distinct-tone **WAV** files in `audio-assets/` via `npm run make:audio` —
+format-agnostic, so Symone's MP3 masters drop in with no code change. Deviation from 3.2: the
+placeholders are **not committed** (binary blobs), only the generator script is — matches Task 4's
+"keep audio out of git"; regenerate in any checkout/worktree with `npm run make:audio`.
+Acceptance: scripted check that `/audio/*` serves, `audio-select` broadcasts `audio-play` to the
+room only (second room independent), and reset clears selectedTrack; `npm run build` clean, `npm
+test` in sync. **Actual audio through headphones, autoplay on real browsers/phones, and venue wifi
+left for Yewen** (per "what agents cannot verify") — autoplay should hold because both players have
+a prior user gesture (Sign In) before `audio-play` arrives, but verify on iOS Safari.
 
 ### Phase 4 — rebrand + mobile (rebrand: main session inline; mobile: agent)
 
@@ -311,7 +335,11 @@ and reports.**
 **Blocking — need these today:**
 
 1. **The attached visual edits** — can't scope task 2 without them.
-2. **Track count** — 1 to 5? The selection UI depends on it.
+2. **Track count** — 1 to 5? **Still open (`?`).** The selection UI is now data-driven
+   (server lists whatever is in `audio-assets/`), so the count no longer blocks the build —
+   but the final number from Symone is still needed to prep the masters. Dev currently runs
+   with 3 placeholders (`npm run make:audio`); add/remove entries in
+   `scripts/make-placeholder-audio.js` to change the placeholder count.
 
 **Before the event, not before I start:**
 
