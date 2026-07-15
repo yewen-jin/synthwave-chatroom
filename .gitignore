@@ -35,3 +35,8 @@ logs
 dist/
 
 Drafts/
+
+# Claude Code — selective on purpose: .claude/settings.json IS tracked
+# (it carries the shared worktree config), so do not ignore .claude/ wholesale.
+.claude/settings.local.json
+.claude/worktrees/
