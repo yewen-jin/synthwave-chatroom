@@ -36,34 +36,38 @@ app.use(express.static(join(__dirname, "dist")));
 // Serve static assets (fonts, images) from built assets folder
 app.use("/assets", express.static(join(__dirname, "dist/assets")));
 
+// send() treats any dot-segment in the path as a dotfile and 404s it by
+// default — worktree checkouts live under .claude/, so allow explicitly.
+const SENDFILE_OPTS = { dotfiles: "allow" };
+
 // Serve built HTML for control, room1, room2, player-room, narrator-room
 app.get("/control", (req, res) => {
-  res.sendFile(join(__dirname, "dist/control.html"));
+  res.sendFile(join(__dirname, "dist/control.html"), SENDFILE_OPTS);
 });
 app.get("/room1", (req, res) => {
-  res.sendFile(join(__dirname, "dist/room1.html"));
+  res.sendFile(join(__dirname, "dist/room1.html"), SENDFILE_OPTS);
 });
 app.get("/room2", (req, res) => {
-  res.sendFile(join(__dirname, "dist/room2.html"));
+  res.sendFile(join(__dirname, "dist/room2.html"), SENDFILE_OPTS);
 });
 app.get("/player-room", (req, res) => {
-  res.sendFile(join(__dirname, "dist/player-room.html"));
+  res.sendFile(join(__dirname, "dist/player-room.html"), SENDFILE_OPTS);
 });
 app.get("/narrator-room", (req, res) => {
-  res.sendFile(join(__dirname, "dist/narrator-room.html"));
+  res.sendFile(join(__dirname, "dist/narrator-room.html"), SENDFILE_OPTS);
 });
 app.get("/docs", (req, res) => {
-  res.sendFile(join(__dirname, "dist/docs.html"));
+  res.sendFile(join(__dirname, "dist/docs.html"), SENDFILE_OPTS);
   // res.sendFile(join(__dirname, "src/documents.html"));
 });
 // Catch-all route to serve index.html
 app.get("/", (req, res) => {
-  res.sendFile(join(__dirname, "dist/index.html"));
+  res.sendFile(join(__dirname, "dist/index.html"), SENDFILE_OPTS);
 });
 
 // Handle 404s:  send all invalid endpoint to index page
 app.use((req, res) => {
-  res.status(404).sendFile(join(__dirname, "dist/index.html"));
+  res.status(404).sendFile(join(__dirname, "dist/index.html"), SENDFILE_OPTS);
 });
 
 //---------------------------------------//
@@ -213,15 +217,24 @@ function clearPendingTimers(state) {
 // Helper: Calculate delay for a message based on DELAY_MODE
 function calculateMessageDelay(message) {
   if (GameParameters.DELAY_MODE === "test") return 0;
-  if (GameParameters.DELAY_MODE === "fallback") return GameParameters.MESSAGE_DELAY_MS;
+  if (GameParameters.DELAY_MODE === "fallback")
+    return GameParameters.MESSAGE_DELAY_MS;
 
   // Dynamic mode — narrator and speaker messages scale with text length
-  const isDynamic = (message && message.content) &&
-    (message.type === "narrator" || (message.type === "system" && message.speaker));
+  const isDynamic =
+    message &&
+    message.content &&
+    (message.type === "narrator" ||
+      (message.type === "system" && message.speaker));
   if (isDynamic) {
     const charCount = message.content.length;
-    const delay = GameParameters.NARRATOR_DELAY_BASE_MS + charCount * GameParameters.NARRATOR_DELAY_PER_CHAR_MS;
-    return Math.max(GameParameters.NARRATOR_DELAY_MIN_MS, Math.min(delay, GameParameters.NARRATOR_DELAY_MAX_MS));
+    const delay =
+      GameParameters.NARRATOR_DELAY_BASE_MS +
+      charCount * GameParameters.NARRATOR_DELAY_PER_CHAR_MS;
+    return Math.max(
+      GameParameters.NARRATOR_DELAY_MIN_MS,
+      Math.min(delay, GameParameters.NARRATOR_DELAY_MAX_MS),
+    );
   }
 
   // Plain system, image, pause messages use fixed delay
@@ -380,84 +393,83 @@ io.on("connection", (socket) => {
     const sequence = node.messageSequence;
 
     // Cumulative delay: starts with initial gap after player choice
-    let cumulativeDelay = playerUsername ? calculateMessageDelay(sequence[0]) : 0;
+    let cumulativeDelay = playerUsername
+      ? calculateMessageDelay(sequence[0])
+      : 0;
 
     sequence.forEach((message, index) => {
-      const timerId = setTimeout(
-        () => {
-          // Check if state is still active (may have been cleared by restart/end)
-          if (!state.active) return;
+      const timerId = setTimeout(() => {
+        // Check if state is still active (may have been cleared by restart/end)
+        if (!state.active) return;
 
-          const content = interpolateText(message.content, state.variables);
+        const content = interpolateText(message.content, state.variables);
 
-          switch (message.type) {
-            case "system":
-              io.emit("chat", {
-                text: content,
-                username: "SYSTEM",
-                timestamp: Date.now(),
-                isSystem: true,
-                speaker: message.speaker || null,
-              });
-              break;
+        switch (message.type) {
+          case "system":
+            io.emit("chat", {
+              text: content,
+              username: "SYSTEM",
+              timestamp: Date.now(),
+              isSystem: true,
+              speaker: message.speaker || null,
+            });
+            break;
 
-            case "narrator":
-              io.emit("chat", {
-                text: content,
-                username: GameParameters.NARRATOR_USERNAME,
-                timestamp: Date.now(),
-              });
-              break;
+          case "narrator":
+            io.emit("chat", {
+              text: content,
+              username: GameParameters.NARRATOR_USERNAME,
+              timestamp: Date.now(),
+            });
+            break;
 
-            case "image":
-              io.emit("chat", {
-                imageUrl: message.url,
-                imageAlt: message.alt || "",
-                username: "SYSTEM",
-                timestamp: Date.now(),
-                isImage: true,
-              });
-              break;
+          case "image":
+            io.emit("chat", {
+              imageUrl: message.url,
+              imageAlt: message.alt || "",
+              username: "SYSTEM",
+              timestamp: Date.now(),
+              isImage: true,
+            });
+            break;
 
-            case "pause":
-              // Pause type - no action, just affects timing
-              break;
+          case "pause":
+            // Pause type - no action, just affects timing
+            break;
 
-            default:
-              console.warn(`Unknown message type: ${message.type}`);
+          default:
+            console.warn(`Unknown message type: ${message.type}`);
+        }
+
+        // After last message in sequence
+        if (index === sequence.length - 1) {
+          const hasChoices = node.choices && node.choices.length > 0;
+
+          if (!hasChoices) {
+            const advanceDelay = calculateMessageDelay(message);
+            const advanceTimerId = setTimeout(() => {
+              if (!state.active) return;
+              if (node.type === "ending") {
+                handleDialogueEnd(room, state);
+              } else if (node.nextNode) {
+                console.log(`Auto-advancing to next node: ${node.nextNode}`);
+                state.currentNode = node.nextNode;
+                processNode(room);
+              } else {
+                console.log(
+                  "Warning: No nextNode specified for auto-advancing node",
+                );
+              }
+            }, advanceDelay);
+            state.pendingTimers.push(advanceTimerId);
+          } else {
+            // Show choices to player
+            const includeData = !state.dialogueDataSynced;
+            io.emit("dialogue-sync", buildSyncPayload(state, includeData));
+            if (includeData) state.dialogueDataSynced = true;
           }
-
-          // After last message in sequence
-          if (index === sequence.length - 1) {
-            const hasChoices = node.choices && node.choices.length > 0;
-
-            if (!hasChoices) {
-              const advanceDelay = calculateMessageDelay(message);
-              const advanceTimerId = setTimeout(() => {
-                if (!state.active) return;
-                if (node.type === "ending") {
-                  handleDialogueEnd(room, state);
-                } else if (node.nextNode) {
-                  console.log(`Auto-advancing to next node: ${node.nextNode}`);
-                  state.currentNode = node.nextNode;
-                  processNode(room);
-                } else {
-                  console.log(
-                    "Warning: No nextNode specified for auto-advancing node",
-                  );
-                }
-              }, advanceDelay);
-              state.pendingTimers.push(advanceTimerId);
-            } else {
-              // Show choices to player
-              const includeData = !state.dialogueDataSynced;
-              io.emit("dialogue-sync", buildSyncPayload(state, includeData));
-              if (includeData) state.dialogueDataSynced = true;
-            }
-          }
-        },
-        cumulativeDelay,
-      );
+        }
+      }, cumulativeDelay);
       state.pendingTimers.push(timerId);
 
       // Add delay for the next message based on the current message
@@ -469,12 +481,19 @@ io.on("connection", (socket) => {
   }
 
   // Helper: Process a node and auto-advance if needed
-  function processNode(room, playerUsername = null, choiceText = null, depth = 0) {
+  function processNode(
+    room,
+    playerUsername = null,
+    choiceText = null,
+    depth = 0,
+  ) {
     const state = dialogueStates.get(room);
     if (!state || !state.active) return;
 
     if (depth > 50) {
-      console.error(`processNode exceeded max depth (50) at node: ${state.currentNode} — possible circular condition`);
+      console.error(
+        `processNode exceeded max depth (50) at node: ${state.currentNode} — possible circular condition`,
+      );
       return;
     }
 
@@ -534,7 +553,9 @@ io.on("connection", (socket) => {
       state.currentNode = currentNode.nextNode;
       processNode(room, null, null, depth + 1);
     } else {
-      console.warn(`Node ${state.currentNode} has no messageSequence, choices, or nextNode`);
+      console.warn(
+        `Node ${state.currentNode} has no messageSequence, choices, or nextNode`,
+      );
     }
   }
 
