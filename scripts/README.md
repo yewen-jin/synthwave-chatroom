@@ -1,37 +1,40 @@
 # Twee to JSON Converter
 
-This script converts Twee format files to the **messageSequence dialogue format** used in the Void Space Chatroom. The output is compatible with the server's dialogue system as documented in [interaction.md](../interaction.md).
+Converts Twee files to the **messageSequence dialogue format** the server delivers over Socket.IO. Format reference: [`__context__/interaction.md`](../__context__/interaction.md).
 
-## Quick Start
+## Quick Start — the current story
+
+For _The B0dy_is_0bs0let3_, you don't need to call this script directly. Edit `src/data/twine/thebodyisobsolete.twee`, then:
+
+```bash
+npm run build:dialogue    # regenerate the shipped dialogue
+npm test                  # confirm twee and shipped JSON are in sync
+```
+
+The regenerated JSON lands on the **next transmission trigger** — no server restart. See `AGENTS.md` → _Dialogue Data_ for the full pipeline.
+
+## Adding a new story
 
 ### 1. Export from Twine
 
 - Open your story in Twine 2
 - Go to the Twine menu (bottom-left)
 - Select "View Proofing Copy"
-- Save the page source as a `.twee` file
+- Save the page source as a `.twee` file into `src/data/twine/`
 
-### 2. Run the Converter
+### 2. Convert it
 
-```bash
-node scripts/twee-to-json.js my-story.twee output.json
-```
-
-### 3. Use the Output
-
-Move the generated JSON file to `src/data/dialogues/`:
+The server loads dialogue from `public/data/dialogues/<id>.json`, where `<id>` is the `dialogueId` the narrator client requests. Output must land there:
 
 ```bash
-mv output.json src/data/dialogues/episode2.json
+node scripts/twee-to-json.js src/data/twine/episode2.twee public/data/dialogues/episode2.json
 ```
 
-### 4. Update the Server
+> **Do not** write output to `src/data/dialogues/`. That directory used to be documented here and the server never read it — regenerating into it silently does nothing. It was deleted on 15 Jul 2026.
 
-In `server.js`, change the dialogue file being loaded:
+### 3. That's it — the server needs no edit
 
-```javascript
-dialogueData = require("./src/data/dialogues/episode2.json");
-```
+`server.js` → `loadDialogueData(dialogueId)` reads `public/data/dialogues/${dialogueId}.json` at each `startDialogue()`. It is not a `require()` and there is no hardcoded filename to change; a new story is picked up by requesting its id. `npm test` will check any `.twee` in `src/data/twine/` against its shipped JSON automatically.
 
 ## Twine Story Format
 
