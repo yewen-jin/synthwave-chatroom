@@ -19,9 +19,29 @@ An ancestor file at `/Users/yewenjin/CLAUDE.md` is loaded automatically into ses
 ## Working agreements
 
 - One task at a time; atomic commits with specific messages (`Fix narrator restart not resetting story variables`, not `updates`).
+- **Plain imperative commit subjects, not conventional-commit prefixes** — this repo's history has no `feat(x):` style and shouldn't gain one.
 - Ask before anything irreversible — this repo backs a live performance.
 - Verify by running the app, not by citing empty tests.
 - British English in prose and docs.
+
+## Worktree workflow
+
+**Work in a worktree, not directly in the main checkout.** `main` is the branch the show runs from; the main checkout is the one you open when a performance is imminent. Keep experiments out of it.
+
+Use the `EnterWorktree` tool (this is the standing project instruction that authorises it). Worktrees land in `.claude/worktrees/<name>/` on their own branch.
+
+```bash
+npm test          # works immediately in a new worktree — no npm install needed
+npm install       # required before npm run dev / vite:dev (node_modules is not shared)
+```
+
+### Traps specific to this repo
+
+1. **`worktree.baseRef` is set to `head`** in `.claude/settings.json`, deliberately. The default (`fresh`) branches from `origin/main`, which goes stale the moment you commit locally without pushing — a worktree would silently lack the newest instructions and dialogue. `head` branches from local HEAD. Don't "helpfully" restore the default.
+2. **Two stacks can't run at once.** The backend honours `PORT` (`process.env.PORT || 3000`), but `vite.config.js` hardcodes the dev-server port (5173) **and** proxies `/socket.io` to `ws://localhost:3000`. So a worktree's frontend started alongside main's backend will talk to **main's server**, not its own. Normal use — stop main's stack, run the worktree's on the default ports — avoids this entirely. Don't rewire the proxy to work around it unless you actually need both up.
+3. **`merge=ours` on `server.js`, `vite.config.js`, `render.yaml`, `.env*`** (`.gitattributes`). This looks like a deploy guard protecting the `production` / `build` branches from a main-merge clobbering their config — treat it as intentional and leave it alone. It is currently **inert**, because no `merge.ours.driver` is configured. Verified 15 Jul 2026: with the driver unset a conflicting merge conflicts loudly (safe); with `git config merge.ours.driver true` set, the merge **reports success and silently discards** the branch's changes to those files. So: don't configure that driver casually, and if a merge of a worktree branch ever seems to lose `server.js` edits, this is why.
+4. **`node_modules` is absent from this checkout entirely** and is per-worktree. `npm test` and `npm run build:dialogue` use only node builtins and work without it; anything that boots a server does not.
+5. **Dialogue is per-worktree.** `server.js` reads `public/data/dialogues/` relative to its own `__dirname`, so regenerating dialogue in a worktree cannot disturb a running show in the main checkout.
 
 ## Current status
 
