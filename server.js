@@ -59,6 +59,9 @@ app.get("/narrator-room", (req, res) => {
 app.get("/chatroom", (req, res) => {
   res.sendFile(join(__dirname, "dist/chatroom.html"), SENDFILE_OPTS);
 });
+app.get("/room", (req, res) => {
+  res.sendFile(join(__dirname, "dist/room.html"), SENDFILE_OPTS);
+});
 
 // Handle 404s:  send all invalid endpoint to index page
 app.use((req, res) => {
@@ -673,6 +676,116 @@ io.on("connection", (socket) => {
 
       // Broadcast narrator status to all clients
       broadcastNarratorStatus();
+    }
+  });
+});
+
+//---------------------------------------//
+// Room-based card game namespace (/rooms)
+//
+// Fully isolated from the default namespace: the legacy TBIO clients and the
+// generic chatroom stay on `io` with its global `io.emit` broadcasts. The card
+// game lives here, where clients join real socket.io rooms and can only hear
+// their own room. NONE of the existing io.emit/handlers above are touched.
+//---------------------------------------//
+const roomsNsp = io.of("/rooms");
+
+// Per-room state. Own map, own username sets — never the global takenUsernames,
+// or the cross-contamination comes straight back. selectedTrack is added by
+// Phase 3 (audio); stubbed here so empty-room cleanup has one place to clear.
+const roomStates = new Map(); // roomName -> { usernames: Set<string>, selectedTrack: null }
+
+function getRoomState(roomName) {
+  if (!roomStates.has(roomName)) {
+    roomStates.set(roomName, { usernames: new Set(), selectedTrack: null });
+  }
+  return roomStates.get(roomName);
+}
+
+function freeRoomSlot(roomName, username) {
+  const state = roomStates.get(roomName);
+  if (!state) return;
+  state.usernames.delete(username);
+  // Clear all room state once the room empties — fresh slate for the next pair.
+  if (state.usernames.size === 0) {
+    roomStates.delete(roomName);
+    console.log(`Room "${roomName}" emptied — cleared all state`);
+  }
+}
+
+roomsNsp.on("connection", (socket) => {
+  console.log(`[/rooms] client connected: ${socket.id}`);
+
+  // Check whether a username is already taken in this room only.
+  socket.on("check username", ({ roomName, username } = {}) => {
+    if (!roomName || !username) return;
+    const state = getRoomState(roomName);
+    socket.emit("username response", state.usernames.has(username));
+  });
+
+  // Join a room as a named player.
+  socket.on("user joined", ({ roomName, username } = {}) => {
+    if (!roomName || !username) return;
+    const state = getRoomState(roomName);
+
+    if (state.usernames.has(username)) {
+      socket.emit("username taken");
+      return;
+    }
+
+    // Capacity cap — a third scanner is turned away explicitly, not silently
+    // dropped into someone else's game.
+    if (state.usernames.size >= GameParameters.ROOM_CAPACITY) {
+      socket.emit("room-full", { capacity: GameParameters.ROOM_CAPACITY });
+      return;
+    }
+
+    socket.join(roomName);
+    socket.roomName = roomName;
+    socket.username = username;
+    state.usernames.add(username);
+
+    console.log(
+      `[/rooms] ${username} joined room "${roomName}" (${state.usernames.size}/${GameParameters.ROOM_CAPACITY})`,
+    );
+
+    // Confirm the join to the joining client so it can leave name-entry.
+    socket.emit("room-joined", { roomName, username });
+
+    // Broadcast join to the room only.
+    roomsNsp.to(roomName).emit("user joined", { username });
+  });
+
+  // Chat — broadcast to the room only.
+  socket.on("chat", (messageObj) => {
+    if (
+      messageObj &&
+      messageObj.username &&
+      messageObj.text &&
+      messageObj.timestamp &&
+      socket.username === messageObj.username &&
+      socket.roomName
+    ) {
+      roomsNsp.to(socket.roomName).emit("chat", messageObj);
+    }
+  });
+
+  // Refresh button — broadcast reset to the room; both clients reload, which
+  // disconnects the sockets and triggers the disconnect cleanup below, freeing
+  // names and clearing room state for the next pair.
+  socket.on("room-reset", () => {
+    if (socket.roomName) {
+      console.log(`[/rooms] reset requested in room "${socket.roomName}"`);
+      roomsNsp.to(socket.roomName).emit("room-reset");
+    }
+  });
+
+  socket.on("disconnect", () => {
+    const { roomName, username } = socket;
+    if (roomName && username) {
+      console.log(`[/rooms] ${username} left room "${roomName}"`);
+      roomsNsp.to(roomName).emit("user left", username);
+      freeRoomSlot(roomName, username);
     }
   });
 });

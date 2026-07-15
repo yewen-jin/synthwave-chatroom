@@ -234,21 +234,39 @@ clean, `npm test` in sync, `/` → docs, `/chatroom` → old chat UI, all 5 lega
 
 ### Phase 2 — `/rooms` namespace + room page (agent: fork — inherits verified context)
 
-- [ ] 2.1 `server.js`: `io.of("/rooms")` block, **additive only — zero edits to existing
+- [x] 2.1 `server.js`: `io.of("/rooms")` block, **additive only — zero edits to existing
       handlers or the 17 `io.emit` calls.** Join `{roomName, username}` → `socket.join`;
       per-room `Map<roomName, Set<username>>` (never the global `takenUsernames`); capacity 2
       with explicit `room-full` rejection; chat via `nsp.to(room)`; disconnect cleanup frees
       name, empty room clears all state; `room-reset` → broadcast to room. Constants
       (`ROOM_CAPACITY = 2`) in `shared/gameParameters.js`.
-- [ ] 2.2 Client: `src/room.html` + `src/js/roomMain.js` — room name from `location.hash`
+- [x] 2.2 Client: `src/room.html` + `src/js/roomMain.js` — room name from `location.hash`
       (no hash → entry prompt, then set hash); username popup + chat rendering reusing
       `chatUI.js`; refresh button emits `room-reset`, on receipt `location.reload()`.
       Parameterise `initSocket` (socket.js:7) with an optional namespace arg — default
       behaviour unchanged. Page title: `thisverisionofme_thisverisionofyou` from birth.
-- [ ] 2.3 Register `room` in `rollupOptions.input`
+- [x] 2.3 Register `room` in `rollupOptions.input`
 - **Acceptance:** scripted socket.io-client isolation matrix against the real `server.js`
   (legacy client still hears `io.emit`; pairA ↛ pairB; 3rd joiner rejected); browser smoke of
   `/room/#test` on the Vite dev server.
+
+**Phase 2 outcome (15 Jul):** done in the worktree, one commit. `io.of("/rooms")` block added
+before `server.listen` — own `roomStates` Map (`roomName -> { usernames, selectedTrack }`),
+own username sets, never touches global `takenUsernames`/`activeUsers`; none of the 17
+`io.emit` calls or existing handlers changed. Protocol: `check username` → `user joined`
+(→ `room-joined` to joiner + `user joined` broadcast to room, or `room-full` / `username taken`)
+→ `chat` / `room-reset` broadcast to room; disconnect frees the name and clears all room state
+when the room empties. `ROOM_CAPACITY = 2` in `shared/gameParameters.js`. `app.get("/room")`
+added next to `/chatroom`. `initSocket` takes an optional `namespace` arg (default `""` →
+default namespace, unchanged) — `roomMain.js` passes `"/rooms"`. `room.html` mirrors
+`chatroom.html`'s element IDs so `chatUI.js` is reused as-is (username popup kept first in the
+DOM so `chatUI`'s `querySelector('.login-content')` attaches the username error correctly);
+adds a room-name entry overlay (no hash → prompt, then sets the hash) and a refresh button.
+Acceptance: scripted socket.io-client matrix — 8/8 green (alice/bob same-room chat delivered;
+carol the 3rd scanner rejected with `room-full`; dave in roomB isolated from roomA; legacy
+default-ns `io.emit` reaches default ns only, not `/rooms`; `room-reset` reaches both room
+clients). `npm run build` clean, `npm test` in sync, `/room` serves the new title via both the
+prod server and Vite. Browser smoke of `/room/#...` left for Yewen (real two-client session).
 
 ### Phase 3 — audio (agent: fork)
 

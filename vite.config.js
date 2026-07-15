@@ -37,6 +37,7 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, "src/index.html"),
         chatroom: path.resolve(__dirname, "src/chatroom.html"),
+        room: path.resolve(__dirname, "src/room.html"),
         control: path.resolve(__dirname, "src/control.html"),
         room1: path.resolve(__dirname, "src/room1.html"),
         room2: path.resolve(__dirname, "src/room2.html"),

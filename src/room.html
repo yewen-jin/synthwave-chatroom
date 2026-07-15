@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>thisverisionofme_thisverisionofyou</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/assets/images/icons/favicon.svg"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- MSN-style Window Container -->
+    <div class="msn-window">
+      <!-- Title Bar -->
+      <div class="title-bar">
+        <img
+          src="assets/images/icons/chat-room-icon.svg"
+          alt="icon"
+          class="msn-icon"
+        />
+        <span class="window-title">thisverisionofme_thisverisionofyou</span>
+        <div class="window-controls">
+          <button id="refresh-btn" class="refresh-btn" title="Reset this room">
+            ↻
+          </button>
+          <button class="minimize">_</button>
+          <button class="maximize">□</button>
+          <button class="close">×</button>
+        </div>
+      </div>
+
+      <!-- Chat Area -->
+      <div class="chat-area">
+        <!-- Messages Container -->
+        <div class="chat-body" id="chatBody"></div>
+
+        <!-- Message Input Area -->
+        <div class="input-section">
+          <div class="message-input-area">
+            <div class="input-wrapper">
+              <div class="input-container">
+                <textarea
+                  id="chatInput"
+                  placeholder="Type a message…"
+                ></textarea>
+              </div>
+            </div>
+            <button class="send-btn">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Username Popup (kept before the room-entry popup in the DOM so
+         chatUI.js's querySelector('.login-content') attaches the username
+         error here, not in the room-entry popup) -->
+    <div id="username-popup" class="popup" style="display: none;">
+      <div class="popup-content msn-style">
+        <div class="title-bar">
+          <img
+            src="assets/images/icons/chat-room-icon.svg"
+            alt="icon"
+            class="msn-icon"
+          />
+          <span class="window-title">Sign In</span>
+        </div>
+        <div class="login-content">
+          <p>Please enter your display name to continue</p>
+          <input
+            type="text"
+            id="username-input"
+            placeholder="Display name"
+            maxlength="20"
+          />
+          <button id="username-submit">Sign In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room-name entry popup (shown only when there is no room in the URL hash) -->
+    <div id="room-entry-popup" class="popup" style="display: none;">
+      <div class="popup-content msn-style">
+        <div class="title-bar">
+          <img
+            src="assets/images/icons/chat-room-icon.svg"
+            alt="icon"
+            class="msn-icon"
+          />
+          <span class="window-title">Join a room</span>
+        </div>
+        <div class="login-content">
+          <p>Enter the room name on your QR card to join</p>
+          <input
+            type="text"
+            id="room-name-input"
+            placeholder="Room name"
+            maxlength="30"
+          />
+          <button id="room-name-submit">Join</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/roomMain.js"></script>
+  </body>
+</html>

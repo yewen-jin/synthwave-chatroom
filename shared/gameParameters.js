@@ -8,6 +8,10 @@ export const SYSTEM_MESSAGE_DELAY_MS = 2000;
 export const ENDING_DELAY_MS = 2000;
 export const STATE_CLEANUP_MS = 5 * 60 * 1000;
 
+// ========== ROOM-BASED CARD GAME (/rooms namespace) ==========
+// Max named players per room — a third scanner is turned away, not dropped in.
+export const ROOM_CAPACITY = 2;
+
 // Delay modes: "dynamic" (narrator length-based), "fallback" (fixed 2000ms), "test" (0ms instant)
 export const DELAY_MODE = "dynamic";
 // export const DELAY_MODE = "test";
