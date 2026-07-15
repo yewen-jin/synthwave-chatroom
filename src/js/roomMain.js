@@ -238,6 +238,11 @@ function showNowPlaying(name) {
 }
 
 function playTrack(name) {
+  // audio-select triggers both an audio-play and a room-status broadcast, and
+  // room-status is what a mid-session joiner also uses to sync — so this can
+  // legitimately be called twice for the same track. Without this guard the
+  // second call resets currentTime to 0 and restarts playback immediately.
+  if (trackSelected && currentTrack === name) return;
   currentTrack = name;
   trackSelected = true;
   // Stop any other track that was playing.
