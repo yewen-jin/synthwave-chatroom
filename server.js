@@ -17,13 +17,19 @@ const server = createServer(app);
 // create the socket
 const io = new Server(server, {
   cors: {
+    // CORS only governs CROSS-origin socket connections; same-origin (the
+    // normal case here — the server serves both the page and the socket on one
+    // origin) is never checked, so this allowlist is effectively a no-op for a
+    // standard deploy. It only bites if a browser loads the page from a
+    // different origin than the socket server (e.g. some dev/proxy setups).
+    // Production: the VPS deploy domain. A CORS origin is scheme+host(+port)
+    // only, never a path — the old onrender "/control" entry could never match.
+    // Dev: reflect the request origin (origin: true) so cross-origin dev access
+    // from a LAN/Tailscale/forwarded host works without curating a list.
     origin:
       process.env.NODE_ENV === "production"
-        ? [
-            "https://void-space-chatroom.onrender.com",
-            "https://void-space-chatroom.onrender.com/control",
-          ]
-        : ["http://localhost:5173", "http://localhost:3000"],
+        ? ["https://chat.datadadaist.space"]
+        : true,
     methods: ["GET", "POST", "OPTIONS"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
