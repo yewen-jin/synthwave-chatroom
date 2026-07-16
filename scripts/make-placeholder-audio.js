@@ -1,18 +1,19 @@
-// make-placeholder-audio.js — generate dev placeholder tracks for the card game.
+// make-placeholder-audio.js — generate a dev placeholder track for the card game.
 //
-// The real tracks come from Symone as MP3s and live in audio-assets/ (which is
-// gitignored, so re-exports never enter git history). For local dev this script
-// regenerates a few short, distinct-tone WAVs so the selection/playback flow is
-// testable without the final audio. The mechanism is format-agnostic — the
-// server lists whatever files are in audio-assets/ and the client <audio>
-// element plays them, so swapping WAV placeholders for MP3 masters needs no
+// The real track comes from Symone as an MP3 and lives in audio-assets/ (which
+// is gitignored, so re-exports never enter git history). For local dev this
+// script regenerates a short tone WAV so the play/pause flow is testable
+// without the final audio. The mechanism is format-agnostic — the server
+// lists whatever files are in audio-assets/ and the client <audio> element
+// plays them, so swapping the WAV placeholder for the MP3 master needs no
 // code change.
 //
 // Run: npm run make:audio   (or: node scripts/make-placeholder-audio.js)
 //
-// Track COUNT is data-driven — add or remove entries in TRACKS below to change
-// how many placeholders are generated. Final count for the show is still open
-// (1–5, per Symone); see __context__/thisverisionofme-plan.md.
+// One track for now, matching the actual event (per Symone, 16 Jul 2026) —
+// the room auto-selects tracks[0], no picker UI. A future multi-track picker
+// isn't built yet; when it lands, add more entries here. See
+// __context__/thisverisionofme-plan.md.
 
 import { writeFileSync, mkdirSync } from "fs";
 import { dirname, join } from "path";
@@ -22,15 +23,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const OUT_DIR = join(__dirname, "..", "audio-assets");
 
-// Distinct tones so you can hear which track is playing during dev.
-const TRACKS = [
-  { name: "track-1.wav", freq: 220.0, label: "Track 1 (low)" },
-  { name: "track-2.wav", freq: 330.0, label: "Track 2 (mid)" },
-  { name: "track-3.wav", freq: 440.0, label: "Track 3 (high)" },
-];
+const TRACKS = [{ name: "track-1.wav", freq: 220.0, label: "Track 1" }];
 
 const SAMPLE_RATE = 44100;
-const DURATION_SEC = 3;
+const DURATION_SEC = 20; // long enough to actually test pause/resume by hand
 const AMPLITUDE = 0.2; // moderate so it's audible but not harsh
 
 function buildWav(freq) {

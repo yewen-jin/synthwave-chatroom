@@ -43,41 +43,21 @@
         </div>
       </div> -->
 
-        <!-- Track selection (shown once the room has 2 named players and no
-             track is selected yet; buttons are injected by roomMain.js).
-             Picking a track does not start playback — it locks the choice
-             and reveals the Start panel below. -->
-        <div id="track-selection" class="track-selection" style="display: none">
-          <p class="track-selection__title">Choose a track for this room</p>
-          <div id="track-list" class="track-list"></div>
-          <p
-            id="track-waiting"
-            class="track-selection__hint"
-            style="display: none"
+        <!-- Audio bar (shown once the room has 2 named players). One track
+             for now, auto-selected by the server — no picker. Either player
+             can press the toggle; play/pause applies to both at once.
+             Disabled until the track has preloaded, so pressing it can't
+             stall mid-game. A future multi-track picker (separate button +
+             popup) would live here alongside the toggle — not built yet. -->
+        <div id="audio-bar" class="track-selection" style="display: none">
+          <button
+            id="audio-toggle-btn"
+            class="track-btn"
+            type="button"
+            disabled
           >
-            Waiting for the other player to join…
-          </p>
-        </div>
-
-        <!-- Start panel (shown once a track is chosen but playback hasn't
-             started yet). Either player can press Start; the session begins
-             for both at the same moment. Disabled until the track has
-             preloaded, so pressing it can't stall mid-game. -->
-        <div
-          id="audio-start-panel"
-          class="track-selection"
-          style="display: none"
-        >
-          <p class="track-selection__title">
-            Track chosen: <span id="audio-start-track-name"></span>
-          </p>
-          <button id="audio-start-btn" class="track-btn" type="button" disabled>
             ▶ Start
           </button>
-          <p class="track-selection__hint">
-            Either player can press start — the session begins for both of you
-            at once.
-          </p>
         </div>
 
         <!-- Messages Container -->

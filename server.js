@@ -41,23 +41,33 @@ app.use("/assets", express.static(join(__dirname, "dist/assets")));
 // Symone's re-exports never enter git and Vite's emptyOutDir never wipes them).
 app.use("/audio", express.static(join(__dirname, "audio-assets")));
 
-// Track list is DATA, not code: read whatever audio files are present at boot.
-// Count is unbounded — 1, 3, 5, whatever Symone drops in. Final count is still
-// open; see __context__/thisverisionofme-plan.md.
+// Track list is DATA, not code: read whatever audio files are present in
+// audio-assets/ *each time a room needs to know*, not once at boot. Reading
+// once at boot means `npm run make:audio` (or Symone's rsync) after the
+// server has already started leaves every room stuck with an empty list
+// until a restart — a real trap, since deploy is deliberately "rsync audio
+// separately from git pull, no restart needed" (see the plan doc). For now
+// there's exactly one track for the actual event; this stays list-shaped
+// (not hardcoded to one) so a future multi-track picker doesn't need a
+// server rewrite — see the room-state comment below.
 const AUDIO_DIR = join(__dirname, "audio-assets");
 const AUDIO_EXTS = [".mp3", ".wav", ".ogg", ".m4a"];
-const audioTracks = existsSync(AUDIO_DIR)
-  ? readdirSync(AUDIO_DIR)
-      .filter((f) =>
-        AUDIO_EXTS.includes(f.slice(f.lastIndexOf(".")).toLowerCase()),
-      )
-      .sort()
-  : [];
-console.log(
-  audioTracks.length
-    ? `[/rooms] serving ${audioTracks.length} audio track(s): ${audioTracks.join(", ")}`
-    : "[/rooms] WARNING: no audio tracks found in audio-assets/ — run `npm run make:audio`",
-);
+function readAudioTracks() {
+  if (!existsSync(AUDIO_DIR)) return [];
+  return readdirSync(AUDIO_DIR)
+    .filter((f) =>
+      AUDIO_EXTS.includes(f.slice(f.lastIndexOf(".")).toLowerCase()),
+    )
+    .sort();
+}
+{
+  const bootTracks = readAudioTracks();
+  console.log(
+    bootTracks.length
+      ? `[/rooms] found ${bootTracks.length} audio track(s) at boot: ${bootTracks.join(", ")}`
+      : "[/rooms] WARNING: no audio tracks found in audio-assets/ — run `npm run make:audio`",
+  );
+}
 
 // send() treats any dot-segment in the path as a dotfile and 404s it by
 // default — worktree checkouts live under .claude/, so allow explicitly.
@@ -714,19 +724,32 @@ io.on("connection", (socket) => {
 const roomsNsp = io.of("/rooms");
 
 // Per-room state. Own map, own username sets — never the global takenUsernames,
-// or the cross-contamination comes straight back. selectedTrack/started/startedAt
-// are added by Phase 3 (audio); stubbed here so empty-room cleanup has one place
-// to clear. started/startedAt exist so a late-joiner or a reconnecting client can
-// seek to the correct elapsed position instead of restarting the track from 0.
-const roomStates = new Map(); // roomName -> { usernames, selectedTrack, started, startedAt }
+// or the cross-contamination comes straight back.
+//
+// Audio: for the actual event there is exactly one track, so the room
+// auto-selects it (tracks[0]) the moment the room is created — no picker UI
+// needed. This stays list-shaped rather than hardcoded to "the one track" so
+// a future multi-track picker (a separate button + popup, per Symone — not
+// built yet) can slot in later without a server rewrite: it would just stop
+// auto-selecting and let a client choose from `readAudioTracks()` instead.
+//
+// playing/startedAt/pausedElapsed model a pause-able, resumable playback
+// clock: pausedElapsed accumulates seconds already played; startedAt marks
+// when the current playing segment began (null while paused). Elapsed time
+// at any moment = playing ? pausedElapsed + (now - startedAt) : pausedElapsed.
+// This is what lets a late joiner or a reconnecting client seek to the
+// correct position — playing or paused — instead of restarting from 0.
+const roomStates = new Map(); // roomName -> { usernames, track, playing, startedAt, pausedElapsed }
 
 function getRoomState(roomName) {
   if (!roomStates.has(roomName)) {
+    const tracks = readAudioTracks();
     roomStates.set(roomName, {
       usernames: new Set(),
-      selectedTrack: null,
-      started: false,
+      track: tracks[0] ?? null,
+      playing: false,
       startedAt: null,
+      pausedElapsed: 0,
     });
   }
   return roomStates.get(roomName);
@@ -735,9 +758,10 @@ function getRoomState(roomName) {
 function roomStatusPayload(state) {
   return {
     playerCount: state.usernames.size,
-    selectedTrack: state.selectedTrack,
-    started: state.started,
+    track: state.track,
+    playing: state.playing,
     startedAt: state.startedAt,
+    pausedElapsed: state.pausedElapsed,
   };
 }
 
@@ -790,13 +814,14 @@ roomsNsp.on("connection", (socket) => {
 
     // Confirm the join to the joining client so it can leave name-entry.
     socket.emit("room-joined", { roomName, username });
-    // Send the current track list (data-driven count) to the joiner.
-    socket.emit("audio-tracks", { tracks: audioTracks });
+    // Send the current track list to the joiner, read fresh (not a boot-time
+    // snapshot) so it reflects whatever's actually in audio-assets/ right now.
+    socket.emit("audio-tracks", { tracks: readAudioTracks() });
 
     // Broadcast join to the room only.
     roomsNsp.to(roomName).emit("user joined", { username });
-    // Room status so every client knows player count + any already-selected
-    // track + whether playback has started (and when, for elapsed-time sync).
+    // Room status so every client knows player count + the room's current
+    // playback state (track, playing, and enough to compute elapsed time).
     roomsNsp.to(roomName).emit("room-status", roomStatusPayload(state));
   });
 
@@ -814,48 +839,36 @@ roomsNsp.on("connection", (socket) => {
     }
   });
 
-  // Track selection — music is picked once at session start by either player
-  // and is per-room. First pick wins; later picks are ignored until a reset
-  // empties the room and clears selectedTrack. Selecting a track does NOT
-  // start playback — it only locks the choice in and reveals the Start
-  // button (to both players) via room-status. See audio-start below.
-  socket.on("audio-select", ({ track } = {}) => {
-    if (!socket.roomName || !track) return;
+  // Play / pause — either player can press either intent, from a single
+  // toggle button on the client. Both are idempotent by design (an explicit
+  // "play" request when already playing, or two players pressing at once,
+  // is a no-op) rather than a blind flip, so a click race can't leave the
+  // room in the wrong state. The session starts/resumes/pauses for both
+  // players at (approximately) the same moment via the room-status broadcast.
+  socket.on("audio-play-request", () => {
+    if (!socket.roomName) return;
     const state = getRoomState(socket.roomName);
-    if (!audioTracks.includes(track) || state.started) return;
+    if (!state.track || state.playing) return;
 
-    if (!state.selectedTrack) {
-      state.selectedTrack = track;
-      console.log(
-        `[/rooms] track "${track}" selected in room "${socket.roomName}"`,
-      );
-    } else if (state.selectedTrack !== track) {
-      // Already locked to a different track — honour the first pick, just
-      // resend status so this client's UI reflects the locked-in choice.
-    }
-
+    state.playing = true;
+    state.startedAt = Date.now();
+    console.log(
+      `[/rooms] play in room "${socket.roomName}" (track "${state.track}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
+    );
     roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
   });
 
-  // Start — the one and only playback trigger. Either player can press it
-  // once a track is chosen; the session starts for both at (approximately)
-  // the same moment. Idempotent: a second press (or a race between both
-  // players clicking at once) is a no-op once started is true.
-  socket.on("audio-start", () => {
+  socket.on("audio-pause-request", () => {
     if (!socket.roomName) return;
     const state = getRoomState(socket.roomName);
-    if (!state.selectedTrack || state.started) return;
+    if (!state.track || !state.playing) return;
 
-    state.started = true;
-    state.startedAt = Date.now();
+    state.pausedElapsed += (Date.now() - state.startedAt) / 1000;
+    state.playing = false;
+    state.startedAt = null;
     console.log(
-      `[/rooms] playback started in room "${socket.roomName}" (track "${state.selectedTrack}")`,
+      `[/rooms] pause in room "${socket.roomName}" (track "${state.track}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
     );
-
-    roomsNsp.to(socket.roomName).emit("audio-play", {
-      track: state.selectedTrack,
-      startedAt: state.startedAt,
-    });
     roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
   });
 

@@ -1287,7 +1287,7 @@ button:hover {
 }
 
 /* ============================================================================
-   20. COMPONENTS - Card Game Room (/room track selection + now-playing)
+   20. COMPONENTS - Card Game Room (/room audio bar + now-playing)
    Uses the site's existing tokens and the same hover accent as
    #username-submit so it reads as one visual system, not a bolted-on panel.
    ============================================================================ */
@@ -1298,24 +1298,6 @@ button:hover {
   padding: var(--spacing-lg) var(--spacing-xl);
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
-}
-
-.track-selection__title {
-  margin: 0 0 var(--spacing-sm);
-  font-size: var(--font-size-sm);
-  color: var(--text-color);
-}
-
-.track-selection__hint {
-  margin: var(--spacing-sm) 0 0;
-  font-size: var(--font-size-xs);
-  color: var(--secondary-text-color);
-}
-
-.track-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
 }
 
 .track-btn {
