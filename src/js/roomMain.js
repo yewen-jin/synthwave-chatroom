@@ -172,12 +172,15 @@ window._socket.on("room-joined", ({ username: name }) => {
   updateUserDisplayName(name);
 });
 
-// Room at capacity — turn the third scanner away explicitly.
+// Room at capacity — turn the third scanner away explicitly. Rooms are minted
+// per pair now, so there is no "other room" to send them to as there was when
+// two were standing permanently: the way in is to scan the printed code and
+// start their own.
 window._socket.on("room-full", ({ capacity } = {}) => {
   username = null;
   hideUsernamePopup();
   showRoomError(
-    `This room is full (${capacity} players max). Please join the other room.`,
+    `This room is full — it belongs to another pair (${capacity} players max). Scan the printed code to start your own.`,
   );
 });
 
@@ -222,21 +225,58 @@ const chatBodyEl = document.getElementById("chatBody");
 const inputSectionEl = document.querySelector(".input-section");
 let notYetEl = null;
 
-function setChatOpen(open) {
+function setChatOpen(open, showNotYet = true) {
   if (chatBodyEl) chatBodyEl.style.display = open ? "" : "none";
   if (inputSectionEl) inputSectionEl.style.display = open ? "" : "none";
 
   // Say why the room looks empty, rather than leaving a blank panel that
-  // reads as broken while they wait for the other player.
-  if (!open && !notYetEl) {
+  // reads as broken while they wait for the other player. Suppressed while
+  // the pairing QR is up: "the conversation has not begun" underneath "ask
+  // your pair to scan this" only muddies what to do next.
+  if (!open && showNotYet && !notYetEl) {
     notYetEl = document.createElement("div");
     notYetEl.className = "chat-not-begun";
     notYetEl.textContent = "The conversation has not begun.";
     document.querySelector(".chat-area")?.appendChild(notYetEl);
-  } else if (open && notYetEl) {
+  } else if ((open || !showNotYet) && notYetEl) {
     notYetEl.remove();
     notYetEl = null;
   }
+}
+
+// ----- pairing: the QR player B scans -----
+//
+// The printed code names no room. Player A scans it, the server mints a room
+// that has never existed, and A's screen becomes the way in for exactly one
+// other person. So a pair can't land in a stale room, and a previous pair's
+// forgotten tab holds an id nobody will ever be handed again. The third
+// scanner is refused by ROOM_CAPACITY as before.
+const pairInviteEl = document.getElementById("pair-invite");
+const pairQrEl = document.getElementById("pair-qr");
+const pairCodeEl = document.getElementById("pair-code");
+const pairJoinOtherEl = document.getElementById("pair-join-other");
+
+function showPairInvite(show) {
+  if (!pairInviteEl) return;
+  pairInviteEl.hidden = !show;
+  if (!show || !roomName) return;
+  // Absolute URL: this is scanned by a different phone, so it has to carry
+  // the host, not a relative path. location.origin is whatever A reached us
+  // on — the VPS domain in production, and correct in dev too.
+  const joinUrl = `${window.location.origin}/room#${encodeURIComponent(roomName)}`;
+  const src = `/qr.svg?d=${encodeURIComponent(joinUrl)}`;
+  if (pairQrEl && pairQrEl.getAttribute("src") !== src) {
+    pairQrEl.setAttribute("src", src);
+  }
+  if (pairCodeEl) pairCodeEl.textContent = roomName;
+}
+
+// Recovery for the pair who both scanned the poster and are now sitting in
+// separate empty rooms waiting for each other.
+if (pairJoinOtherEl) {
+  pairJoinOtherEl.addEventListener("click", () => {
+    showRoomEntryPopup();
+  });
 }
 
 // ----- the other player -----
@@ -517,9 +557,13 @@ function applyPlaybackState({
   // R7: the chat itself stays shut until someone presses "begin conversation".
   // Server-driven rather than local, so both players open together and a
   // reload mid-game rejoins an already-open chat instead of re-gating it.
+  // Alone in the room => show the way in for the other player. The moment
+  // they arrive it's no longer needed, and nobody else may use it anyway.
+  const waitingForPair = playerCount < 2;
   lastKnownBegun = !!begun;
-  setChatOpen(!!begun);
+  setChatOpen(!!begun, !waitingForPair);
   showOtherPlayer(usernames);
+  showPairInvite(waitingForPair);
 
   // Keep the newest clock for the timeline to interpolate against.
   lastStatus = { playing, startedAt, pausedElapsed };
@@ -614,9 +658,26 @@ window._socket.on("reconnect", () => {
 // open for a frame and then close again.
 setChatOpen(false);
 
-// Initial screen: room name first if missing, otherwise straight to sign-in.
+// The server minted us a room — take it and carry on into sign-in. It goes in
+// the hash so a reload rejoins the same room rather than minting another.
+window._socket.on("room created", ({ roomName: minted } = {}) => {
+  if (!minted) return;
+  roomName = minted;
+  window.location.hash = encodeURIComponent(minted);
+  showUsernamePopup();
+});
+
+window._socket.on("room create failed", () => {
+  // Nothing useful to auto-retry — the manual entry is the way out.
+  showRoomError("Could not open a room. Ask your pair for their code.");
+});
+
+// A hash means we were sent here deliberately: by our partner's QR, by typing
+// their code, or by reloading our own room. No hash means we came from the
+// printed code, which names no room — so ask for a brand-new one rather than
+// making someone invent a name that might collide with a live game.
 if (roomName) {
   showUsernamePopup();
 } else {
-  showRoomEntryPopup();
+  window._socket.emit("create room");
 }

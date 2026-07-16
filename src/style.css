@@ -1558,6 +1558,64 @@ button:hover {
   border-color: var(--text-color);
 }
 
+/* ---- pairing invite (the QR player B scans) ---------------------------- */
+
+.pair-invite {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.pair-invite[hidden] {
+  display: none; /* [hidden] loses to display:flex without this */
+}
+
+.pair-invite__line {
+  margin: 0;
+  color: var(--text-color);
+  font-size: var(--font-size-base);
+}
+
+/* Capped, and never wider than the window: this is scanned off a phone
+   screen, so it wants to be as large as the space allows but must not force
+   the layout wider. */
+.pair-invite__qr {
+  width: min(200px, 55vmin);
+  height: auto;
+  max-width: 100%;
+  background: #fff; /* quiet zone — scanners need the light background */
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border-color);
+}
+
+.pair-invite__code {
+  margin: 0;
+  color: var(--secondary-text-color);
+  font-size: var(--font-size-xs);
+}
+
+.pair-invite__code strong {
+  color: var(--text-color);
+  letter-spacing: 0.12em; /* read aloud or typed, not skimmed */
+  font-size: var(--font-size-base);
+}
+
+.pair-invite__alt {
+  background: none;
+  border: none;
+  padding: var(--spacing-sm);
+  color: var(--secondary-text-color);
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* Stands in for the hidden chat before the pair begins, so the empty panel
    reads as "not yet" rather than as a broken room. */
 .chat-not-begun {

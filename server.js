@@ -5,6 +5,8 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { readFile } from "fs/promises";
 import { readdirSync, existsSync } from "fs";
+import { randomBytes } from "crypto";
+import QRCode from "qrcode";
 import * as GameParameters from "./shared/gameParameters.js";
 
 // Fix for __dirname in ES modules
@@ -46,6 +48,34 @@ app.use("/assets", express.static(join(__dirname, "dist/assets")));
 // Card-game audio — served from audio-assets/ (outside dist, gitignored, so
 // Symone's re-exports never enter git and Vite's emptyOutDir never wipes them).
 app.use("/audio", express.static(join(__dirname, "audio-assets")));
+
+// Renders a QR as SVG, server-side. Player A's page shows one of these for
+// player B to scan, which is how a pair ends up in the same room. Done here
+// rather than in the browser so the frontend stays plain HTML/JS with no
+// bundled encoder — see AGENTS.md on dependencies.
+app.get("/qr.svg", async (req, res) => {
+  const data = String(req.query.d ?? "");
+  // Bound the input: this endpoint is public, and QR encoding cost climbs
+  // with length. A room URL is ~60 chars.
+  if (!data || data.length > 512) {
+    return res.status(400).type("text/plain").send("bad or missing ?d=");
+  }
+  try {
+    const svg = await QRCode.toString(data, {
+      type: "svg",
+      errorCorrectionLevel: "M",
+      margin: 1,
+    });
+    // Immutable for a given ?d= — the room id never changes meaning.
+    res
+      .type("image/svg+xml")
+      .set("Cache-Control", "public, max-age=3600")
+      .send(svg);
+  } catch (err) {
+    console.error("[qr] render failed:", err);
+    res.status(500).type("text/plain").send("qr render failed");
+  }
+});
 
 // Track list is DATA, not code: read whatever audio files are present in
 // audio-assets/ *each time a room needs to know*, not once at boot. Reading
@@ -773,6 +803,25 @@ function currentTrack() {
   return readAudioTracks()[0] ?? null;
 }
 
+// A fresh room id, guaranteed not to be one that already has state. Player A
+// scans the printed code, gets one of these, and shows their partner a QR for
+// it — so every pair plays in a room that has never existed before, and a
+// previous pair's abandoned tab holds an id nobody will ever be sent to
+// again. Ambiguous glyphs are out of the alphabet because this id is also
+// shown as text for anyone whose camera won't read a phone screen.
+const ROOM_ID_ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789"; // no i/l/o/0/1
+function newRoomName() {
+  for (let attempt = 0; attempt < 50; attempt++) {
+    const id = [...randomBytes(6)]
+      .map((b) => ROOM_ID_ALPHABET[b % ROOM_ID_ALPHABET.length])
+      .join("");
+    if (!roomStates.has(id)) return id;
+  }
+  // 31^6 ids against at most a handful of live rooms — reaching here means
+  // something is very wrong, so fail loudly rather than hand out a collision.
+  throw new Error("could not find a free room id in 50 attempts");
+}
+
 function roomStatusPayload(state) {
   return {
     playerCount: state.usernames.size,
@@ -802,6 +851,20 @@ function freeRoomSlot(roomName, username) {
 
 roomsNsp.on("connection", (socket) => {
   console.log(`[/rooms] client connected: ${socket.id}`);
+
+  // Player A arrived via the printed code, which names no room — mint one.
+  // Server-side so "a room that didn't exist before" is actually checked
+  // against live state rather than trusted to client randomness.
+  socket.on("create room", () => {
+    try {
+      const roomName = newRoomName();
+      console.log(`[/rooms] minted new room "${roomName}" for ${socket.id}`);
+      socket.emit("room created", { roomName });
+    } catch (err) {
+      console.error("[/rooms] room mint failed:", err);
+      socket.emit("room create failed");
+    }
+  });
 
   // Check whether a username is already taken in this room only.
   socket.on("check username", ({ roomName, username } = {}) => {

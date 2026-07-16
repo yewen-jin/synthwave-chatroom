@@ -82,6 +82,27 @@
           </div>
         </div>
 
+        <!-- Shown to player A while they're alone in a freshly minted room:
+             the QR their partner scans to land in this same room. The code is
+             also given as text, because a phone camera reading another phone's
+             screen is exactly where glare and brightness bite — and because
+             someone who scanned the printed code by mistake needs a way back
+             to their partner's room. -->
+        <div id="pair-invite" class="pair-invite" hidden>
+          <p class="pair-invite__line">ask your pair to scan this</p>
+          <img
+            id="pair-qr"
+            class="pair-invite__qr"
+            alt="QR code to join this room"
+          />
+          <p class="pair-invite__code">
+            or enter this code: <strong id="pair-code"></strong>
+          </p>
+          <button id="pair-join-other" class="pair-invite__alt" type="button">
+            joined the wrong room? enter your pair's code
+          </button>
+        </div>
+
         <!-- Messages Container -->
         <div class="chat-body" id="chatBody"></div>
 

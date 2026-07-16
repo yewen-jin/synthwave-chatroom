@@ -33,6 +33,13 @@ export default defineConfig({
         target: "http://localhost:3000",
         changeOrigin: true,
       },
+      // Same reason as /audio: the QR is rendered by the backend, so without
+      // this the pairing image 404s against the Vite dev server and player A
+      // has nothing to show their partner.
+      "/qr.svg": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
     },
   },
   build: {
