@@ -196,7 +196,12 @@ button {
 /* Maximized window state (fullscreen) */
 .msn-window.maximized {
   width: 100% !important;
+  /* dvh, not vh: on mobile 100vh is the *large* viewport (measured as if the
+     browser toolbar were retracted), so a 100vh box is taller than what the
+     phone actually shows and its top/bottom get clipped. dvh tracks the real,
+     collapsing viewport. vh first as the fallback for browsers without dvh. */
   height: 100vh !important;
+  height: 100dvh !important;
   top: 0 !important;
   left: 0 !important;
   transform: none !important;
@@ -207,6 +212,7 @@ button {
 .msn-window.maximized .chat-area {
   width: 100%;
   height: calc(100vh - 30px);
+  height: calc(100dvh - 30px);
 }
 
 .msn-window.maximized .chat-body {
@@ -259,6 +265,16 @@ button {
 
 .window-title {
   font-size: var(--font-size-md);
+  /* thisverisionofme_thisverisionofyou is long enough to overflow a phone's
+     title bar. A flex item defaults to min-width:auto and so refuses to
+     shrink below its text — which squeezed .window-controls until its four
+     buttons stacked vertically, making the title bar 121px tall (22% of a
+     320px-wide window) and pushing the controls past the window's edge.
+     Truncate instead. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .msn-icon {
@@ -270,6 +286,10 @@ button {
 /* Window control buttons (minimize, maximize, close) */
 .window-controls {
   margin-left: auto;
+  /* Keep the controls on one row at their natural size — they are the last
+     thing that should give when the title bar runs out of width. */
+  display: flex;
+  flex-shrink: 0;
 }
 
 .window-controls button {
@@ -1100,6 +1120,7 @@ button:hover {
   body {
     padding: 0;
     height: 100vh;
+    height: 100dvh;
   }
 
   .msn-window {
@@ -1107,12 +1128,48 @@ button:hover {
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
     width: 95%;
+    /* Height matches the 95% width so the inset is even on all four sides.
+       Previously no height was set here, so the window came out as
+       title-bar + chat-area's `calc(100vh - 40px)` = exactly 100vh — and
+       100vh is the *large* viewport (measured as if the browser toolbar were
+       retracted), which is taller than the phone actually shows. That is why
+       the top and bottom were being cut off. dvh tracks the real viewport. */
+    height: 95vh; /* fallback for browsers without dvh */
+    height: 95dvh;
+    /* The 2.5% inset alone doesn't clear a notch or home indicator, which are
+       fixed pixel intrusions rather than a share of the screen. */
+    max-height: calc(
+      100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) -
+        var(--spacing-md)
+    );
+  }
+
+  /* The title bar must keep its natural height in the flex column; only the
+     chat area below it should absorb the slack. */
+  .title-bar {
+    flex-shrink: 0;
+  }
+
+  /* At 320px only ~150px is left for the title once the icon and the four
+     controls take their share, and the game's name needs 12px to fit that.
+     Shrinking it beats ellipsising the title of the piece down to
+     "thisverisionofme_t…". The ellipsis above stays as the safety net. */
+  .window-title {
+    font-size: var(--font-size-xs);
   }
 
   .chat-area {
     width: 100%;
-    height: calc(100vh - 40px);
+    /* Fill whatever the window has left, rather than assuming a 40px title
+       bar and a 100vh viewport. min-height:0 lets a flex child shrink below
+       its content size instead of pushing the window taller than 95dvh. */
+    flex: 1;
+    min-height: 0;
+    height: auto;
   }
 
   /* Stack input area vertically on mobile */
@@ -1186,6 +1243,13 @@ button:hover {
     width: 12px;
     height: 12px;
   }
+
+  /* No .window-title override here on purpose. At 320px the full name needs
+     ~169px against ~160px available, so it ellipsises to
+     "thisverisionofme_thisverisiono…". Shrinking it far enough to fit costs
+     more legibility than the ellipsis does, for a class of device (iPhone SE
+     1st gen, 2016) that is now vanishingly rare — every phone from 375px up
+     shows the name in full. Let the ellipsis do its job. */
 }
 
 /* ============================================================================
