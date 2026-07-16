@@ -311,6 +311,53 @@ a prior user gesture (Sign In) before `audio-play` arrives, but verify on iOS Sa
 clients back to name entry. Full 15-min runtime not exercised (placeholders are 3 s); real-device
 autoplay (iOS Safari) and venue wifi still to confirm before the show.
 
+### Interlude — audit of phases 0–3, and visual parity with /chatroom (16 Jul)
+
+Requested out of sequence: an audit of everything committed so far, then bringing in the
+background-visual redesign that had landed on `main` while this branch was in progress.
+
+**Audit findings:**
+
+- Confirmed via a whitespace-ignored diff over the full range since `main`: the pre-existing
+  narrator/TBIO logic in `server.js` has **zero semantic changes**, only reformatting.
+- Room isolation — scripted socket.io-client matrix, 4/4: capacity cap rejects a 3rd joiner,
+  roomA↛roomB, `/rooms` never leaks to/from the default namespace.
+- **Real bug, found and fixed (`dfe3c6e`):** `audio-select` broadcasts both `audio-play` and
+  `room-status` (carrying the same track) to the room — `room-status` doubles as the resync
+  path for a mid-session joiner, so it has to carry the track. The client's `playTrack()` had
+  no guard against being called twice for the same track, so every selection restarted
+  playback from 0:00 within milliseconds of starting. Reproduced empirically (scripted client
+  received both signals at +0ms); fixed with a one-line idempotency guard in `roomMain.js`.
+  Confirmed the guard is in place by inspection; confirming it actually stops the audible
+  restart needs a browser — see "what agents cannot verify" below.
+- Minor, not fixed: `check username` doesn't account for room capacity, so a 3rd scanner could
+  see "name available" and then get rejected on actual join. Cosmetic only — the real gate on
+  `user joined` is correct.
+- Two suspected issues turned out fine on inspection: `chatUI.js`'s global `.login-content`
+  selector correctly targets the username popup (kept first in the DOM, as documented in
+  Phase 2's notes), and `#refresh-btn` inherits styling from the generic
+  `.window-controls button` rule rather than being unstyled.
+
+**`main` had moved (`b719ea6`):** 4 commits landed while this branch was in progress — PR #2
+merged the `bg` branch (background-visual redesign, `src/js/visuals.js` rewritten for a "3D
+Synthwave Sunset Highway" look with CRT effects) and PR #3 merged a `card-game` branch that
+turned out to contain _only_ that same visual commit, no overlap with anything here. Merged
+clean, zero conflicts — confirmed via diffstat before merging that there was no file overlap.
+
+**Visual parity (`e0d328e`):** `/room` had no background canvas at all — only `chatroom.html`
+(via `main.js`) called `initVisuals()`. Brought `/room` to full structural parity: same toolbar,
+same title-bar, `initVisuals()` + `initChatDrag()` wired into `roomMain.js` matching `main.js`'s
+pattern exactly, so the card game and the generic chatroom read as one app skin. The
+room-specific additions (track selection, now-playing banner, room-entry popup, refresh button)
+stay, but restyled using the site's own CSS variables and its existing button hover accent
+(`#003300`/`#00ff00` — the same one `#username-submit` already uses) instead of the ad hoc
+neon-green/black the panel had before.
+
+Deliberately **not** wired: `glitch-control`/`theme-change` events from `/control` only ever
+broadcast on the default namespace, never `/rooms` — making `/room` live-reactive to those would
+need a real architecture decision (dual namespace connection, or bridging broadcasts), which
+wasn't asked for and isn't built. The background animation runs on its own regardless.
+
 ### Phase 4 — rebrand + mobile (rebrand: main session inline; mobile: agent)
 
 - [ ] 4.1 Rebrand: grep `B0dy_is_0bs0let3` / `Symone` across `src/`; retitle `chatroom.html`
