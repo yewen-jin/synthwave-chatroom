@@ -557,6 +557,10 @@ button {
 /* User avatar panel on right side of input */
 .user-avatar-panel {
   width: 120px;
+  /* Without this the mobile rule's `width: 100%` sits on top of the padding
+     and the panel renders wider than its container — it was overhanging the
+     window's right edge, hidden only because .input-section clips overflow. */
+  box-sizing: border-box;
   padding: 0 var(--spacing-sm);
   display: flex;
   flex-direction: column;
@@ -1185,11 +1189,15 @@ button:hover {
     overflow: hidden;
   }
 
+  /* Horizontal padding matches .message-input-area's (--spacing-sm) so the
+     avatar starts on the same vertical line as the toolbar, input and Send
+     directly below it. It was --spacing-xs, putting the avatar 2px left of
+     that spine — enough to read as misaligned rather than as a choice. */
   .user-avatar-panel {
     flex-direction: row;
     align-items: center;
     justify-content: left;
-    padding: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
     width: 100%;
     border-left: none;
     border-bottom: 1px solid var(--border-color);
@@ -1261,8 +1269,11 @@ button:hover {
     min-height: 44px;
   }
 
+  /* Vertical padding goes (height is the scarce axis here), but the
+     horizontal keeps --spacing-sm so the avatar stays on the same spine as
+     everything else in the column. */
   .user-avatar-panel {
-    padding: 0 var(--spacing-xs);
+    padding: 0 var(--spacing-sm);
   }
 
   .user-avatar {
@@ -1427,6 +1438,18 @@ button:hover {
   border-bottom: 1px solid var(--border-color);
 }
 
+/* Same spine as the rest of the column on a phone: --spacing-xl put the
+   button and timeline 8px right of the avatar, toolbar, input and Send. The
+   roomier padding stays on desktop, where the bar has width to spare.
+   This lives here, not in section 16, because section 20 is *later* in the
+   file — at equal specificity an override up there would simply lose. */
+@media screen and (max-width: 768px), screen and (max-height: 500px) {
+  .track-selection {
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+  }
+}
+
 .track-selection__hint {
   margin: 0;
   font-size: var(--font-size-xs);
@@ -1479,9 +1502,14 @@ button:hover {
 
 /* ---- track timeline ---------------------------------------------------- */
 
-/* Full row of the audio bar, under the button and status. */
+/* Its own full row, always under the button and status. `order: 1` puts it
+   last regardless of DOM position — .now-playing is appended at runtime and
+   would otherwise land after it, splitting the button from its status, which
+   is meant to sit beside it. flex 0 0 100% stops it shrinking up onto that
+   first row instead of wrapping. */
 .timeline {
-  flex-basis: 100%;
+  order: 1;
+  flex: 0 0 100%;
 }
 
 .timeline__track {
