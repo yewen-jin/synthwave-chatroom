@@ -25,8 +25,18 @@ const OUT_DIR = join(__dirname, "..", "audio-assets");
 
 const TRACKS = [{ name: "track-1.wav", freq: 220.0, label: "Track 1" }];
 
-const SAMPLE_RATE = 44100;
-const DURATION_SEC = 20; // long enough to actually test pause/resume by hand
+// Default 20s: long enough to test pause/resume by hand. Override for the
+// track timeline, whose dots sit at 3/6/9/12 min — against a 20s file no dot
+// can ever be drawn and the bar fills instantly, so the feature can't
+// honestly be checked. `TRACK_SECONDS=900 npm run make:audio` gives a
+// 15-minute stand-in matching Symone's planned track.
+const DURATION_SEC = Number(process.env.TRACK_SECONDS) || 20;
+
+// 44.1kHz for short files; anything long drops to 8kHz. A 15-minute 44.1kHz
+// mono WAV is ~79MB, which is a silly thing to regenerate and serve for a
+// placeholder tone — at 8kHz it's ~14MB and sounds no worse for the purpose.
+// audio-assets/ is gitignored, so neither ever enters history.
+const SAMPLE_RATE = DURATION_SEC > 120 ? 8000 : 44100;
 const AMPLITUDE = 0.2; // moderate so it's audible but not harsh
 
 function buildWav(freq) {

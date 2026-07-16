@@ -68,6 +68,18 @@
           >
             ▶ Start
           </button>
+
+          <!-- Track timeline: how far into the track the pair is, with dots
+               at TRACK_MARKERS_SEC. No numeric countdown, by request — it is
+               a sense of where you are, not a clock ticking down at you.
+               Takes a full row of the flex bar. Hidden until the conversation
+               has begun and the track's duration is known. -->
+          <div id="track-timeline" class="timeline" hidden>
+            <div class="timeline__track">
+              <div id="timeline-fill" class="timeline__fill"></div>
+              <div id="timeline-dots" class="timeline__dots"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Messages Container -->
@@ -142,6 +154,11 @@
               class="avatar user-avatar"
             />
             <span class="contact-name" id="user-display-name"></span>
+            <!-- The other player, on this same row rather than in a bar of
+                 its own: it costs no height on a phone, and it reads as the
+                 pair it is — you, and who you're with. Populated from
+                 room-status; hidden until they arrive. -->
+            <span class="contact-with" id="other-player" hidden></span>
           </div>
         </div>
       </div>

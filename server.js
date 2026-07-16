@@ -776,6 +776,11 @@ function currentTrack() {
 function roomStatusPayload(state) {
   return {
     playerCount: state.usernames.size,
+    // Who is here. The client shows whoever isn't itself as "the other
+    // player" — a pair only ever has one. Sent with every status so the name
+    // appears and disappears as they join and leave, rather than relying on
+    // the "entered the chat" line, which scrolls away.
+    usernames: [...state.usernames],
     track: currentTrack(),
     begun: state.begun,
     playing: state.playing,

@@ -16,6 +16,7 @@ import {
 } from "./chatUI.js";
 import { initChatDrag } from "./chatDrag.js";
 import { initVisuals } from "./visuals.js";
+import { TRACK_MARKERS_SEC } from "../../shared/gameParameters.js";
 
 const ROOMS_NAMESPACE = "/rooms";
 
@@ -238,6 +239,104 @@ function setChatOpen(open) {
   }
 }
 
+// ----- the other player -----
+const otherPlayerEl = document.getElementById("other-player");
+
+function showOtherPlayer(usernames) {
+  if (!otherPlayerEl) return;
+  // A pair has at most one "other". Compare against our own name rather than
+  // taking [1], since join order differs per client.
+  const other = (usernames ?? []).find((n) => n !== username);
+  otherPlayerEl.textContent = other ? `with ${other}` : "";
+  otherPlayerEl.hidden = !other;
+}
+
+// ----- track timeline -----
+//
+// How far into the track the pair is: a line, dots at TRACK_MARKERS_SEC, no
+// numbers. Driven by the *room's* clock, not this device's audio.currentTime
+// — the two players must see one identical timeline, and a device whose
+// playback was autoplay-blocked would otherwise show a frozen bar while the
+// game actually ran. The server sends {playing, startedAt, pausedElapsed} and
+// we interpolate locally between broadcasts, so there is no per-second
+// server tick for what is a cosmetic bar.
+const timelineEl = document.getElementById("track-timeline");
+const timelineFillEl = document.getElementById("timeline-fill");
+const timelineDotsEl = document.getElementById("timeline-dots");
+let lastStatus = null; // newest {playing, startedAt, pausedElapsed}
+let dotsBuiltFor = null; // duration the dots were laid out against
+let timelineTimer = null;
+
+// The room's elapsed position, interpolated from the last broadcast.
+function roomElapsedSec() {
+  if (!lastStatus) return 0;
+  const { playing, startedAt, pausedElapsed } = lastStatus;
+  return playing && startedAt
+    ? pausedElapsed + (Date.now() - startedAt) / 1000
+    : pausedElapsed;
+}
+
+function trackDuration(track) {
+  const d = track ? audioCache.get(track)?.duration : NaN;
+  return Number.isFinite(d) && d > 0 ? d : null;
+}
+
+function buildDots(duration) {
+  if (dotsBuiltFor === duration || !timelineDotsEl) return;
+  dotsBuiltFor = duration;
+  timelineDotsEl.innerHTML = "";
+  // Only markers that actually fall inside this track — a shorter track gets
+  // fewer dots rather than dots crowded against the end.
+  TRACK_MARKERS_SEC.filter((m) => m < duration).forEach((m) => {
+    const dot = document.createElement("span");
+    dot.className = "timeline__dot";
+    dot.style.left = `${(m / duration) * 100}%`;
+    dot.dataset.at = String(m);
+    timelineDotsEl.appendChild(dot);
+  });
+}
+
+function renderTimeline(track) {
+  const duration = trackDuration(track);
+  // Nothing honest to draw without a duration (the device may not have loaded
+  // metadata yet) or before they've begun.
+  if (!timelineEl) return;
+  if (!lastKnownBegun || !duration) {
+    timelineEl.hidden = true;
+    return;
+  }
+  timelineEl.hidden = false;
+  buildDots(duration);
+
+  const elapsed = Math.min(roomElapsedSec(), duration);
+  if (timelineFillEl) {
+    timelineFillEl.style.width = `${(elapsed / duration) * 100}%`;
+  }
+  // Dots light as they're passed, so a marker means something once reached
+  // rather than being decoration.
+  timelineDotsEl?.querySelectorAll(".timeline__dot").forEach((dot) => {
+    dot.classList.toggle(
+      "timeline__dot--passed",
+      elapsed >= Number(dot.dataset.at),
+    );
+  });
+}
+
+// Tick only while actually playing — a paused or unstarted room needs no
+// timer at all.
+function syncTimeline(track) {
+  renderTimeline(track);
+  const shouldTick = lastKnownBegun && lastStatus?.playing;
+  if (shouldTick && !timelineTimer) {
+    // 500ms is imperceptible on a 15-minute bar (a ~350px line advances well
+    // under a pixel per tick) and far cheaper than requestAnimationFrame.
+    timelineTimer = setInterval(() => renderTimeline(track), 500);
+  } else if (!shouldTick && timelineTimer) {
+    clearInterval(timelineTimer);
+    timelineTimer = null;
+  }
+}
+
 function preloadTrack(name) {
   if (audioCache.has(name)) return;
   const audio = new Audio(`/audio/${encodeURIComponent(name)}`);
@@ -247,6 +346,12 @@ function preloadTrack(name) {
     if (toggleBtnEl && toggleBtnEl.dataset.track === name) {
       updateToggleButton(name, lastKnownPlaying, lastKnownBegun);
     }
+  });
+  // The timeline can't be drawn until the duration is known, and metadata
+  // usually lands after the first room-status — so redraw when it arrives
+  // rather than leaving the bar hidden until the next broadcast.
+  audio.addEventListener("loadedmetadata", () => {
+    if (toggleBtnEl?.dataset.track === name) syncTimeline(name);
   });
   // A track that 404s or dies mid-fetch must not leave the room silently
   // dead: surface it, and let the next press retry rather than stranding
@@ -392,6 +497,7 @@ function applyPlaybackState({
   pausedElapsed,
   playerCount,
   begun,
+  usernames,
 }) {
   // The audio bar shows as soon as a player is in the room, but the toggle
   // itself only appears once both are named — a solo player shouldn't be
@@ -413,6 +519,11 @@ function applyPlaybackState({
   // reload mid-game rejoins an already-open chat instead of re-gating it.
   lastKnownBegun = !!begun;
   setChatOpen(!!begun);
+  showOtherPlayer(usernames);
+
+  // Keep the newest clock for the timeline to interpolate against.
+  lastStatus = { playing, startedAt, pausedElapsed };
+  syncTimeline(track);
 
   updateToggleButton(track, playing, begun);
   if (!track) {

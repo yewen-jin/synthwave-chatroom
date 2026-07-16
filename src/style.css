@@ -1464,6 +1464,72 @@ button:hover {
   letter-spacing: 0.05em;
 }
 
+/* The other player, sharing the avatar row with your own name. Pushed right
+   so the row reads as the two of you at either end. */
+.contact-with {
+  margin-left: auto;
+  padding-right: var(--spacing-sm);
+  color: var(--secondary-text-color);
+  font-size: var(--font-size-xs);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- track timeline ---------------------------------------------------- */
+
+/* Full row of the audio bar, under the button and status. */
+.timeline {
+  flex-basis: 100%;
+}
+
+.timeline__track {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+/* No transition: the fill is driven by the room clock every 500ms, and
+   animating it would fight the next update — and lie during a seek. */
+.timeline__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 2px;
+  background: var(--text-color);
+  opacity: 0.75;
+}
+
+.timeline__dots {
+  position: absolute;
+  inset: 0;
+}
+
+/* Centred on their mark: left is the marker's position, the translate pulls
+   the dot back by half its own width so the dot's middle lands on the time,
+   not its leading edge. */
+.timeline__dot {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+}
+
+.timeline__dot--passed {
+  background: var(--text-color);
+  border-color: var(--text-color);
+}
+
 /* Stands in for the hidden chat before the pair begins, so the empty panel
    reads as "not yet" rather than as a broken room. */
 .chat-not-begun {
