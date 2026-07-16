@@ -193,57 +193,170 @@ atomic commit per numbered step. All work on branch `thisverisionofme` — `main
 
 ### Phase 0 — prep (main session, no agent)
 
-- [ ] 0.1 Commit the pending dialogue-reorg work from this morning's audit (staged twee
+- [x] 0.1 Commit the pending dialogue-reorg work from this morning's audit (staged twee
       canonicalisation + deletions, plus `package.json` scripts, `scripts/README.md`,
       `scripts/check-dialogue.js`, `AGENTS.md`, `CLAUDE.md`, audit doc) — one commit.
       Commit this plan doc separately.
-- [ ] 0.2 `git switch -c thisverisionofme`
-- [ ] 0.3 Baseline: `npm install` (no `node_modules` locally), `npm test` (dialogue drift),
+- [x] 0.2 `git switch -c thisverisionofme`
+- [x] 0.3 Baseline: `npm install` (no `node_modules` locally), `npm test` (dialogue drift),
       `npm run build`, boot both servers, confirm TBIO transmission works **before** changes.
+
+**Phase 0 outcome (15 Jul):** 0.1 turned out mostly done already — the dialogue-reorg was
+merged as PR #1 (`70b26b5`) and the dirty duplicates in the main checkout had been resolved;
+only the plan doc needed committing (`9468b1a` on `main`). 0.2 became `EnterWorktree` per the
+new CLAUDE.md workflow — branch `worktree-thisverisionofme` from `9468b1a`. 0.3 all green:
+`npm test` in sync, build clean, all 7 routes 200, scripted narrator→player transmission
+verified (dialogue-started → opening image message → sync at `main_portal`, 1 choice → manual
+end). One trap found and fixed en route: `res.sendFile` 404s under `.claude/` worktrees
+(dotfiles default) — fixed in `a047ab5`, documented as worktree trap 6 in CLAUDE.md.
 
 ### Phase 1 — routing & renames (agent: mechanical / Sonnet-tier)
 
-- [ ] 1.1 `git mv src/index.html src/chatroom.html`, then `git mv src/docs.html src/index.html`
+- [x] 1.1 `git mv src/index.html src/chatroom.html`, then `git mv src/docs.html src/index.html`
       (that order — the target name is occupied)
-- [ ] 1.2 `vite.config.js`: point `main` input at the new index (docs), add `chatroom` input
-- [ ] 1.3 `server.js`: add `app.get("/chatroom")`; delete dead `app.get("/")` (server.js:60) and
+- [x] 1.2 `vite.config.js`: point `main` input at the new index (docs), add `chatroom` input
+- [x] 1.3 `server.js`: add `app.get("/chatroom")`; delete dead `app.get("/")` (server.js:60) and
       `app.get("/docs")`; keep the 404 catch-all (now correctly lands on docs)
-- [ ] 1.4 Front page (former docs): add links for `/chatroom` and `/room`
+- [x] 1.4 Front page (former docs): add links for `/chatroom` and `/room`
 - **Acceptance:** build passes; `/` = docs, `/chatroom` = old chat UI, all 5 legacy routes
   byte-identical behaviour; `npm test` still green.
 
+**Phase 1 outcome (15 Jul):** done in the `thisverisionofme` worktree, one commit. Renames in
+the specified order; `vite.config.js` `docs` input dropped, `chatroom` added. Server: `/chatroom`
+route added, dead `/` and `/docs` removed, 404 catch-all now serves the docs page. Front page
+got a `/room` card-game entry (top) and the "General Chatroom" link repointed from `/room1.html`
+to `/chatroom` (the designated generic-chat route — `chatroom.html`, `room1.html`, `room2.html`
+are all variants of the same generic chat UI, so `/room1` is still reachable via its unchanged
+URL, just no longer the front-page's featured chat link). Front-page `<h1>` left as
+`The B0dy_is_0bs0let3` — branding pending Symone's answer to open question 4. Verified: build
+clean, `npm test` in sync, `/` → docs, `/chatroom` → old chat UI, all 5 legacy routes 200,
+`/docs` and mistyped URLs 404 → docs page.
+
 ### Phase 2 — `/rooms` namespace + room page (agent: fork — inherits verified context)
 
-- [ ] 2.1 `server.js`: `io.of("/rooms")` block, **additive only — zero edits to existing
+- [x] 2.1 `server.js`: `io.of("/rooms")` block, **additive only — zero edits to existing
       handlers or the 17 `io.emit` calls.** Join `{roomName, username}` → `socket.join`;
       per-room `Map<roomName, Set<username>>` (never the global `takenUsernames`); capacity 2
       with explicit `room-full` rejection; chat via `nsp.to(room)`; disconnect cleanup frees
       name, empty room clears all state; `room-reset` → broadcast to room. Constants
       (`ROOM_CAPACITY = 2`) in `shared/gameParameters.js`.
-- [ ] 2.2 Client: `src/room.html` + `src/js/roomMain.js` — room name from `location.hash`
+- [x] 2.2 Client: `src/room.html` + `src/js/roomMain.js` — room name from `location.hash`
       (no hash → entry prompt, then set hash); username popup + chat rendering reusing
       `chatUI.js`; refresh button emits `room-reset`, on receipt `location.reload()`.
       Parameterise `initSocket` (socket.js:7) with an optional namespace arg — default
       behaviour unchanged. Page title: `thisverisionofme_thisverisionofyou` from birth.
-- [ ] 2.3 Register `room` in `rollupOptions.input`
+- [x] 2.3 Register `room` in `rollupOptions.input`
 - **Acceptance:** scripted socket.io-client isolation matrix against the real `server.js`
   (legacy client still hears `io.emit`; pairA ↛ pairB; 3rd joiner rejected); browser smoke of
   `/room/#test` on the Vite dev server.
 
+**Phase 2 outcome (15 Jul):** done in the worktree, one commit. `io.of("/rooms")` block added
+before `server.listen` — own `roomStates` Map (`roomName -> { usernames, selectedTrack }`),
+own username sets, never touches global `takenUsernames`/`activeUsers`; none of the 17
+`io.emit` calls or existing handlers changed. Protocol: `check username` → `user joined`
+(→ `room-joined` to joiner + `user joined` broadcast to room, or `room-full` / `username taken`)
+→ `chat` / `room-reset` broadcast to room; disconnect frees the name and clears all room state
+when the room empties. `ROOM_CAPACITY = 2` in `shared/gameParameters.js`. `app.get("/room")`
+added next to `/chatroom`. `initSocket` takes an optional `namespace` arg (default `""` →
+default namespace, unchanged) — `roomMain.js` passes `"/rooms"`. `room.html` mirrors
+`chatroom.html`'s element IDs so `chatUI.js` is reused as-is (username popup kept first in the
+DOM so `chatUI`'s `querySelector('.login-content')` attaches the username error correctly);
+adds a room-name entry overlay (no hash → prompt, then sets the hash) and a refresh button.
+Acceptance: scripted socket.io-client matrix — 8/8 green (alice/bob same-room chat delivered;
+carol the 3rd scanner rejected with `room-full`; dave in roomB isolated from roomA; legacy
+default-ns `io.emit` reaches default ns only, not `/rooms`; `room-reset` reaches both room
+clients). `npm run build` clean, `npm test` in sync, `/room` serves the new title via both the
+prod server and Vite. Browser smoke of `/room/#...` left for Yewen (real two-client session).
+
 ### Phase 3 — audio (agent: fork)
 
-- [ ] 3.1 Server: `app.use("/audio", express.static("audio-assets"))` — a directory **outside**
+- [x] 3.1 Server: `app.use("/audio", express.static("audio-assets"))` — a directory **outside**
       `dist` and **gitignored** (so Vite's `emptyOutDir` never wipes it and Symone's re-exports
       never enter git history; deploy = `rsync` separate from `git pull`). Server reads the dir
       and emits the track list to room clients on join — **track count becomes data, not code**,
       which un-blocks the "1–5 tracks?" question entirely.
-- [ ] 3.2 Commit 2–3 tiny placeholder MP3s (seconds long, a few KB) for dev.
-- [ ] 3.3 Client: when the room reaches 2 named players, show track selection; either player
+- [x] 3.2 Commit 2–3 tiny placeholder MP3s (seconds long, a few KB) for dev.
+- [x] 3.3 Client: when the room reaches 2 named players, show track selection; either player
       picks; preload (`canplaythrough`) gates the play button; `audio-select` → server
       broadcasts `audio-play` to the room; selected track lives in room state, cleared on
       reset/empty.
 - **Acceptance:** two browser clients in one room hear the same track; second room independent;
   reset returns both to name entry with track cleared.
+
+**Phase 3 outcome (15 Jul):** done in the worktree, one commit. **Track count is open — `?`** —
+the mechanism is data-driven so 1, 3, or 5 all work with no code change; currently 3 placeholder
+tracks generated for dev. Final count awaiting Symone's answer (open question 2). Server serves
+`/audio` from `audio-assets/` (outside `dist`, gitignored), reads the dir at boot into
+`audioTracks` (any audio extension, sorted), and emits `audio-tracks` to each joiner plus
+`room-status` (playerCount + selectedTrack) to the room on every join. `audio-select` sets
+`state.selectedTrack` (first pick wins, locked until reset), broadcasts `audio-play` + updated
+`room-status` to the room only; a late/reconnecting client re-syncs via `room-status`. Selected
+track is cleared on reset/empty because `freeRoomSlot` deletes the whole room state when the
+room empties (the reloads from `room-reset` disconnect both sockets). Client: `room.html` adds a
+`#track-selection` panel (buttons injected by JS from the track list — count is dynamic);
+`roomMain.js` preloads every track (`new Audio`, `canplaythrough` enables its button), shows
+selection at 2 players, plays on `audio-play`, shows a "now playing" banner, locks after pick.
+Placeholder audio: no ffmpeg on the machine, so `scripts/make-placeholder-audio.js` (committed)
+generates 3 short distinct-tone **WAV** files in `audio-assets/` via `npm run make:audio` —
+format-agnostic, so Symone's MP3 masters drop in with no code change. Deviation from 3.2: the
+placeholders are **not committed** (binary blobs), only the generator script is — matches Task 4's
+"keep audio out of git"; regenerate in any checkout/worktree with `npm run make:audio`.
+Acceptance: scripted check that `/audio/*` serves, `audio-select` broadcasts `audio-play` to the
+room only (second room independent), and reset clears selectedTrack; `npm run build` clean, `npm
+test` in sync. **Actual audio through headphones, autoplay on real browsers/phones, and venue wifi
+left for Yewen** (per "what agents cannot verify") — autoplay should hold because both players have
+a prior user gesture (Sign In) before `audio-play` arrives, but verify on iOS Safari.
+
+**Yewen-verified 15 Jul (browser, two-window):** 3 audio files play, refresh button resets both
+clients back to name entry. Full 15-min runtime not exercised (placeholders are 3 s); real-device
+autoplay (iOS Safari) and venue wifi still to confirm before the show.
+
+### Interlude — audit of phases 0–3, and visual parity with /chatroom (16 Jul)
+
+Requested out of sequence: an audit of everything committed so far, then bringing in the
+background-visual redesign that had landed on `main` while this branch was in progress.
+
+**Audit findings:**
+
+- Confirmed via a whitespace-ignored diff over the full range since `main`: the pre-existing
+  narrator/TBIO logic in `server.js` has **zero semantic changes**, only reformatting.
+- Room isolation — scripted socket.io-client matrix, 4/4: capacity cap rejects a 3rd joiner,
+  roomA↛roomB, `/rooms` never leaks to/from the default namespace.
+- **Real bug, found and fixed (`dfe3c6e`):** `audio-select` broadcasts both `audio-play` and
+  `room-status` (carrying the same track) to the room — `room-status` doubles as the resync
+  path for a mid-session joiner, so it has to carry the track. The client's `playTrack()` had
+  no guard against being called twice for the same track, so every selection restarted
+  playback from 0:00 within milliseconds of starting. Reproduced empirically (scripted client
+  received both signals at +0ms); fixed with a one-line idempotency guard in `roomMain.js`.
+  Confirmed the guard is in place by inspection; confirming it actually stops the audible
+  restart needs a browser — see "what agents cannot verify" below.
+- Minor, not fixed: `check username` doesn't account for room capacity, so a 3rd scanner could
+  see "name available" and then get rejected on actual join. Cosmetic only — the real gate on
+  `user joined` is correct.
+- Two suspected issues turned out fine on inspection: `chatUI.js`'s global `.login-content`
+  selector correctly targets the username popup (kept first in the DOM, as documented in
+  Phase 2's notes), and `#refresh-btn` inherits styling from the generic
+  `.window-controls button` rule rather than being unstyled.
+
+**`main` had moved (`b719ea6`):** 4 commits landed while this branch was in progress — PR #2
+merged the `bg` branch (background-visual redesign, `src/js/visuals.js` rewritten for a "3D
+Synthwave Sunset Highway" look with CRT effects) and PR #3 merged a `card-game` branch that
+turned out to contain _only_ that same visual commit, no overlap with anything here. Merged
+clean, zero conflicts — confirmed via diffstat before merging that there was no file overlap.
+
+**Visual parity (`e0d328e`):** `/room` had no background canvas at all — only `chatroom.html`
+(via `main.js`) called `initVisuals()`. Brought `/room` to full structural parity: same toolbar,
+same title-bar, `initVisuals()` + `initChatDrag()` wired into `roomMain.js` matching `main.js`'s
+pattern exactly, so the card game and the generic chatroom read as one app skin. The
+room-specific additions (track selection, now-playing banner, room-entry popup, refresh button)
+stay, but restyled using the site's own CSS variables and its existing button hover accent
+(`#003300`/`#00ff00` — the same one `#username-submit` already uses) instead of the ad hoc
+neon-green/black the panel had before.
+
+Deliberately **not** wired: `glitch-control`/`theme-change` events from `/control` only ever
+broadcast on the default namespace, never `/rooms` — making `/room` live-reactive to those would
+need a real architecture decision (dual namespace connection, or bridging broadcasts), which
+wasn't asked for and isn't built. The background animation runs on its own regardless.
 
 ### Phase 4 — rebrand + mobile (rebrand: main session inline; mobile: agent)
 
@@ -273,7 +386,11 @@ and reports.**
 **Blocking — need these today:**
 
 1. **The attached visual edits** — can't scope task 2 without them.
-2. **Track count** — 1 to 5? The selection UI depends on it.
+2. **Track count** — 1 to 5? **Still open (`?`).** The selection UI is now data-driven
+   (server lists whatever is in `audio-assets/`), so the count no longer blocks the build —
+   but the final number from Symone is still needed to prep the masters. Dev currently runs
+   with 3 placeholders (`npm run make:audio`); add/remove entries in
+   `scripts/make-placeholder-audio.js` to change the placeholder count.
 
 **Before the event, not before I start:**
 
