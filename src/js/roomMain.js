@@ -196,20 +196,47 @@ window._socket.on("room-full", ({ capacity } = {}) => {
 //                       while paused. Idempotent — a no-op if already playing.
 //   audio-pause-request client -> server: either player presses the toggle
 //                       while playing. Idempotent — a no-op if already paused.
-//   room-status         server -> room/joiner: {playerCount, track, playing,
-//                       startedAt, pausedElapsed} — the single source of
-//                       truth for the toggle button's state and for seeking
+//   room-status         server -> room/joiner: {playerCount, track, begun,
+//                       playing, startedAt, pausedElapsed} — the single
+//                       source of truth for the toggle button's state, for
+//                       whether the chat is open (`begun`), and for seeking
 //                       a late joiner / reconnecting client to the correct
 //                       elapsed position instead of restarting from 0.
 const audioCache = new Map(); // track filename -> HTMLAudioElement
 const loadFailed = new Set(); // tracks whose fetch/decode errored — retryable
 let appliedPlaybackKey = null; // last-applied "track|playing|startedAt" — see applyPlaybackState
 let lastKnownPlaying = false; // so async listeners can refresh the button correctly
+let lastKnownBegun = false; // ditto — has "begin conversation" been pressed?
 
 const audioBarEl = document.getElementById("audio-bar");
 const audioWaitingEl = document.getElementById("audio-waiting");
 const toggleBtnEl = document.getElementById("audio-toggle-btn");
 let nowPlayingEl = null;
+
+// R7: "begin conversation" opens the chatroom and starts the music in one
+// press. Until then the messages and the composer are hidden — the room is a
+// held breath, not a chat you can get on with. The audio bar stays visible
+// throughout; it carries the button that opens all this.
+const chatBodyEl = document.getElementById("chatBody");
+const inputSectionEl = document.querySelector(".input-section");
+let notYetEl = null;
+
+function setChatOpen(open) {
+  if (chatBodyEl) chatBodyEl.style.display = open ? "" : "none";
+  if (inputSectionEl) inputSectionEl.style.display = open ? "" : "none";
+
+  // Say why the room looks empty, rather than leaving a blank panel that
+  // reads as broken while they wait for the other player.
+  if (!open && !notYetEl) {
+    notYetEl = document.createElement("div");
+    notYetEl.className = "chat-not-begun";
+    notYetEl.textContent = "The conversation has not begun.";
+    document.querySelector(".chat-area")?.appendChild(notYetEl);
+  } else if (open && notYetEl) {
+    notYetEl.remove();
+    notYetEl = null;
+  }
+}
 
 function preloadTrack(name) {
   if (audioCache.has(name)) return;
@@ -218,7 +245,7 @@ function preloadTrack(name) {
   audio.addEventListener("canplaythrough", () => {
     loadFailed.delete(name);
     if (toggleBtnEl && toggleBtnEl.dataset.track === name) {
-      updateToggleButton(name, lastKnownPlaying);
+      updateToggleButton(name, lastKnownPlaying, lastKnownBegun);
     }
   });
   // A track that 404s or dies mid-fetch must not leave the room silently
@@ -227,7 +254,7 @@ function preloadTrack(name) {
   audio.addEventListener("error", () => {
     loadFailed.add(name);
     if (toggleBtnEl && toggleBtnEl.dataset.track === name) {
-      updateToggleButton(name, lastKnownPlaying);
+      updateToggleButton(name, lastKnownPlaying, lastKnownBegun);
     }
   });
   audioCache.set(name, audio);
@@ -262,16 +289,27 @@ function showNowPlaying(name, playing) {
 // gating on it left the toggle disabled forever and killed the feature. A
 // press starts loading; play() buffers on demand. Preload is an optimisation,
 // never a precondition.
-function updateToggleButton(track, playing) {
+// One button, three labels. Before the pair has begun it reads "begin
+// conversation" — Symone's wording — because that press does both jobs at
+// once: it opens the chat and starts the music. Afterwards it is only a music
+// control, so it becomes Pause/Resume; `begun` never goes back to false, so
+// pausing the track can't shut the conversation.
+function updateToggleButton(track, playing, begun) {
   lastKnownPlaying = playing;
   if (!toggleBtnEl) return;
   toggleBtnEl.dataset.track = track ?? "";
   toggleBtnEl.textContent = loadFailed.has(track)
     ? "⟳ Retry track"
-    : playing
-      ? "⏸ Pause"
-      : "▶ Start";
+    : !begun
+      ? "begin conversation"
+      : playing
+        ? "⏸ Pause"
+        : "▶ Resume";
   toggleBtnEl.disabled = !track;
+  toggleBtnEl.classList.toggle(
+    "track-btn--begin",
+    !begun && !loadFailed.has(track),
+  );
 }
 
 if (toggleBtnEl) {
@@ -286,7 +324,7 @@ if (toggleBtnEl) {
       audioCache.delete(track);
       loadFailed.delete(track);
       preloadTrack(track);
-      updateToggleButton(track, playing);
+      updateToggleButton(track, playing, lastKnownBegun);
     }
 
     // Start playback synchronously, inside the gesture. iOS only grants an
@@ -357,6 +395,7 @@ function applyPlaybackState({
   startedAt,
   pausedElapsed,
   playerCount,
+  begun,
 }) {
   // The audio bar shows as soon as a player is in the room, but the toggle
   // itself only appears once both are named — a solo player shouldn't be
@@ -371,7 +410,13 @@ function applyPlaybackState({
   if (toggleBtnEl)
     toggleBtnEl.style.display = bothPresent ? "inline-block" : "none";
 
-  updateToggleButton(track, playing);
+  // R7: the chat itself stays shut until someone presses "begin conversation".
+  // Server-driven rather than local, so both players open together and a
+  // reload mid-game rejoins an already-open chat instead of re-gating it.
+  lastKnownBegun = !!begun;
+  setChatOpen(!!begun);
+
+  updateToggleButton(track, playing, begun);
   if (!track) {
     showNowPlaying(null);
     return;
@@ -408,7 +453,13 @@ function applyPlaybackState({
       .play()
       .then(hideTapToEnable)
       .catch((err) => {
-        // Almost always the autoplay policy on the non-pressing device.
+        // Not every rejection is an autoplay block, and treating them alike
+        // put a "tap to enable sound" prompt in front of players who had
+        // simply pressed Pause. Calling pause() while play() is still pending
+        // rejects it with AbortError — that is us, not the browser refusing.
+        // The lastKnownPlaying check catches the same race more generally:
+        // by the time a stale promise settles the room may have moved on.
+        if (err?.name === "AbortError" || !lastKnownPlaying) return;
         console.warn("audio play blocked:", err);
         showTapToEnable();
       });
@@ -447,6 +498,10 @@ window._socket.on("reconnect", () => {
     window._socket.emit("user joined", { roomName, username });
   }
 });
+
+// Start shut, before the first room-status lands, so the chat can't flash
+// open for a frame and then close again.
+setChatOpen(false);
 
 // Initial screen: room name first if missing, otherwise straight to sign-in.
 if (roomName) {

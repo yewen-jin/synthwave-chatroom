@@ -1393,6 +1393,28 @@ button:hover {
   color: #00ff00;
 }
 
+/* "begin conversation" is the one press that opens the room, so it carries
+   more weight than the Pause/Resume it becomes afterwards. */
+.track-btn--begin {
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: var(--font-size-base);
+  letter-spacing: 0.05em;
+}
+
+/* Stands in for the hidden chat before the pair begins, so the empty panel
+   reads as "not yet" rather than as a broken room. */
+.chat-not-begun {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--secondary-text-color);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
 .now-playing {
   width: 100%;
   box-sizing: border-box;

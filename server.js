@@ -755,6 +755,12 @@ function getRoomState(roomName) {
   if (!roomStates.has(roomName)) {
     roomStates.set(roomName, {
       usernames: new Set(),
+      // Has either player pressed "begin conversation" yet? Latches true on
+      // the first play and stays true — pausing the music must not shut the
+      // chat again, and a reconnecting player has to be able to tell "not
+      // started" from "started but currently paused". Cleared only when the
+      // room empties or is reset.
+      begun: false,
       playing: false,
       startedAt: null,
       pausedElapsed: 0,
@@ -771,6 +777,7 @@ function roomStatusPayload(state) {
   return {
     playerCount: state.usernames.size,
     track: currentTrack(),
+    begun: state.begun,
     playing: state.playing,
     startedAt: state.startedAt,
     pausedElapsed: state.pausedElapsed,
@@ -863,10 +870,12 @@ roomsNsp.on("connection", (socket) => {
     const track = currentTrack();
     if (!track || state.playing) return;
 
+    const first = !state.begun;
+    state.begun = true; // latches: "begin conversation" opens the chat for good
     state.playing = true;
     state.startedAt = Date.now();
     console.log(
-      `[/rooms] play in room "${socket.roomName}" (track "${track}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
+      `[/rooms] ${first ? "BEGIN CONVERSATION" : "play"} in room "${socket.roomName}" (track "${track}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
     );
     roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
   });

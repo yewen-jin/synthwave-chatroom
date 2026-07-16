@@ -130,6 +130,19 @@
             </div>
             <button class="send-btn">Send</button>
           </div>
+
+          <!-- User Avatar Side Panel — R5 ("Keep Display name for each person").
+               #user-display-name is what chatUI.js's updateUserDisplayName()
+               writes to; without this block that call was a silent no-op and
+               the room showed no display name at all. -->
+          <div class="user-avatar-panel">
+            <img
+              src="assets/images/mask.svg"
+              alt="Your Avatar"
+              class="avatar user-avatar"
+            />
+            <span class="contact-name" id="user-display-name"></span>
+          </div>
         </div>
       </div>
     </div>
