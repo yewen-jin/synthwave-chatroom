@@ -14,6 +14,8 @@ import {
   hideErrorMessage,
   updateUserDisplayName,
 } from "./chatUI.js";
+import { initChatDrag } from "./chatDrag.js";
+import { initVisuals } from "./visuals.js";
 
 const ROOMS_NAMESPACE = "/rooms";
 
@@ -145,6 +147,11 @@ function onUsernameTaken() {
 
 // initChatUI wires the username popup + chat input/send button.
 initChatUI(handleSend, handleUsernameSubmit);
+// Same background canvas + draggable/maximizable window as /chatroom, so the
+// room reads as the same app skin. No glitch-control wiring: those events
+// only ever broadcast on the default namespace (from /control), not /rooms.
+initVisuals();
+initChatDrag();
 
 // Connect to the isolated /rooms namespace.
 window._socket = initSocket(
