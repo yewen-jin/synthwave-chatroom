@@ -425,11 +425,14 @@ and reports.**
 **Blocking — need these today:**
 
 1. **The attached visual edits** — can't scope task 2 without them.
-2. **Track count** — 1 to 5? **Still open (`?`).** The selection UI is now data-driven
-   (server lists whatever is in `audio-assets/`), so the count no longer blocks the build —
-   but the final number from Symone is still needed to prep the masters. Dev currently runs
-   with 3 placeholders (`npm run make:audio`); add/remove entries in
-   `scripts/make-placeholder-audio.js` to change the placeholder count.
+2. **Track count — RESOLVED (16 Jul): one track for now.** Symone confirmed the real event
+   ships with exactly one track. The UI stays as the current single-track ▶/⏸ bar — no picker.
+   The list-shaped protocol (`audio-tracks`, `readAudioTracks()`) is kept deliberately rather
+   than hardcoding "one track" into the wire format, so a future "change track" button + popup
+   for multi-track can read from the same source without another server rewrite. That multi-track
+   UI is explicitly **not** wanted yet. Dev runs with 1 placeholder (`npm run make:audio`
+   generates `track-1.wav`, 20 s); add entries in `scripts/make-placeholder-audio.js` when more
+   tracks are needed.
 
 **Before the event, not before I start:**
 
