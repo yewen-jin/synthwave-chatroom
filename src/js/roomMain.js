@@ -647,8 +647,18 @@ if (refreshBtn) {
   });
 }
 
-// Re-join on reconnect (socket.io may re-establish without a page reload).
-window._socket.on("reconnect", () => {
+// Re-join whenever the socket (re)connects. socket.io v4 has NO "reconnect"
+// event on the Socket — it lives on the Manager (socket.io.on("reconnect")) —
+// so the handler this replaces never fired even once. The room lives on the
+// server's socket object, so a reconnected client that doesn't re-announce
+// itself is connected but in no room at all: silently outside its own game,
+// receiving nothing. That is exactly what a wifi blip or a server restart
+// does, which is the case all of this is meant to survive.
+//
+// "connect" fires on the first connection and on every reconnection. The
+// guard makes the first one a no-op — there is no username yet — so one
+// handler covers both without a second code path.
+window._socket.on("connect", () => {
   if (username && roomName) {
     window._socket.emit("user joined", { roomName, username });
   }

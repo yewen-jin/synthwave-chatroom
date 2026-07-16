@@ -4,7 +4,14 @@ import { createServer } from "http";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { readFile } from "fs/promises";
-import { readdirSync, existsSync } from "fs";
+import {
+  readdirSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+  renameSync,
+} from "fs";
 import { randomBytes } from "crypto";
 import QRCode from "qrcode";
 import * as GameParameters from "./shared/gameParameters.js";
@@ -788,19 +795,121 @@ function getRoomState(roomName) {
       // Has either player pressed "begin conversation" yet? Latches true on
       // the first play and stays true — pausing the music must not shut the
       // chat again, and a reconnecting player has to be able to tell "not
-      // started" from "started but currently paused". Cleared only when the
-      // room empties or is reset.
+      // started" from "started but currently paused". Cleared only on reset.
       begun: false,
       playing: false,
       startedAt: null,
       pausedElapsed: 0,
+      updatedAt: Date.now(), // for pruning abandoned rooms — see SESSION_TTL_MS
     });
   }
   return roomStates.get(roomName);
 }
 
+// Mark a room as touched and schedule a write. Call after any change worth
+// surviving a restart.
+function touchRoom(state) {
+  state.updatedAt = Date.now();
+  persistSessions();
+}
+
 function currentTrack() {
   return readAudioTracks()[0] ?? null;
+}
+
+// ---------------------------------------------------------------------------
+// Session persistence
+//
+// Rooms are minted per pair and their ids are never reused, so a room that
+// empties can't be inherited by anyone — which is what lets us keep it. Both
+// players can close everything, reopen their #hash, and find their game where
+// they left it, even across a server restart or deploy.
+//
+// Two rules make this work:
+//
+// 1. PRESENCE IS NEVER PERSISTED. `usernames` is bound to live sockets;
+//    restoring it would greet returning players with "name taken" — their own
+//    ghost holding the slot. Only the session (begun + the clock) is written.
+//
+// 2. THE FILE ALWAYS HOLDS A PAUSED SNAPSHOT. Writing `playing: true` with a
+//    `startedAt` would be a lie the moment the process dies: on boot the
+//    elapsed time would be computed against a timestamp from before the
+//    outage, and the track would jump forward by however long the server was
+//    down. So a playing room is written as paused at its elapsed-so-far, and
+//    restored paused. Players press Resume — which is the same thing they'd
+//    do after any interruption.
+// ---------------------------------------------------------------------------
+const SESSIONS_DIR = join(__dirname, "data");
+const SESSIONS_FILE = join(SESSIONS_DIR, "room-sessions.json");
+const SESSION_TTL_MS = 24 * 60 * 60 * 1000; // prune abandoned rooms after a day
+let persistTimer = null;
+
+// The room's elapsed position right now, whether it's running or paused.
+function elapsedNow(state) {
+  return state.playing && state.startedAt
+    ? state.pausedElapsed + (Date.now() - state.startedAt) / 1000
+    : state.pausedElapsed;
+}
+
+function writeSessionsNow() {
+  persistTimer = null;
+  const now = Date.now();
+  const out = {};
+  for (const [roomName, state] of roomStates) {
+    if (state.updatedAt && now - state.updatedAt > SESSION_TTL_MS) continue;
+    out[roomName] = {
+      begun: state.begun,
+      pausedElapsed: elapsedNow(state), // see rule 2 above
+      updatedAt: state.updatedAt ?? now,
+    };
+  }
+  try {
+    mkdirSync(SESSIONS_DIR, { recursive: true });
+    // Write-then-rename: a process that dies mid-write must not leave a
+    // half-written file that fails to parse on the next boot, taking every
+    // room with it.
+    const tmp = `${SESSIONS_FILE}.tmp`;
+    writeFileSync(tmp, JSON.stringify(out, null, 2));
+    renameSync(tmp, SESSIONS_FILE);
+  } catch (err) {
+    // Never let a disk problem take the show down — the in-memory session is
+    // still authoritative and the game carries on.
+    console.error("[/rooms] could not persist sessions:", err.message);
+  }
+}
+
+function persistSessions() {
+  if (persistTimer) return; // coalesce bursts; at most one write per second
+  persistTimer = setTimeout(writeSessionsNow, 1000);
+}
+
+function loadSessions() {
+  if (!existsSync(SESSIONS_FILE)) return;
+  let parsed;
+  try {
+    parsed = JSON.parse(readFileSync(SESSIONS_FILE, "utf8"));
+  } catch (err) {
+    console.error(
+      `[/rooms] ignoring unreadable ${SESSIONS_FILE}: ${err.message}`,
+    );
+    return;
+  }
+  const now = Date.now();
+  let restored = 0;
+  for (const [roomName, s] of Object.entries(parsed ?? {})) {
+    if (s.updatedAt && now - s.updatedAt > SESSION_TTL_MS) continue;
+    roomStates.set(roomName, {
+      usernames: new Set(), // presence is live — never restored (rule 1)
+      begun: !!s.begun,
+      playing: false, // restored paused (rule 2)
+      startedAt: null,
+      pausedElapsed: Number(s.pausedElapsed) || 0,
+      updatedAt: s.updatedAt ?? now,
+    });
+    restored++;
+  }
+  if (restored)
+    console.log(`[/rooms] restored ${restored} session(s) from disk`);
 }
 
 // A fresh room id, guaranteed not to be one that already has state. Player A
@@ -842,11 +951,25 @@ function freeRoomSlot(roomName, username) {
   const state = roomStates.get(roomName);
   if (!state) return;
   state.usernames.delete(username);
-  // Clear all room state once the room empties — fresh slate for the next pair.
-  if (state.usernames.size === 0) {
-    roomStates.delete(roomName);
-    console.log(`Room "${roomName}" emptied — cleared all state`);
+
+  // A player vanished mid-game: hold the session where it is rather than let
+  // the track run on without them. Their partner sees the pairing QR again
+  // (playerCount < 2) and the timeline stops too, since both follow the room
+  // clock rather than either device's audio.
+  if (state.playing && state.usernames.size < GameParameters.ROOM_CAPACITY) {
+    state.pausedElapsed = elapsedNow(state);
+    state.playing = false;
+    state.startedAt = null;
+    console.log(
+      `[/rooms] "${roomName}" auto-paused at ${state.pausedElapsed.toFixed(1)}s — a player dropped`,
+    );
   }
+
+  // The room is deliberately NOT deleted when it empties. Ids are minted per
+  // pair and never handed out twice, so an idle room cannot be inherited by
+  // anyone — and both players must be able to reopen their #hash and find the
+  // game where they left it. Abandoned rooms age out via SESSION_TTL_MS.
+  touchRoom(state);
 }
 
 roomsNsp.on("connection", (socket) => {
@@ -894,6 +1017,9 @@ roomsNsp.on("connection", (socket) => {
     socket.roomName = roomName;
     socket.username = username;
     state.usernames.add(username);
+    // Not for the username's sake (presence is never persisted) — this keeps
+    // an active room's updatedAt fresh so it can't age out mid-game.
+    touchRoom(state);
 
     console.log(
       `[/rooms] ${username} joined room "${roomName}" (${state.usernames.size}/${GameParameters.ROOM_CAPACITY})`,
@@ -945,6 +1071,7 @@ roomsNsp.on("connection", (socket) => {
     console.log(
       `[/rooms] ${first ? "BEGIN CONVERSATION" : "play"} in room "${socket.roomName}" (track "${track}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
     );
+    touchRoom(state);
     roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
   });
 
@@ -959,6 +1086,7 @@ roomsNsp.on("connection", (socket) => {
     console.log(
       `[/rooms] pause in room "${socket.roomName}" (track "${currentTrack()}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
     );
+    touchRoom(state);
     roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
   });
 
@@ -990,9 +1118,30 @@ roomsNsp.on("connection", (socket) => {
       console.log(`[/rooms] ${username} left room "${roomName}"`);
       roomsNsp.to(roomName).emit("user left", username);
       freeRoomSlot(roomName, username);
+      // Tell whoever is left. Without this the remaining player's UI keeps
+      // the last playerCount it saw, so it would neither surface the pairing
+      // QR again nor reflect the auto-pause above.
+      const state = roomStates.get(roomName);
+      if (state) {
+        roomsNsp.to(roomName).emit("room-status", roomStatusPayload(state));
+      }
     }
   });
 });
+
+// Bring back any sessions from a previous run before accepting connections,
+// so a pair reopening their #hash after a restart finds their game rather
+// than a blank room. Restored paused — see the persistence notes above.
+loadSessions();
+
+// Last-gasp flush. A clean shutdown (systemd restart, deploy, Ctrl-C) would
+// otherwise lose up to the 1s debounce window.
+for (const signal of ["SIGINT", "SIGTERM"]) {
+  process.on(signal, () => {
+    writeSessionsNow();
+    process.exit(0);
+  });
+}
 
 // Start server
 const PORT = process.env.PORT || 3000;
