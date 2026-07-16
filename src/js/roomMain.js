@@ -204,8 +204,10 @@ window._socket.on("room-full", ({ capacity } = {}) => {
 const audioCache = new Map(); // track filename -> HTMLAudioElement
 const trackReady = new Set(); // tracks that have fired canplaythrough
 let appliedPlaybackKey = null; // last-applied "track|playing|startedAt" — see applyPlaybackState
+let lastKnownPlaying = false; // so the canplaythrough listener can refresh the button correctly
 
 const audioBarEl = document.getElementById("audio-bar");
+const audioWaitingEl = document.getElementById("audio-waiting");
 const toggleBtnEl = document.getElementById("audio-toggle-btn");
 let nowPlayingEl = null;
 
@@ -216,7 +218,7 @@ function preloadTrack(name) {
   audio.addEventListener("canplaythrough", () => {
     trackReady.add(name);
     if (toggleBtnEl && toggleBtnEl.dataset.track === name) {
-      toggleBtnEl.disabled = false;
+      updateToggleButton(name, lastKnownPlaying);
     }
   });
   audioCache.set(name, audio);
@@ -246,10 +248,16 @@ function showNowPlaying(name, playing) {
 }
 
 function updateToggleButton(track, playing) {
+  lastKnownPlaying = playing;
   if (!toggleBtnEl) return;
   toggleBtnEl.dataset.track = track ?? "";
-  toggleBtnEl.textContent = playing ? "⏸ Pause" : "▶ Start";
-  toggleBtnEl.disabled = !track || (!playing && !trackReady.has(track));
+  const loading = !!track && !playing && !trackReady.has(track);
+  toggleBtnEl.textContent = loading
+    ? "Loading track…"
+    : playing
+      ? "⏸ Pause"
+      : "▶ Start";
+  toggleBtnEl.disabled = !track || loading;
 }
 
 if (toggleBtnEl) {
@@ -271,12 +279,18 @@ function applyPlaybackState({
   pausedElapsed,
   playerCount,
 }) {
-  // The audio bar only appears once both players are named — a solo player
-  // shouldn't be able to start the shared session's music before their
-  // partner arrives. Runs unconditionally (not gated by the idempotency key
-  // below) since playerCount can change independently of playback state.
+  // The audio bar shows as soon as a player is in the room, but the toggle
+  // itself only appears once both are named — a solo player shouldn't be
+  // able to start the shared session's music before their partner arrives.
+  // Runs unconditionally (not gated by the idempotency key below) since
+  // playerCount can change independently of playback state.
+  const bothPresent = playerCount >= 2;
   if (audioBarEl)
-    audioBarEl.style.display = playerCount >= 2 ? "block" : "none";
+    audioBarEl.style.display = playerCount >= 1 ? "block" : "none";
+  if (audioWaitingEl)
+    audioWaitingEl.style.display = bothPresent ? "none" : "block";
+  if (toggleBtnEl)
+    toggleBtnEl.style.display = bothPresent ? "inline-block" : "none";
 
   updateToggleButton(track, playing);
   if (!track) {

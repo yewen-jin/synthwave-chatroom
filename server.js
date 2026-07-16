@@ -726,12 +726,16 @@ const roomsNsp = io.of("/rooms");
 // Per-room state. Own map, own username sets — never the global takenUsernames,
 // or the cross-contamination comes straight back.
 //
-// Audio: for the actual event there is exactly one track, so the room
-// auto-selects it (tracks[0]) the moment the room is created — no picker UI
-// needed. This stays list-shaped rather than hardcoded to "the one track" so
-// a future multi-track picker (a separate button + popup, per Symone — not
-// built yet) can slot in later without a server rewrite: it would just stop
-// auto-selecting and let a client choose from `readAudioTracks()` instead.
+// Audio: for the actual event there is exactly one track. Deliberately NOT
+// stored on room creation — currentTrack() below reads audio-assets/ fresh
+// every time it's asked, same as readAudioTracks(). Storing "the room's
+// track" once, at creation, was a real bug: a room created before the file
+// existed (or during any transient audio-assets/ state) would carry a
+// permanently-null track for its whole lifetime, silently no-oping every
+// play request with no client-visible explanation. Recomputing removes that
+// class of bug entirely. Stays list-shaped rather than hardcoded to "the one
+// track" so a future multi-track picker (a separate button + popup, per
+// Symone — not built yet) can slot in later without a server rewrite.
 //
 // playing/startedAt/pausedElapsed model a pause-able, resumable playback
 // clock: pausedElapsed accumulates seconds already played; startedAt marks
@@ -739,14 +743,12 @@ const roomsNsp = io.of("/rooms");
 // at any moment = playing ? pausedElapsed + (now - startedAt) : pausedElapsed.
 // This is what lets a late joiner or a reconnecting client seek to the
 // correct position — playing or paused — instead of restarting from 0.
-const roomStates = new Map(); // roomName -> { usernames, track, playing, startedAt, pausedElapsed }
+const roomStates = new Map(); // roomName -> { usernames, playing, startedAt, pausedElapsed }
 
 function getRoomState(roomName) {
   if (!roomStates.has(roomName)) {
-    const tracks = readAudioTracks();
     roomStates.set(roomName, {
       usernames: new Set(),
-      track: tracks[0] ?? null,
       playing: false,
       startedAt: null,
       pausedElapsed: 0,
@@ -755,10 +757,14 @@ function getRoomState(roomName) {
   return roomStates.get(roomName);
 }
 
+function currentTrack() {
+  return readAudioTracks()[0] ?? null;
+}
+
 function roomStatusPayload(state) {
   return {
     playerCount: state.usernames.size,
-    track: state.track,
+    track: currentTrack(),
     playing: state.playing,
     startedAt: state.startedAt,
     pausedElapsed: state.pausedElapsed,
@@ -848,12 +854,13 @@ roomsNsp.on("connection", (socket) => {
   socket.on("audio-play-request", () => {
     if (!socket.roomName) return;
     const state = getRoomState(socket.roomName);
-    if (!state.track || state.playing) return;
+    const track = currentTrack();
+    if (!track || state.playing) return;
 
     state.playing = true;
     state.startedAt = Date.now();
     console.log(
-      `[/rooms] play in room "${socket.roomName}" (track "${state.track}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
+      `[/rooms] play in room "${socket.roomName}" (track "${track}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
     );
     roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
   });
@@ -861,13 +868,13 @@ roomsNsp.on("connection", (socket) => {
   socket.on("audio-pause-request", () => {
     if (!socket.roomName) return;
     const state = getRoomState(socket.roomName);
-    if (!state.track || !state.playing) return;
+    if (!state.playing) return;
 
     state.pausedElapsed += (Date.now() - state.startedAt) / 1000;
     state.playing = false;
     state.startedAt = null;
     console.log(
-      `[/rooms] pause in room "${socket.roomName}" (track "${state.track}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
+      `[/rooms] pause in room "${socket.roomName}" (track "${currentTrack()}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
     );
     roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
   });

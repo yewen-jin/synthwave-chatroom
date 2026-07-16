@@ -43,17 +43,27 @@
         </div>
       </div> -->
 
-        <!-- Audio bar (shown once the room has 2 named players). One track
-             for now, auto-selected by the server — no picker. Either player
-             can press the toggle; play/pause applies to both at once.
-             Disabled until the track has preloaded, so pressing it can't
-             stall mid-game. A future multi-track picker (separate button +
-             popup) would live here alongside the toggle — not built yet. -->
+        <!-- Audio bar. Shown as soon as a player is in the room; the toggle
+             itself only appears once both players are named — before that,
+             a waiting hint. One track for now, auto-selected by the server —
+             no picker. Either player can press the toggle; play/pause
+             applies to both at once. Disabled until the track has preloaded,
+             so pressing it can't stall mid-game, or until both players have
+             joined. A future multi-track picker (separate button + popup)
+             would live here alongside the toggle — not built yet. -->
         <div id="audio-bar" class="track-selection" style="display: none">
+          <p
+            id="audio-waiting"
+            class="track-selection__hint"
+            style="display: none"
+          >
+            Waiting for the other player to join…
+          </p>
           <button
             id="audio-toggle-btn"
             class="track-btn"
             type="button"
+            style="display: none"
             disabled
           >
             ▶ Start

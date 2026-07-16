@@ -1300,6 +1300,12 @@ button:hover {
   border-bottom: 1px solid var(--border-color);
 }
 
+.track-selection__hint {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--secondary-text-color);
+}
+
 .track-btn {
   padding: var(--spacing-sm) var(--spacing-lg);
   background: var(--bg-secondary);
