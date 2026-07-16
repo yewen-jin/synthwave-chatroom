@@ -319,11 +319,27 @@ function showTapToEnable() {
   tapToEnableEl.type = "button";
   tapToEnableEl.textContent = "🔇 Tap to enable sound";
   tapToEnableEl.addEventListener("click", () => {
+    const track = toggleBtnEl?.dataset.track;
+    if (!track) return;
+    // play() MUST be called synchronously here, in the gesture itself. iOS
+    // consumes the gesture token immediately and it does not survive a socket
+    // round-trip — emitting first and playing in the room-status callback
+    // would be rejected exactly as the original attempt was, re-showing this
+    // prompt in a loop. Playing here earns the element its permission; the
+    // status round-trip below then only corrects the position.
+    const audio = audioCache.get(track) ?? preloadTrackAndReturn(track);
+    audio.play().catch((err) => console.warn("tap-to-enable blocked:", err));
+
     appliedPlaybackKey = null; // force a re-apply at the current elapsed time
     window._socket.emit("audio-status-request");
     hideTapToEnable();
   });
   audioBarEl?.appendChild(tapToEnableEl);
+  // The room is playing, but this device isn't — don't claim otherwise while
+  // the prompt is up. Runs after applyPlaybackState's showNowPlaying (the
+  // play() rejection that gets us here is async), so this wins.
+  if (nowPlayingEl)
+    nowPlayingEl.textContent = "🔇 sound blocked on this device";
 }
 function hideTapToEnable() {
   tapToEnableEl?.remove();
