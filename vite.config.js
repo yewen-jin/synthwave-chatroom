@@ -25,6 +25,14 @@ export default defineConfig({
         ws: true,
         changeOrigin: true,
       },
+      // Card-game audio lives in audio-assets/ and is served by the backend's
+      // express.static in production. In dev the page runs on Vite (5173), so
+      // without this proxy /audio/* hits Vite's SPA fallback (text/html) and
+      // the client's <audio> never reaches canplaythrough — "stuck loading".
+      "/audio": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
     },
   },
   build: {
