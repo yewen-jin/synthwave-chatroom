@@ -437,15 +437,101 @@ has seen it fire on real hardware.
 **Note on the background-throttle test:** it reproduces the _consequence_ (no `canplaythrough`),
 not the _mechanism_ (iOS autoplay policy). Don't let it stand in for a device test.
 
-### Phase 4 — rebrand + mobile (rebrand: main session inline; mobile: agent)
+### Symone's visual edits — RECEIVED 16 Jul (`~/KEEP or DELETE.pdf`)
 
-- [ ] 4.1 Rebrand: grep `B0dy_is_0bs0let3` / `Symone` across `src/`; retitle `chatroom.html`
-      to `thisverisionofme_thisverisionofyou` (title + `.window-title`). Front page branding
-      stays pending Symone's answer (open question 4). Symone's attached visual edits slot in
-      here **when they arrive**.
-- [ ] 4.2 Mobile: audit `/room` first, then `/chatroom`, at 320/375/390/412px via Chrome device
-      emulation; `100vh` → `100dvh`; fix what breaks. Screenshots as evidence.
-- **Acceptance:** no horizontal scroll at any width; input area usable; screenshots attached.
+The long-missing "additional visual edits attached". Three annotated slides. Transcribed here
+because the source lives outside the repo; the PDF is the authority if they ever disagree.
+(Extracted with PDFKit via `swift` — `pdftotext`/poppler is not installed on this machine.)
+
+Her screenshots are of **`room1.html` / `player-room.html`** (the legacy pages), not the new
+`room.html` — so a few notes describe elements the card-game room never had.
+
+| #      | Requirement (her words, condensed)                                                                                             | Slide | Status           |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------ | ----- | ---------------- |
+| **R1** | "Sam entered the room — keep this"                                                                                             | 2     | ✅ done          |
+| **R2** | "Sam is typing…" or live typing visual — _"still nice to have"_                                                                | 2     | ❌ **new**       |
+| **R3** | "Take out Symone is online" (avatar + status bar)                                                                              | 2     | ✅ done          |
+| **R4** | Take out "The B0dy_is(..)", replace with `thisverisionofme_thisverisionofyou`                                                  | 2     | ⚠️ partial       |
+| **R5** | "Keep Display name for each person if possible"                                                                                | 2     | ⚠️ **broken**    |
+| **R6** | Synthwave background could be removed — _"if you want/if it's simple"_; not visible on mobile, "might be taking extra storage" | 2     | ⚠️ **conflict**  |
+| **R7** | One player presses **"begin conversation"** → opens the chatroom **+ plays music**                                             | 3     | ⚠️ partial       |
+| **R8** | Game end: **(a)** "thank you for playing" + chat closed, **or** **(b)** chat continues, music stops                            | 3     | ❌ **new**       |
+| **R9** | "suitable for all mobile devices, ensure the ___"                                                                              | 3     | ❓ **truncated** |
+| **R0** | "Keep this intro page" — the Sign In / display-name popup                                                                      | 1     | ✅ done          |
+
+### Audit of phases 1–3 against the PDF (16 Jul)
+
+**Satisfied.** R0 (`#username-popup` on `room.html`), R1 (`onUserJoined` renders
+"_**Sam** entered the chat_"), R3 (the `.contact-info` avatar/"Online" bar is commented out in
+both `room.html` and `chatroom.html`).
+
+**R5 is silently broken — the audit's real find.** `updateUserDisplayName()`
+(`src/js/chatUI.js:147`) writes to `#user-display-name`. That element exists **only** in
+`player-room.html` and `room1.html` — the pages Symone screenshotted. `room.html` has no such
+element, so `roomMain.js` calls the function on every join and it does nothing, silently. Her
+arrow points at the `.user-avatar-panel` (mask avatar + name, bottom-right of the input row);
+that whole block is absent from `room.html`. Note the softer reading too: per-message sender
+names already appear on every line, so "display name for each person" is arguably met — but the
+panel she circled is genuinely missing. Fix is a copy of the block from `room1.html:106–114`.
+
+**R4 partial.** `room.html` is already correct. Still carrying "The B0dy_is_0bs0let3":
+`index.html:11`, `chatroom.html:7,26`, `room1.html:7,26`, `room2.html:7,26`,
+`player-room.html:7,27`, `narrator-room.html:7,26`. ⚠️ **`player-room` / `narrator-room` are the
+legacy narrator show — a different work.** Retitling those renames The Body is Obsolete itself.
+Assume rebrand = `index` + `chatroom` + `room` only, pending Symone (open question 4).
+
+**R7 partial — smaller than it looks.** Currently: both players sign in → chat is open
+immediately → a separate "▶ Start" plays music. Symone wants **one** button that opens the chat
+_and_ starts the music. The machinery already matches: the button only appears once both players
+are present, either may press it, and one press starts music for both. The delta is only
+(1) relabel "▶ Start" → "begin conversation", (2) gate the chat area behind that press.
+**The audio work stands — the non-presser still receives music by broadcast, so the iOS
+tap-to-enable fallback is exactly as load-bearing under this framing.**
+
+**R8 not implemented at all.** There is no end-of-game concept; `refresh` is the only reset.
+
+**R6 is a stakeholder conflict, not a task.** Yewen (16 Jul): _"I want /room to share the same
+background with the rest of the site"_ — which is why `roomMain.js` calls `initVisuals()`.
+Symone: the background could go, it's invisible on mobile and "might be taking extra storage".
+Not a neutral toss-up: dropping it also removes p5 (the heaviest dependency), which helps mobile
+performance and answers her storage worry. **Needs Yewen's call.**
+
+**R9 is truncated in the source PDF** — the sentence ends "ensure the". Not recoverable here;
+only Symone has the rest. **Ask.**
+
+### Phase 4 — REVISED after the PDF (16 Jul). Scope now exceeds the 5h remaining.
+
+R2, R7 and R8 are **net-new** beyond "rebrand + mobile". The original Phase 4 was ~3h of a 5h
+remainder; these do not fit alongside it. Triage below uses Symone's own signals — she marked R2
+"nice to have" and R6 "if you want/if it's simple", so those defer first.
+
+**Core (fits ~5h, in priority order):**
+
+- [ ] 4.1 Rebrand (R4) — ~0.5h. `index` + `chatroom` + `room` only; leave the narrator pages
+      pending Symone.
+- [ ] 4.2 Mobile (R9) — ~2–2.5h. `/room` first (the QR target), then `/chatroom`, at
+      320/375/390/412px; `100vh` → `100dvh` (6 sites); 26 hardcoded px widths; only 4 `@media`
+      blocks across 1348 lines of CSS. Screenshots as evidence.
+- [ ] 4.3 Display-name panel (R5) — ~0.25h. Port `.user-avatar-panel` from `room1.html`.
+- [ ] 4.4 "begin conversation" (R7) — ~0.75h. Relabel + gate the chat area on the press.
+
+**Deferred unless Symone's answers or spare budget say otherwise:**
+
+- [ ] 4.5 Game end (R8) — needs her (a)/(b) choice first. **Cost is asymmetric:** (b) "chat
+      continues, music stops" is near-free _if the single track is the game clock_ — the audio
+      `ended` event is the game-over signal. (a) needs an explicit end trigger plus chat locking.
+      Don't build either arm speculatively.
+- [ ] 4.6 Typing indicator (R2) — her own "nice to have". Needs a `typing` event on the `/rooms`
+      namespace + debounce. ~0.75h.
+- [ ] 4.7 Background removal (R6) — blocked on Yewen's call (conflicts with his own instruction).
+
+**Proposal worth putting to Symone (resolves R7 + R8(b) together, cheaply):** the single track
+_is_ the game clock — "begin conversation" starts it, the track ending ends the game and stops
+the music. It matches her "15-minute track with all the timing signals" idea and needs no
+separate timer. **Offer as a proposal, not a decision.**
+
+- **Acceptance:** no horizontal scroll at any width; input area usable on a real phone;
+  screenshots attached; iPhone audio test passed (see Interlude 3 — that is still a gate).
 
 ### Phase 5 — final verification + docs (main session)
 
@@ -464,7 +550,22 @@ and reports.**
 
 **Blocking — need these today:**
 
-1. **The attached visual edits** — can't scope task 2 without them.
+1. **The attached visual edits — RECEIVED 16 Jul** (`~/KEEP or DELETE.pdf`). Transcribed and
+   audited above (R0–R9). They **grew the job past the remaining 5h**: R2, R7, R8 are net-new.
+   See the revised Phase 4 for the triage. Three follow-ups came _out_ of the PDF:
+
+   1a. **R9 is cut off mid-sentence** — "Additionally: suitable for all mobile devices, ensure
+   the ___". The slide just ends. **What was the rest?** Can't guess this one.
+
+   1b. **R8 — she offered (a) or (b) and didn't pick.** Needs a decision. Suggest (b) (chat
+   continues, music stops) with the track as the game clock — near-free, and it matches her
+   "15-minute track with all the timing signals" plan. (a) costs more (explicit end trigger +
+   chat locking).
+
+   1c. **R4 vs the narrator show** — "The B0dy_is_0bs0let3" also titles `player-room` /
+   `narrator-room`, which are the _legacy TBIO piece_, not the card game. Confirm the rename
+   covers only the card-game pages (front page, `/chatroom`, `/room`). See also Q4.
+
 2. **Track count — RESOLVED (16 Jul): one track for now.** Symone confirmed the real event
    ships with exactly one track. The UI stays as the current single-track ▶/⏸ bar — no picker.
    The list-shaped protocol (`audio-tracks`, `readAudioTracks()`) is kept deliberately rather
