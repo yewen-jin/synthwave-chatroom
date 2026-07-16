@@ -714,15 +714,31 @@ io.on("connection", (socket) => {
 const roomsNsp = io.of("/rooms");
 
 // Per-room state. Own map, own username sets — never the global takenUsernames,
-// or the cross-contamination comes straight back. selectedTrack is added by
-// Phase 3 (audio); stubbed here so empty-room cleanup has one place to clear.
-const roomStates = new Map(); // roomName -> { usernames: Set<string>, selectedTrack: null }
+// or the cross-contamination comes straight back. selectedTrack/started/startedAt
+// are added by Phase 3 (audio); stubbed here so empty-room cleanup has one place
+// to clear. started/startedAt exist so a late-joiner or a reconnecting client can
+// seek to the correct elapsed position instead of restarting the track from 0.
+const roomStates = new Map(); // roomName -> { usernames, selectedTrack, started, startedAt }
 
 function getRoomState(roomName) {
   if (!roomStates.has(roomName)) {
-    roomStates.set(roomName, { usernames: new Set(), selectedTrack: null });
+    roomStates.set(roomName, {
+      usernames: new Set(),
+      selectedTrack: null,
+      started: false,
+      startedAt: null,
+    });
   }
   return roomStates.get(roomName);
+}
+
+function roomStatusPayload(state) {
+  return {
+    playerCount: state.usernames.size,
+    selectedTrack: state.selectedTrack,
+    started: state.started,
+    startedAt: state.startedAt,
+  };
 }
 
 function freeRoomSlot(roomName, username) {
@@ -779,11 +795,9 @@ roomsNsp.on("connection", (socket) => {
 
     // Broadcast join to the room only.
     roomsNsp.to(roomName).emit("user joined", { username });
-    // Room status so every client knows player count + any already-selected track.
-    roomsNsp.to(roomName).emit("room-status", {
-      playerCount: state.usernames.size,
-      selectedTrack: state.selectedTrack,
-    });
+    // Room status so every client knows player count + any already-selected
+    // track + whether playback has started (and when, for elapsed-time sync).
+    roomsNsp.to(roomName).emit("room-status", roomStatusPayload(state));
   });
 
   // Chat — broadcast to the room only.
@@ -802,12 +816,13 @@ roomsNsp.on("connection", (socket) => {
 
   // Track selection — music is picked once at session start by either player
   // and is per-room. First pick wins; later picks are ignored until a reset
-  // empties the room and clears selectedTrack. The chosen track lives in room
-  // state so a reconnecting/reloading client re-syncs to the same track.
+  // empties the room and clears selectedTrack. Selecting a track does NOT
+  // start playback — it only locks the choice in and reveals the Start
+  // button (to both players) via room-status. See audio-start below.
   socket.on("audio-select", ({ track } = {}) => {
     if (!socket.roomName || !track) return;
     const state = getRoomState(socket.roomName);
-    if (!audioTracks.includes(track)) return;
+    if (!audioTracks.includes(track) || state.started) return;
 
     if (!state.selectedTrack) {
       state.selectedTrack = track;
@@ -815,18 +830,33 @@ roomsNsp.on("connection", (socket) => {
         `[/rooms] track "${track}" selected in room "${socket.roomName}"`,
       );
     } else if (state.selectedTrack !== track) {
-      // Already locked to a different track — honour the first pick.
-      socket.emit("audio-play", { track: state.selectedTrack });
-      return;
+      // Already locked to a different track — honour the first pick, just
+      // resend status so this client's UI reflects the locked-in choice.
     }
 
-    roomsNsp
-      .to(socket.roomName)
-      .emit("audio-play", { track: state.selectedTrack });
-    roomsNsp.to(socket.roomName).emit("room-status", {
-      playerCount: state.usernames.size,
-      selectedTrack: state.selectedTrack,
+    roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
+  });
+
+  // Start — the one and only playback trigger. Either player can press it
+  // once a track is chosen; the session starts for both at (approximately)
+  // the same moment. Idempotent: a second press (or a race between both
+  // players clicking at once) is a no-op once started is true.
+  socket.on("audio-start", () => {
+    if (!socket.roomName) return;
+    const state = getRoomState(socket.roomName);
+    if (!state.selectedTrack || state.started) return;
+
+    state.started = true;
+    state.startedAt = Date.now();
+    console.log(
+      `[/rooms] playback started in room "${socket.roomName}" (track "${state.selectedTrack}")`,
+    );
+
+    roomsNsp.to(socket.roomName).emit("audio-play", {
+      track: state.selectedTrack,
+      startedAt: state.startedAt,
     });
+    roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
   });
 
   // Refresh button — broadcast reset to the room; both clients reload, which

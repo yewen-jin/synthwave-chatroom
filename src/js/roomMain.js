@@ -180,16 +180,32 @@ window._socket.on("room-full", ({ capacity } = {}) => {
   );
 });
 
-// ----- audio: data-driven track selection + per-room playback -----
+// ----- audio: data-driven track selection + gated per-room playback -----
+//
+// Protocol (server is authoritative — see server.js's /rooms audio-* handlers):
+//   audio-tracks  server -> client, on join: the track list.
+//   audio-select  client -> server: lock in a track. Does NOT start playback.
+//   audio-start   client -> server: either player presses Start; this is the
+//                 ONLY event that starts playback, for both players at once.
+//   audio-play    server -> room, on audio-start: {track, startedAt} — the
+//                 actual "press play now" signal.
+//   room-status   server -> room/joiner: {playerCount, selectedTrack, started,
+//                 startedAt} — drives which panel is shown, and lets a late
+//                 joiner or a reconnecting client seek to the correct elapsed
+//                 position instead of restarting the track from 0.
 let tracks = [];
 const audioCache = new Map(); // track filename -> HTMLAudioElement
 const trackReady = new Set(); // tracks that have fired canplaythrough
 let currentTrack = null;
-let trackSelected = false;
+let trackSelected = false; // true once THIS client has started/synced playback
+let pendingStartTrack = null; // selected, not yet started
 
 const trackSelectionEl = document.getElementById("track-selection");
 const trackListEl = document.getElementById("track-list");
 const trackWaitingEl = document.getElementById("track-waiting");
+const startPanelEl = document.getElementById("audio-start-panel");
+const startBtnEl = document.getElementById("audio-start-btn");
+const startTrackNameEl = document.getElementById("audio-start-track-name");
 let nowPlayingEl = null;
 
 function trackLabel(name, i) {
@@ -206,9 +222,7 @@ function buildTrackButtons() {
     btn.textContent = trackLabel(name, i);
     btn.title = name;
     btn.dataset.track = name;
-    btn.disabled = !trackReady.has(name);
     btn.addEventListener("click", () => {
-      if (btn.disabled || trackSelected) return;
       window._socket.emit("audio-select", { track: name });
     });
     trackListEl.appendChild(btn);
@@ -221,10 +235,7 @@ function preloadTrack(name) {
   audio.preload = "auto";
   audio.addEventListener("canplaythrough", () => {
     trackReady.add(name);
-    const btn = trackListEl?.querySelector(
-      `[data-track="${CSS.escape(name)}"]`,
-    );
-    if (btn) btn.disabled = false;
+    if (startBtnEl && pendingStartTrack === name) startBtnEl.disabled = false;
   });
   audioCache.set(name, audio);
 }
@@ -244,11 +255,16 @@ function showNowPlaying(name) {
   chatArea?.insertBefore(nowPlayingEl, chatArea.firstChild);
 }
 
-function playTrack(name) {
-  // audio-select triggers both an audio-play and a room-status broadcast, and
-  // room-status is what a mid-session joiner also uses to sync — so this can
-  // legitimately be called twice for the same track. Without this guard the
-  // second call resets currentTime to 0 and restarts playback immediately.
+function hideAudioPanels() {
+  if (trackSelectionEl) trackSelectionEl.style.display = "none";
+  if (startPanelEl) startPanelEl.style.display = "none";
+}
+
+// Starts playback of `name` at `seekSeconds` (default 0 — a fresh start
+// triggered just now via audio-start). Idempotent per track: if this client
+// is already playing `name`, later calls (e.g. the room-status broadcast
+// that follows every audio-start) are a no-op rather than restarting it.
+function playTrack(name, seekSeconds = 0) {
   if (trackSelected && currentTrack === name) return;
   currentTrack = name;
   trackSelected = true;
@@ -260,15 +276,16 @@ function playTrack(name) {
     }
   }
   const audio = audioCache.get(name) ?? preloadTrackAndReturn(name);
-  audio.currentTime = 0;
-  const start = () =>
+  const start = () => {
+    audio.currentTime = Math.min(seekSeconds, audio.duration || seekSeconds);
     audio.play().catch((err) => console.warn("audio play blocked:", err));
+  };
   if (trackReady.has(name)) {
     start();
   } else {
     audio.addEventListener("canplaythrough", start, { once: true });
   }
-  if (trackSelectionEl) trackSelectionEl.style.display = "none";
+  hideAudioPanels();
   showNowPlaying(name);
 }
 
@@ -277,27 +294,57 @@ function preloadTrackAndReturn(name) {
   return audioCache.get(name);
 }
 
-window._socket.on("room-status", ({ playerCount, selectedTrack } = {}) => {
-  if (selectedTrack) {
-    // A track was already chosen (e.g. this client joined mid-session) — sync.
-    playTrack(selectedTrack);
-    return;
-  }
-  if (playerCount >= 2) {
-    // Both players named — show the selection, hide the waiting hint.
-    if (trackWaitingEl) trackWaitingEl.style.display = "none";
-    if (trackListEl) trackListEl.style.display = "flex";
-    if (trackSelectionEl) trackSelectionEl.style.display = "block";
-  } else {
-    // Waiting for the second player.
-    if (trackSelectionEl) trackSelectionEl.style.display = "block";
-    if (trackListEl) trackListEl.style.display = "none";
-    if (trackWaitingEl) trackWaitingEl.style.display = "block";
-  }
-});
+if (startBtnEl) {
+  startBtnEl.addEventListener("click", () => {
+    window._socket.emit("audio-start");
+  });
+}
+
+window._socket.on(
+  "room-status",
+  ({ playerCount, selectedTrack, started, startedAt } = {}) => {
+    if (selectedTrack && started) {
+      if (trackSelected && currentTrack === selectedTrack) return; // already synced
+      // Late join / reconnect after the session already started — seek to
+      // the elapsed position rather than restarting from 0, so this client
+      // doesn't desync from a partner who's already minutes into the track.
+      const elapsed = startedAt ? (Date.now() - startedAt) / 1000 : 0;
+      playTrack(selectedTrack, Math.max(0, elapsed));
+      return;
+    }
+
+    if (selectedTrack && !started) {
+      // Track locked in, waiting for either player to press Start.
+      pendingStartTrack = selectedTrack;
+      if (trackSelectionEl) trackSelectionEl.style.display = "none";
+      if (startPanelEl) startPanelEl.style.display = "block";
+      if (startTrackNameEl) {
+        const i = tracks.indexOf(selectedTrack);
+        startTrackNameEl.textContent = trackLabel(selectedTrack, i);
+      }
+      if (startBtnEl) startBtnEl.disabled = !trackReady.has(selectedTrack);
+      return;
+    }
+
+    // No track chosen yet.
+    pendingStartTrack = null;
+    if (startPanelEl) startPanelEl.style.display = "none";
+    if (playerCount >= 2) {
+      // Both players named — show the selection, hide the waiting hint.
+      if (trackWaitingEl) trackWaitingEl.style.display = "none";
+      if (trackListEl) trackListEl.style.display = "flex";
+      if (trackSelectionEl) trackSelectionEl.style.display = "block";
+    } else {
+      // Waiting for the second player.
+      if (trackSelectionEl) trackSelectionEl.style.display = "block";
+      if (trackListEl) trackListEl.style.display = "none";
+      if (trackWaitingEl) trackWaitingEl.style.display = "block";
+    }
+  },
+);
 
 window._socket.on("audio-play", ({ track } = {}) => {
-  if (track) playTrack(track);
+  if (track) playTrack(track, 0);
 });
 
 // Refresh button — server broadcasts room-reset to the room; both clients
