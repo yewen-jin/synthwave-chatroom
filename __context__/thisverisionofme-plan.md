@@ -397,6 +397,46 @@ existing isolation matrix (capacity, cross-room, cross-namespace) — still 4/4.
 **Open question 2 (track count) is resolved — one track, for now.** The "before the event" question
 list below still needs Symone's answers on room-naming and front-page branding.
 
+### Interlude 3 — "Loading track…" resolved, and the preload gate removed (16 Jul)
+
+**The reported bug was already fixed on disk but never delivered.** `8bcc587` (proxy `/audio` to
+the backend in Vite dev) was committed at 02:14 but sat unpushed, and Yewen's Vite had been
+started at 09:15 — before the config existed. Restarting Vite picked it up; Yewen confirmed:
+_"I'm able to start the track now."_ All commits are now pushed to `origin/worktree-thisverisionofme`.
+
+**A worse bug was sitting behind it.** The toggle was `disabled` until `canplaythrough` fired.
+That is a bad gate on any stall — venue wifi, a 15-minute track — and mobile browsers (iOS Safari
+especially) routinely ignore `preload="auto"` entirely and fetch nothing until a gesture. On those
+devices `canplaythrough` never fires before the first press, so **the button would have been dead
+on arrival at the event** while working perfectly on the desktop it was tested on.
+
+Fixed in `8988ba1`. Preload is now an optimisation, never a precondition:
+
+- the toggle is enabled as soon as a track exists and both players are present;
+- seeking waits for `loadedmetadata` (which it needs) rather than `canplaythrough` (which it doesn't);
+- a load `error` becomes a retryable "⟳ Retry track" instead of a permanently dead button;
+- the presser calls `play()` **synchronously inside the click**, since iOS only grants an element
+  playback permission from a real gesture — the old code only ever called `play()` from the
+  `room-status` callback, which iOS is liable to reject **for both players**;
+- the non-presser, whose device made no gesture on its own audio element, falls back to a
+  "🔇 Tap to enable sound" prompt that re-seeks to the room's live elapsed position (new
+  `audio-status-request`, emitted to that one socket) — so it rejoins the music **in sync**
+  rather than restarting it.
+
+**Verified** on desktop Chrome, two clients, including a tab where preload never completes
+(background tabs are media-throttled, which reproduces "canplaythrough never fires"): button stays
+enabled, either player can start, play/pause syncs both ways, and the elapsed clock resumes from
+the paused position (0.0 → 6.1 → 6.1 → 6.7s) rather than restarting.
+
+⚠️ **Not verified, and cannot be here:** the actual iOS autoplay behaviour. The gesture handling
+above addresses Safari's documented rules _in principle_ — it is reasoned from the spec, not
+tested on hardware. **A real-iPhone test is a gate before the event**, not a nice-to-have: if
+the non-presser's audio is blocked, the fallback prompt is what saves the feature, and nobody
+has seen it fire on real hardware.
+
+**Note on the background-throttle test:** it reproduces the _consequence_ (no `canplaythrough`),
+not the _mechanism_ (iOS autoplay policy). Don't let it stand in for a device test.
+
 ### Phase 4 — rebrand + mobile (rebrand: main session inline; mobile: agent)
 
 - [ ] 4.1 Rebrand: grep `B0dy_is_0bs0let3` / `Symone` across `src/`; retitle `chatroom.html`
