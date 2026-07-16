@@ -535,38 +535,54 @@ remainder; these do not fit alongside it. Triage below uses Symone's own signals
 - [ ] 4.2b Mobile — remaining pages (`index`, legacy rooms) if budget allows; not the QR path.
 - [ ] 4.3 Display-name panel (R5) — ~0.25h. Port `.user-avatar-panel` from `room1.html`.
 - [ ] 4.4 "begin conversation" (R7) — ~0.75h. Relabel + gate the chat area on the press.
-- [ ] 4.8 **Track timeline (Yewen, 16 Jul)** — ~1–1.5h. Do **after** 4.3/4.4.
+- [x] 4.3 / 4.4 / 4.9 — **DONE 16 Jul** (`07d4684`, `68c2e54`). Display-name panel, "begin
+      conversation", and the other player's name ("with Alex", on the avatar row — no extra
+      height, and deliberately _not_ a revival of the contact-info bar R3 removed: that was a
+      hardcoded host, this is the live partner). `room-status` now carries `usernames`.
+- [x] 4.8 **Track timeline — DONE 16 Jul** (`68c2e54`). Built as designed below. Verified against
+      a 900s track by driving the client's own `room-status` handler with chosen `pausedElapsed`
+      values (`playing:false` ⇒ elapsed _is_ `pausedElapsed`, so no clock patching):
+      dots at exactly 20/40/60/80%, each lighting on crossing (179s → none, 181s → the 3-min
+      dot), fill = elapsed/duration, capped at 100% past the end.
+      **Two things could not be verified here and need the device pass:** continuous ticking, and
+      `duration` arriving from real metadata — this Chrome tab is backgrounded and Chrome
+      throttles both media loading and `setInterval` in hidden tabs.
+      _Testing note for whoever comes next:_ don't patch `Date.now` to fast-forward the room
+      clock — socket.io reads it for ping timeouts, so a jump of minutes disconnects the client
+      and wedges the renderer. Drive the `room-status` handler instead.
 
-      A line showing how far into the track the pair is, with dots at **3/6/9/12 min**.
-          **No numeric countdown** — deliberate: this is a mood cue, not a clock.
+      Original design (kept — all of it held up):
 
-          Design decisions, so they aren't re-litigated mid-build:
+          A line showing how far into the track the pair is, with dots at **3/6/9/12 min**.
+              **No numeric countdown** — deliberate: this is a mood cue, not a clock.
 
-          1. **Drive it from the room clock, not `audio.currentTime`.** The server already owns
-             `startedAt` + `pausedElapsed` (see Interlude 3), so both players see an identical
-             timeline. `audio.currentTime` is per-device and would diverge — and on a device whose
-             playback is autoplay-blocked it would sit at 0 while the game actually runs. The
-             timeline is the _game's_ progress, not this speaker's.
-          2. **Marker times are absolute seconds, not proportions.** `[180, 360, 540, 720]` →
-             `shared/gameParameters.js` (it already holds constants shared by client and server).
-             Position each as `marker / duration`; render only markers that fall inside the actual
-             duration, so a shorter track degrades to fewer dots instead of dots off the end.
-             Yewen's "3/6/9/12 min" implies Symone's ~15-min track → dots at 20/40/60/80%.
-          3. **Duration comes from `audio.duration`** (needs `loadedmetadata`). Unknown on a device
-             that hasn't loaded → render the line with no fill and no dots rather than guessing.
-          4. **Ticking:** interpolate locally between `room-status` broadcasts — the server already
-             sends everything needed (`playing`, `startedAt`, `pausedElapsed`). **Do not add a
-             per-second server tick**; that would be a new broadcast per room per second for a
-             cosmetic bar.
+              Design decisions, so they aren't re-litigated mid-build:
 
-          ⚠️ **Dev-testing gap:** the placeholder track is 20 s, so no dot would ever render and the
-          fill would complete instantly. `scripts/make-placeholder-audio.js` needs a long option
-          before this can be verified honestly — 15 min at 44.1 kHz is ~79 MB, but 8 kHz mono is
-          ~14 MB, which is fine for a gitignored dev file.
+              1. **Drive it from the room clock, not `audio.currentTime`.** The server already owns
+                 `startedAt` + `pausedElapsed` (see Interlude 3), so both players see an identical
+                 timeline. `audio.currentTime` is per-device and would diverge — and on a device whose
+                 playback is autoplay-blocked it would sit at 0 while the game actually runs. The
+                 timeline is the _game's_ progress, not this speaker's.
+              2. **Marker times are absolute seconds, not proportions.** `[180, 360, 540, 720]` →
+                 `shared/gameParameters.js` (it already holds constants shared by client and server).
+                 Position each as `marker / duration`; render only markers that fall inside the actual
+                 duration, so a shorter track degrades to fewer dots instead of dots off the end.
+                 Yewen's "3/6/9/12 min" implies Symone's ~15-min track → dots at 20/40/60/80%.
+              3. **Duration comes from `audio.duration`** (needs `loadedmetadata`). Unknown on a device
+                 that hasn't loaded → render the line with no fill and no dots rather than guessing.
+              4. **Ticking:** interpolate locally between `room-status` broadcasts — the server already
+                 sends everything needed (`playing`, `startedAt`, `pausedElapsed`). **Do not add a
+                 per-second server tick**; that would be a new broadcast per room per second for a
+                 cosmetic bar.
 
-          **Ties to R8:** if the track is the game clock, this line _is_ the game's progress bar and
-          its end is the game ending. Worth putting to Symone alongside the (a)/(b) question — one
-          coherent design rather than two features.
+              ⚠️ **Dev-testing gap:** the placeholder track is 20 s, so no dot would ever render and the
+              fill would complete instantly. `scripts/make-placeholder-audio.js` needs a long option
+              before this can be verified honestly — 15 min at 44.1 kHz is ~79 MB, but 8 kHz mono is
+              ~14 MB, which is fine for a gitignored dev file.
+
+              **Ties to R8:** if the track is the game clock, this line _is_ the game's progress bar and
+              its end is the game ending. Worth putting to Symone alongside the (a)/(b) question — one
+              coherent design rather than two features.
 
 **Deferred unless Symone's answers or spare budget say otherwise:**
 
