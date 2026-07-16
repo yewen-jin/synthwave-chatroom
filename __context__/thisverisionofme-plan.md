@@ -358,6 +358,45 @@ broadcast on the default namespace, never `/rooms` — making `/room` live-react
 need a real architecture decision (dual namespace connection, or bridging broadcasts), which
 wasn't asked for and isn't built. The background animation runs on its own regardless.
 
+### Interlude 2 — Yewen's first real test pass, and a scope change (16 Jul)
+
+Yewen pulled the branch into her own checkout for the first time (`origin/worktree-thisverisionofme`,
+pushed after realising the earlier work was sitting in an unreachable background-job worktree) and
+reported three things from actually clicking through it:
+
+1. **Bug: the track-selection bar showed no options.** Root cause: `audioTracks` was a constant
+   read once at server boot. If `npm run make:audio` ran after the server was already up — or, at
+   the real event, Symone's rsync landing after the process was started — every room stayed stuck
+   with an empty list until a manual restart. Fixed by replacing it with `readAudioTracks()`,
+   called fresh on room creation and on each join. Reproduced the exact failure (boot with no
+   `audio-assets/`, generate the file after boot, no restart) and confirmed a join now sees it.
+2. **New requirement: pause, not just start.** No pause/resume existed before.
+3. **New requirement: single track for now.** The real event will ship with exactly one track, not
+   the 1–5 the plan had been carrying as open question 2. Symone plans a separate "change track"
+   button + popup for multi-track in the future — explicitly not wanted yet.
+
+**Redesign (`16525e1`):** the track-selection UI is gone. The room auto-selects `tracks[0]` the
+moment it's created — no picker step. Server protocol is now `audio-play-request` /
+`audio-pause-request`, both idempotent intents (not a blind toggle), so a click race between both
+players can't leave the room in the wrong state. Room state gained `pausedElapsed` (seconds already
+played, accumulated across pause/resume cycles) alongside `playing`/`startedAt`, so a late joiner or
+reconnecting client seeks to the correct position whether mid-play or paused, instead of restarting
+from 0. Client-side, `room.html`'s two panels collapsed into one audio bar with a single toggle
+button (▶ Start / ⏸ Pause), gated on `playerCount >= 2` same as before.
+
+The list-shaped protocol (`audio-tracks`, `readAudioTracks()`) was kept deliberately rather than
+hardcoding "one track" into the wire format — so the future multi-track picker button can read from
+the same source without another server rewrite; it just isn't built.
+
+Verified: 13/13 on a new scripted protocol test (the no-restart fix, auto-select on room creation,
+play/pause-request idempotency in both directions, and the elapsed-time arithmetic across a real
+pause-then-resume cycle). Placeholder track bumped from 3s to 20s so pause/resume is actually
+manually testable, and reduced from 3 placeholder files to 1 to match the real scenario. Re-ran the
+existing isolation matrix (capacity, cross-room, cross-namespace) — still 4/4.
+
+**Open question 2 (track count) is resolved — one track, for now.** The "before the event" question
+list below still needs Symone's answers on room-naming and front-page branding.
+
 ### Phase 4 — rebrand + mobile (rebrand: main session inline; mobile: agent)
 
 - [ ] 4.1 Rebrand: grep `B0dy_is_0bs0let3` / `Symone` across `src/`; retitle `chatroom.html`
