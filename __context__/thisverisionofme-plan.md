@@ -507,11 +507,32 @@ remainder; these do not fit alongside it. Triage below uses Symone's own signals
 
 **Core (fits ~5h, in priority order):**
 
-- [ ] 4.1 Rebrand (R4) — ~0.5h. `index` + `chatroom` + `room` only; leave the narrator pages
-      pending Symone.
-- [ ] 4.2 Mobile (R9) — ~2–2.5h. `/room` first (the QR target), then `/chatroom`, at
-      320/375/390/412px; `100vh` → `100dvh` (6 sites); 26 hardcoded px widths; only 4 `@media`
-      blocks across 1348 lines of CSS. Screenshots as evidence.
+- [x] 4.1 Rebrand (R4) — **DONE 16 Jul; it was already complete, 0h spent.**
+      **Yewen's ruling: the new name applies _only_ to `/room`** — the new paired-room + music
+      system. Not `/chatroom`, not the front page, not the legacy pages. Verified: `room.html`
+      carries `thisverisionofme_thisverisionofyou` (title + `.window-title`); `index`,
+      `chatroom`, `room1`, `room2`, `player-room`, `narrator-room` all still read
+      "The B0dy_is_0bs0let3", which is correct — TBIO is a separate, continuing work.
+      This closes open question 1c and supersedes question 4.
+      _Spelling:_ keep **"verision"**. Symone writes it that way twice in her own PDF, so it is
+      deliberate. (Yewen typed it "thisversionofme" in chat on 16 Jul — treat that as shorthand,
+      not a correction; the PDF is authoritative. Closes question 5.)
+- [x] 4.2 Mobile (R9) — **`/room` + `/chatroom` DONE 16 Jul** (`7b5b284`), ~1h. Root cause was
+      _not_ the 26 hardcoded widths: the mobile block set **no height** on `.msn-window`, so it
+      came out at title-bar + `calc(100vh - 40px)` = exactly `100vh`, and `100vh` is the _large_
+      viewport → taller than the phone shows → clipped top and bottom. Now `95dvh` to match the
+      95% width (Yewen's call: even inset all round), `vh` fallback, safe-area insets for
+      notch/home indicator, and `.chat-area` flexes instead of assuming a 40px bar.
+      **Second bug, caused by the rebrand:** the longer title refused to shrink (flex items
+      default to `min-width: auto`), squeezing `.window-controls` until its four buttons stacked
+      vertically — a **121px** title bar on a 320px phone, controls pushed past the window edge.
+      Now truncates; 121px → 31px.
+      Verified 320/375/390/412 on both pages via same-origin iframes (media queries evaluate
+      against the iframe viewport — `resize_window` does not work in this Chrome context):
+      95%×95%, no clipping, no horizontal scroll, Send reachable. Desktop unchanged at 1024/1440.
+      ⚠️ Still needs a real-device pass: iOS Safari's collapsing toolbar and zoom-on-focus are
+      not reproducible here.
+- [ ] 4.2b Mobile — remaining pages (`index`, legacy rooms) if budget allows; not the QR path.
 - [ ] 4.3 Display-name panel (R5) — ~0.25h. Port `.user-avatar-panel` from `room1.html`.
 - [ ] 4.4 "begin conversation" (R7) — ~0.75h. Relabel + gate the chat area on the press.
 
