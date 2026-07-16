@@ -523,7 +523,17 @@ remainder; these do not fit alongside it. Triage below uses Symone's own signals
       Don't build either arm speculatively.
 - [ ] 4.6 Typing indicator (R2) — her own "nice to have". Needs a `typing` event on the `/rooms`
       namespace + debounce. ~0.75h.
-- [ ] 4.7 Background removal (R6) — blocked on Yewen's call (conflicts with his own instruction).
+- ~~4.7 Background removal (R6)~~ — **RESOLVED 16 Jul: the background stays. Do not remove it.**
+  Yewen's call. Symone's underlying worry was that rendering the background would steal
+  processing power from live audio playback — it doesn't: audio decoding runs off the main
+  thread with its own buffer, so canvas work doesn't cause dropouts. The two are unrelated.
+  She wrote "could", not "must". **p5 and `initVisuals()` stay in `roomMain.js`.**
+
+      One honest caveat, recorded so it isn't rediscovered later: her _other_ reason ("on the
+      mobile its not visible") is a design observation, not the misconception, and it broadly
+      checks out — at ≤768px `.msn-window` is `width: 95%; height: 100vh`, leaving the background
+      as a ~2.5% sliver each side. It is fully visible on desktop, which is where it carries the
+      piece. Not a reason to remove it; just don't be surprised on a phone.
 
 **Proposal worth putting to Symone (resolves R7 + R8(b) together, cheaply):** the single track
 _is_ the game clock — "begin conversation" starts it, the track ending ends the game and stops
