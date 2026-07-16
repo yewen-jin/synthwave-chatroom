@@ -202,9 +202,9 @@ window._socket.on("room-full", ({ capacity } = {}) => {
 //                       a late joiner / reconnecting client to the correct
 //                       elapsed position instead of restarting from 0.
 const audioCache = new Map(); // track filename -> HTMLAudioElement
-const trackReady = new Set(); // tracks that have fired canplaythrough
+const loadFailed = new Set(); // tracks whose fetch/decode errored — retryable
 let appliedPlaybackKey = null; // last-applied "track|playing|startedAt" — see applyPlaybackState
-let lastKnownPlaying = false; // so the canplaythrough listener can refresh the button correctly
+let lastKnownPlaying = false; // so async listeners can refresh the button correctly
 
 const audioBarEl = document.getElementById("audio-bar");
 const audioWaitingEl = document.getElementById("audio-waiting");
@@ -216,7 +216,16 @@ function preloadTrack(name) {
   const audio = new Audio(`/audio/${encodeURIComponent(name)}`);
   audio.preload = "auto";
   audio.addEventListener("canplaythrough", () => {
-    trackReady.add(name);
+    loadFailed.delete(name);
+    if (toggleBtnEl && toggleBtnEl.dataset.track === name) {
+      updateToggleButton(name, lastKnownPlaying);
+    }
+  });
+  // A track that 404s or dies mid-fetch must not leave the room silently
+  // dead: surface it, and let the next press retry rather than stranding
+  // the pair with a button that does nothing.
+  audio.addEventListener("error", () => {
+    loadFailed.add(name);
     if (toggleBtnEl && toggleBtnEl.dataset.track === name) {
       updateToggleButton(name, lastKnownPlaying);
     }
@@ -247,24 +256,78 @@ function showNowPlaying(name, playing) {
   nowPlayingEl.textContent = playing ? "♪ now playing" : "⏸ paused";
 }
 
+// The button is deliberately NOT gated on preload finishing. Mobile browsers
+// (iOS Safari especially) routinely ignore preload="auto" and fetch nothing
+// until a gesture, so canplaythrough may never fire before the first press —
+// gating on it left the toggle disabled forever and killed the feature. A
+// press starts loading; play() buffers on demand. Preload is an optimisation,
+// never a precondition.
 function updateToggleButton(track, playing) {
   lastKnownPlaying = playing;
   if (!toggleBtnEl) return;
   toggleBtnEl.dataset.track = track ?? "";
-  const loading = !!track && !playing && !trackReady.has(track);
-  toggleBtnEl.textContent = loading
-    ? "Loading track…"
+  toggleBtnEl.textContent = loadFailed.has(track)
+    ? "⟳ Retry track"
     : playing
       ? "⏸ Pause"
       : "▶ Start";
-  toggleBtnEl.disabled = !track || loading;
+  toggleBtnEl.disabled = !track;
 }
 
 if (toggleBtnEl) {
   toggleBtnEl.addEventListener("click", () => {
-    const playing = toggleBtnEl.textContent.includes("Pause");
+    const track = toggleBtnEl.dataset.track;
+    if (!track) return;
+    const playing = lastKnownPlaying;
+
+    // A previous load errored — rebuild the element so the browser refetches
+    // rather than serving us the same dead one.
+    if (loadFailed.has(track)) {
+      audioCache.delete(track);
+      loadFailed.delete(track);
+      preloadTrack(track);
+      updateToggleButton(track, playing);
+    }
+
+    // Start playback synchronously, inside the gesture. iOS only grants an
+    // element permission to play if play() is called from a user gesture; our
+    // real play() runs later, in the room-status callback, which would be
+    // rejected. Playing here earns that permission for this device — the
+    // subsequent room-status seek then just corrects the position.
+    if (!playing) unlockAndPlay(track);
+
     window._socket.emit(playing ? "audio-pause-request" : "audio-play-request");
   });
+}
+
+// Best-effort autoplay unlock for the device that pressed the button.
+function unlockAndPlay(track) {
+  const audio = audioCache.get(track) ?? preloadTrackAndReturn(track);
+  audio.play().catch((err) => console.warn("audio unlock play blocked:", err));
+}
+
+// The player who did NOT press Start never made a gesture on their own audio
+// element, so their room-status-driven play() can be rejected on iOS. Rather
+// than leave them in silence, surface a tap target; tapping replays the
+// current state, which re-seeks to the room's elapsed position — so they
+// rejoin the music in sync rather than restarting it.
+let tapToEnableEl = null;
+function showTapToEnable() {
+  if (tapToEnableEl) return;
+  tapToEnableEl = document.createElement("button");
+  tapToEnableEl.className = "track-btn";
+  tapToEnableEl.type = "button";
+  tapToEnableEl.textContent = "🔇 Tap to enable sound";
+  tapToEnableEl.addEventListener("click", () => {
+    appliedPlaybackKey = null; // force a re-apply at the current elapsed time
+    window._socket.emit("audio-status-request");
+    hideTapToEnable();
+  });
+  audioBarEl?.appendChild(tapToEnableEl);
+}
+function hideTapToEnable() {
+  tapToEnableEl?.remove();
+  tapToEnableEl = null;
 }
 
 // Applies the room's current playback state. Idempotent per playback
@@ -308,21 +371,34 @@ function applyPlaybackState({
       ? pausedElapsed + (Date.now() - startedAt) / 1000
       : pausedElapsed;
 
-  const apply = () => {
-    audio.currentTime = Math.min(
-      Math.max(elapsed, 0),
-      audio.duration || elapsed,
-    );
-    if (playing) {
-      audio.play().catch((err) => console.warn("audio play blocked:", err));
-    } else {
-      audio.pause();
+  // Seeking needs metadata (duration); playing does not. Waiting for
+  // canplaythrough before either would strand any device that defers
+  // preloading — so seek as soon as metadata allows, and play immediately.
+  const seek = () => {
+    try {
+      audio.currentTime = Math.min(
+        Math.max(elapsed, 0),
+        audio.duration || elapsed,
+      );
+    } catch (err) {
+      console.warn("audio seek failed:", err);
     }
   };
-  if (trackReady.has(track)) {
-    apply();
+  if (audio.readyState >= 1) seek();
+  else audio.addEventListener("loadedmetadata", seek, { once: true });
+
+  if (playing) {
+    audio
+      .play()
+      .then(hideTapToEnable)
+      .catch((err) => {
+        // Almost always the autoplay policy on the non-pressing device.
+        console.warn("audio play blocked:", err);
+        showTapToEnable();
+      });
   } else {
-    audio.addEventListener("canplaythrough", apply, { once: true });
+    audio.pause();
+    hideTapToEnable();
   }
   showNowPlaying(track, playing);
 }

@@ -885,6 +885,18 @@ roomsNsp.on("connection", (socket) => {
     roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
   });
 
+  // Re-send current state to one client only. Used when a device's playback
+  // was blocked by its autoplay policy and the player taps to enable sound:
+  // it needs the room's live elapsed position to join the music in sync, and
+  // it must not disturb the other player — hence socket.emit, not a broadcast.
+  socket.on("audio-status-request", () => {
+    if (!socket.roomName) return;
+    socket.emit(
+      "room-status",
+      roomStatusPayload(getRoomState(socket.roomName)),
+    );
+  });
+
   // Refresh button — broadcast reset to the room; both clients reload, which
   // disconnects the sockets and triggers the disconnect cleanup below, freeing
   // names and clearing room state for the next pair.
