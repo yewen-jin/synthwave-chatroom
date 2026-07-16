@@ -273,12 +273,8 @@ function showNowPlaying(name, playing) {
   if (!nowPlayingEl) {
     nowPlayingEl = document.createElement("div");
     nowPlayingEl.className = "now-playing";
-    document
-      .querySelector(".chat-area")
-      ?.insertBefore(
-        nowPlayingEl,
-        document.querySelector(".chat-area")?.firstChild,
-      );
+    // Inside the audio bar, next to the transport button — one row, not two.
+    audioBarEl?.appendChild(nowPlayingEl);
   }
   nowPlayingEl.textContent = playing ? "♪ now playing" : "⏸ paused";
 }
@@ -402,13 +398,15 @@ function applyPlaybackState({
   // able to start the shared session's music before their partner arrives.
   // Runs unconditionally (not gated by the idempotency key below) since
   // playerCount can change independently of playback state.
+  // "" rather than "block"/"inline-block": an inline display beats the
+  // stylesheet, and hardcoding one here silently overrode .track-selection's
+  // `display: flex` — which is what kept the status on its own row below the
+  // button instead of beside it. Let the stylesheet own the layout; JS only
+  // decides shown vs hidden.
   const bothPresent = playerCount >= 2;
-  if (audioBarEl)
-    audioBarEl.style.display = playerCount >= 1 ? "block" : "none";
-  if (audioWaitingEl)
-    audioWaitingEl.style.display = bothPresent ? "none" : "block";
-  if (toggleBtnEl)
-    toggleBtnEl.style.display = bothPresent ? "inline-block" : "none";
+  if (audioBarEl) audioBarEl.style.display = playerCount >= 1 ? "" : "none";
+  if (audioWaitingEl) audioWaitingEl.style.display = bothPresent ? "none" : "";
+  if (toggleBtnEl) toggleBtnEl.style.display = bothPresent ? "" : "none";
 
   // R7: the chat itself stays shut until someone presses "begin conversation".
   // Server-driven rather than local, so both players open together and a
@@ -467,7 +465,9 @@ function applyPlaybackState({
     audio.pause();
     hideTapToEnable();
   }
-  showNowPlaying(track, playing);
+  // Nothing to report until they've begun — before that the bar said
+  // "⏸ paused", which described a track nobody had started yet.
+  showNowPlaying(begun ? track : null, playing);
 }
 
 function preloadTrackAndReturn(name) {

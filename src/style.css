@@ -1113,10 +1113,15 @@ button:hover {
 }
 
 /* ============================================================================
-   16. RESPONSIVE - Mobile (max-width: 768px)
+   16. RESPONSIVE - Mobile (narrow OR short viewports)
    ============================================================================ */
 
-@media screen and (max-width: 768px) {
+/* Also matches on max-height, not width alone. A phone in landscape is wide
+   but short — an iPhone 14 is 844px across, over the 768px breakpoint — so a
+   width-only rule handed it the desktop layout: a 1006px window on an 844px
+   screen, scrolling sideways. Any viewport too short for the desktop window
+   gets the mobile treatment regardless of how wide it is. */
+@media screen and (max-width: 768px), screen and (max-height: 500px) {
   body {
     padding: 0;
     height: 100vh;
@@ -1200,9 +1205,20 @@ button:hover {
     font-size: var(--font-size-base);
   }
 
+  /* Touch targets. These were 40px (input) and 21px (send) — both under the
+     44px iOS asks for, and Send badly so: a 21px target on the one control
+     every message goes through. The height the audio bar gave back by
+     collapsing to a single row pays for most of this. */
   #chatInput {
-    height: 40px;
-    font-size: var(--font-size-base); /* Prevent zoom on iOS */
+    height: 56px;
+    min-height: 56px;
+    font-size: var(--font-size-base); /* 16px+ or iOS zooms the page on focus */
+  }
+
+  .send-btn {
+    min-height: 44px;
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-base);
   }
 
   .toolbar {
@@ -1227,6 +1243,35 @@ button:hover {
 }
 
 /* ============================================================================
+   16b. RESPONSIVE - Short viewports (landscape phones)
+   ============================================================================ */
+
+/* In landscape there is very little height to spend, and the fixed chrome
+   (title bar, audio bar, avatar panel, toolbar, input, send) would leave the
+   chat itself a sliver. The formatting toolbar is the only part that is
+   purely decorative — those buttons have no handlers anywhere in src/js — so
+   it is what gives way, not the conversation. */
+@media screen and (max-height: 500px) {
+  .toolbar {
+    display: none;
+  }
+
+  #chatInput {
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .user-avatar-panel {
+    padding: 0 var(--spacing-xs);
+  }
+
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ============================================================================
    17. RESPONSIVE - Small Screens (max-width: 320px)
    ============================================================================ */
 
@@ -1244,6 +1289,13 @@ button:hover {
     height: 12px;
   }
 
+  /* Same trade as the landscape block: on the smallest screens the fixed
+     chrome was taking 37% and leaving the conversation 47%. The decorative
+     toolbar goes so the chat can have the room. */
+  .toolbar {
+    display: none;
+  }
+
   /* No .window-title override here on purpose. At 320px the full name needs
      ~169px against ~160px available, so it ellipsises to
      "thisverisionofme_thisverisiono…". Shrinking it far enough to fit costs
@@ -1253,10 +1305,13 @@ button:hover {
 }
 
 /* ============================================================================
-   18. RESPONSIVE - Desktop (min-width: 769px)
+   18. RESPONSIVE - Desktop (wide AND tall enough)
    ============================================================================ */
 
-@media screen and (min-width: 769px) {
+/* Mirrors the mobile query's height condition — without min-height a
+   landscape phone would match both blocks and take desktop's larger type on
+   a screen that has no room for it. */
+@media screen and (min-width: 769px) and (min-height: 501px) {
   /* Larger text for desktop readability */
   .message {
     font-size: var(--font-size-xl);
@@ -1356,10 +1411,18 @@ button:hover {
    #username-submit so it reads as one visual system, not a bolted-on panel.
    ============================================================================ */
 
+/* One row: the transport button and the status sit side by side rather than
+   stacking. On a phone the two used to eat ~9% of the window between them for
+   what is a single idea — "the music, and what it's doing". Wraps at the
+   narrowest widths rather than overflowing. */
 .track-selection {
   width: 100%;
   box-sizing: border-box;
-  padding: var(--spacing-lg) var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-xl);
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
 }
@@ -1415,12 +1478,9 @@ button:hover {
   font-style: italic;
 }
 
+/* Lives inside .track-selection now, beside the button — so no width, no
+   border and no padding of its own; the bar provides all three. */
 .now-playing {
-  width: 100%;
-  box-sizing: border-box;
-  padding: var(--spacing-sm) var(--spacing-xl);
-  border-bottom: 1px solid var(--border-color);
-  background: var(--bg-primary);
   color: var(--text-color);
   font-size: var(--font-size-xs);
   font-style: italic;
