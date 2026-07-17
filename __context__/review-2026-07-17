@@ -1,0 +1,207 @@
+# Comprehensive card-game code review
+
+  ## Verdict
+
+  The card-game architecture is thoughtful and substantially complete, but the current branch is not safe to deploy unchanged. One remotely triggerable input can crash the entire Node process, and three high-impact issues undermine the
+  promised private, two-player room model.
+
+  No files were changed. The worktree remains clean.
+
+  ## Critical finding
+
+  ### 1. A malformed Socket.IO payload can crash both live experiences
+
+  The /rooms event handlers destructure their arguments in the function signature:
+
+  - server.js:1008
+  - server.js:1015
+
+  The default value handles undefined, but not null. A public client can emit check username or user joined with null, causing a synchronous TypeError. Socket.IO dispatches handlers through Node’s EventEmitter without an exception
+  boundary, so this can terminate the process.
+
+  Because the narrative show and card game share that process, one malformed card-game event can take down both.
+
+  Recommendation: validate the raw payload as a plain object before destructuring, validate every field, and add a process-level protocol regression test.
+
+  ## High-severity findings
+
+  ### 2. The intended “joined the wrong room?” flow leaks rooms and creates permanent ghost players
+
+  The recovery button opens the code-entry overlay without leaving the current room:
+
+  - src/js/roomMain.js:343
+  - src/js/roomMain.js:45
+
+  When the player enters another code, the server joins the same socket to the second Socket.IO room and overwrites socket.roomName, but never leaves or cleans the first:
+
+  - server.js:1031
+  - server.js:1165
+
+  Consequences:
+
+  - The socket continues receiving private broadcasts from the first room.
+  - The first room retains a ghost username occupying one of its two slots.
+  - Disconnect cleanup affects only the second room.
+  - The server’s room-to-room isolation guarantee is broken through normal UI, not merely a malicious client.
+
+  The same problem can be deliberately exploited by emitting multiple user joined events.
+
+  Recommendation: make room membership a one-room state transition—leave and clean any previous room before joining another, or reject a second join on the socket.
+
+  ### 3. Display names allow script injection
+
+  Chat messages are correctly rendered with textContent, but join and leave messages interpolate the untrusted username into innerHTML:
+
+  - src/js/roomMain.js:132
+  - src/js/roomMain.js:140
+
+  The 20-character HTML limit does not prevent a compact event-handler payload, and a custom Socket.IO client is not constrained by the HTML at all. The server neither bounds nor validates usernames.
+
+  A participant can therefore execute JavaScript on their partner’s phone under the site origin. The script could access local room data, reset sessions, or connect to the narrative namespace.
+
+  Recommendation: construct join/leave notices entirely with DOM nodes and textContent; also enforce username type, length and allowed characters server-side.
+
+  ### 4. “Begin conversation” and the two-player start requirement are enforced only by the UI
+
+  The client hides the chat and transport button, but the backend accepts:
+
+  - Chat messages before state.begun: server.js:1068
+  - audio-play-request from a room with only one player: server.js:1102
+
+  The visual gate lives at src/js/roomMain.js:621, which is not an authority boundary. A stale, modified or scripted client can begin alone and send messages before the conversation opens.
+
+  Recommendation: require state.usernames.size === ROOM_CAPACITY before the initial play, and reject chat while state.begun is false.
+
+  ### 5. The advertised 24-hour cleanup does not remove rooms from memory
+
+  Expired rooms are omitted when serialising the session file, but never deleted from roomStates:
+
+  - server.js:868
+
+  Additionally, check username creates state for any supplied room name:
+
+  - server.js:1008
+
+  A public client can create unlimited in-memory rooms. Because no sweep removes them, room metadata—and in-memory intimate transcripts—remain until the process restarts. This contradicts the documented 24-hour ageing policy and provides a
+  memory-exhaustion path.
+
+  Recommendation: validate room IDs, avoid creating state during availability checks, and perform actual periodic or access-time deletion of expired entries.
+
+  ### 6. No durable automated tests cover the card game
+
+  npm test runs only the Twine/dialogue drift check. The files under __test__/ remain empty. The commit history describes several useful scripted protocol matrices, but none were retained in the repository.
+
+  That leaves the following core guarantees unprotected:
+
+  - Namespace and room isolation
+  - Capacity
+  - Reconnect/rejoin
+  - Session persistence and reset
+  - Chat replay
+  - Play/pause arithmetic
+  - Input validation and malformed events
+  - Recovery into another room
+
+  For a live-show server, this is a significant regression risk.
+
+  ## Medium-severity findings
+
+  ### 7. Manual room-code entry is likely to create the wrong room on phones
+
+  Minted IDs are lowercase six-character codes, but the fallback input:
+
+  - Does not disable autocapitalisation or spellcheck: src/room.html:227
+  - Does not lowercase or validate against the minted alphabet: src/js/roomMain.js:45
+  - Is accepted by the server as an arbitrary new room name.
+
+  A phone capitalising the first character can silently place the second player in a different empty room.
+
+  ### 8. Room IDs do reach access logs
+
+  The documentation says the fragment keeps the room ID out of server access logs. That is true for navigation, but the client embeds the full join URL—including #<id>—inside the /qr.svg?d=... query:
+
+  - src/js/roomMain.js:328
+  - README.md:74
+
+  Nginx normally logs the complete request URI, so the encoded room ID appears in access logs. The response is also explicitly publicly cacheable at server.js:77.
+
+  This does not immediately expose conversations, but the privacy claim is inaccurate and the room ID behaves partly like an access token whenever capacity is available.
+
+  ### 9. Deployment documentation conflicts with the new artifact workflow
+
+  The newest AGENTS.md correctly says the VPS follows the force-pushed build branch, but both older operator-facing documents still instruct:
+
+  - git pull
+  - Build on the low-memory VPS
+  - Restart manually
+
+  See:
+
+  - README.md:160
+  - __context__/VPS setup manual.md:330
+
+  Following those instructions conflicts directly with the new workflow and its stated RAM constraint.
+
+  ### 10. Dependency-only deploys do not restart the running process
+
+  The VPS script installs when package.json or the lockfile changes, but restarts only for changes under server.js or shared/:
+
+  - scripts/update-vps.sh:54
+  - scripts/update-vps.sh:59
+
+  A running Node process continues using the already-loaded dependency code. The script then misleadingly reports a “dist/-only update.”
+
+  ### 11. The Node support declaration is stale
+
+  CI uses Node 24, and repository instructions require the newest LTS, but package.json and README still advertise Node 18:
+
+  - package.json:16
+  - README.md:35
+
+  This is especially undesirable for an internet-facing live server because Node 18 is no longer the intended deployment baseline.
+
+  ### 12. Missing audio produces a disabled room with no actionable player-facing diagnosis
+
+  When no track exists, the transport is disabled. The server logs a warning, but the pair receives no clear instruction or error. A missing/late audio deployment therefore looks like a broken “begin conversation” button.
+
+  ## Known incomplete requirements
+
+  These are documented scope decisions rather than newly discovered regressions:
+
+  - R8/game end is unresolved. There is no ended handler, so the local audio stops while server state continues to say playing, and the room clock advances beyond the duration.
+  - R2/typing indicator remains deferred.
+  - R9 is still truncated in Symone’s source PDF.
+  - Conversation transcripts intentionally do not survive a server restart, although README’s headline wording can imply that they do.
+  - Real-device gates remain outstanding: iOS autoplay and fallback, Safari dvh, real metadata/timeline ticking, QR scanning phone-to-phone, and reconnect under genuine network loss.
+
+  ## What is working well
+
+  The review also confirmed several strong implementation choices:
+
+  - /rooms is isolated from the default narrative namespace.
+  - Presence is correctly excluded from persisted sessions.
+  - Active playback is persisted as a paused elapsed snapshot.
+  - Reset deletes server state rather than relying on disconnect timing.
+  - Chat message bodies and replay are rendered safely with textContent.
+  - Replay rebuilds from a snapshot and is reconnect-idempotent.
+  - Rejoin correctly uses the Socket.IO connect event.
+  - The audio/timeline uses a server-owned room clock rather than device playback time.
+  - Play and pause are explicit idempotent intents.
+  - /audio and /qr.svg both have matching Vite proxy entries.
+  - Mobile layout work accounts for narrow and short/landscape viewports.
+
+  ## Repository and verification status
+
+  The card-game feature series runs from the routing/namespace work on 15 July through pairing, session persistence and replay on 17 July. The current card-game branch also contains the latest Actions-version changes and the new VPS update
+  script; the core feature implementation is already represented on origin/main.
+
+  Read-only checks completed:
+
+  - npm test: passed—the dialogue source and generated JSON are in sync.
+  - node --check server.js: passed.
+  - node --check src/js/roomMain.js: passed.
+  - bash -n scripts/update-vps.sh: passed.
+  - Installed dependency tree: resolved without missing packages.
+  - Git status: clean.
+
+  I did not run the production build because it rewrites dist/, or run an interactive room session because it writes runtime session state. Those would conflict with the instruction not to change anything.
