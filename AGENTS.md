@@ -90,6 +90,13 @@ npm run check:dialogue    # (= npm test) verify they're in sync; never writes
 - **Don't patch `Date.now` to fast-forward the room clock** in a test — socket.io reads it for ping timeouts, so a jump of minutes disconnects the client. Drive the `room-status` handler with chosen `pausedElapsed` values instead.
 - Changing a large dependency (p5): check `vite.config.js` (`optimizeDeps`, `manualChunks`).
 
+## Decision Log (WORKLOG.md)
+
+- **`WORKLOG.md` at the repo root is append-only** — it records the reasoning behind changes (git history already has the what). Never delete, rewrite, or reorder an entry; corrections and reversions are new entries (`reverted` is a status, not an erasure). The entry template is at the top of the file.
+- **Dispatch the `notes-keeper` agent** (`.claude/agents/notes-keeper.md`, Haiku — cheap enough to run every time) proactively after: completing a feature, an architectural decision, resolving a non-trivial bug, changing or reverting an approach. The agent starts cold, so the brief must carry the decisions **and their whys**, alternatives rejected, and how to backtrack — anything not in the brief doesn't get logged.
+- **Division of labour:** `WORKLOG.md` is append-only history for developers; `README.md` and this file are current state only, never a changelog. The notes-keeper writes only to `WORKLOG.md` — it flags README/AGENTS drift in its report rather than editing them.
+- **What no agent can verify:** the real-device gate under [Testing & Setup](#testing--setup) (iOS autoplay, `dvh`, real media metadata, a camera reading the QR) and how either piece _feels_ in front of a live audience. Do not pretend to have tested these — log them as unverified and ask Yewen to run and report.
+
 ## What NOT to do
 
 - **Do not resurrect `src/data/dialogues/`** — the server reads `public/data/dialogues/`; writing there does nothing.
@@ -100,3 +107,4 @@ npm run check:dialogue    # (= npm test) verify they're in sync; never writes
 - **Do not write conversation transcripts to `data/`** without it being a deliberate decision — the replay log is in-memory by design.
 - **Do not add a card-game backend route without a matching `vite.config.js` proxy entry** — it will 404 only in dev, which is exactly the trap that has bitten twice.
 - **Do not commit `audio-assets/` or `data/`** — both are gitignored runtime state.
+- **Do not rewrite or delete `WORKLOG.md` entries** — it is append-only; log a reversion as a new entry with status `reverted`.
