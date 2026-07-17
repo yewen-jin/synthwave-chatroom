@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>thisverisionofme_thisverisionofyou</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/assets/images/icons/favicon.svg"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- MSN-style Window Container -->
+    <div class="msn-window">
+      <!-- Title Bar -->
+      <div class="title-bar">
+        <img
+          src="assets/images/icons/chat-room-icon.svg"
+          alt="icon"
+          class="msn-icon"
+        />
+        <span class="window-title">thisverisionofme_thisverisionofyou</span>
+        <div class="window-controls">
+          <button id="refresh-btn" class="refresh-btn" title="Reset this room">
+            ↻
+          </button>
+          <button class="minimize">_</button>
+          <button class="maximize">□</button>
+          <button class="close">×</button>
+        </div>
+      </div>
+
+      <!-- Chat Area -->
+      <div class="chat-area">
+        <!-- Contact Info Bar -->
+        <!-- <div class="contact-info">
+        <img src="assets/images/mask.svg" alt="Avatar" class="avatar" />
+        <div class="contact-details">
+          <span class="contact-name">Anon7659</span>
+          <span class="status">Online</span>
+        </div>
+      </div> -->
+
+        <!-- Audio bar. Shown as soon as a player is in the room; the toggle
+             itself only appears once both players are named — before that,
+             a waiting hint. One track for now, auto-selected by the server —
+             no picker. Either player can press the toggle; play/pause
+             applies to both at once. Disabled until the track has preloaded,
+             so pressing it can't stall mid-game, or until both players have
+             joined. A future multi-track picker (separate button + popup)
+             would live here alongside the toggle — not built yet. -->
+        <div id="audio-bar" class="track-selection" style="display: none">
+          <p
+            id="audio-waiting"
+            class="track-selection__hint"
+            style="display: none"
+          >
+            Waiting for the other player to join…
+          </p>
+          <button
+            id="audio-toggle-btn"
+            class="track-btn"
+            type="button"
+            style="display: none"
+            disabled
+          >
+            ▶ Start
+          </button>
+
+          <!-- Track timeline: how far into the track the pair is, with dots
+               at TRACK_MARKERS_SEC. No numeric countdown, by request — it is
+               a sense of where you are, not a clock ticking down at you.
+               Takes a full row of the flex bar. Hidden until the conversation
+               has begun and the track's duration is known. -->
+          <div id="track-timeline" class="timeline" hidden>
+            <div class="timeline__track">
+              <div id="timeline-fill" class="timeline__fill"></div>
+              <div id="timeline-dots" class="timeline__dots"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shown to player A while they're alone in a freshly minted room:
+             the QR their partner scans to land in this same room. The code is
+             also given as text, because a phone camera reading another phone's
+             screen is exactly where glare and brightness bite — and because
+             someone who scanned the printed code by mistake needs a way back
+             to their partner's room. -->
+        <div id="pair-invite" class="pair-invite" hidden>
+          <p class="pair-invite__line">ask your pair to scan this</p>
+          <img
+            id="pair-qr"
+            class="pair-invite__qr"
+            alt="QR code to join this room"
+          />
+          <p class="pair-invite__code">
+            or enter this code: <strong id="pair-code"></strong>
+          </p>
+          <button id="pair-join-other" class="pair-invite__alt" type="button">
+            joined the wrong room? enter your pair's code
+          </button>
+        </div>
+
+        <!-- Messages Container -->
+        <div class="chat-body" id="chatBody"></div>
+
+        <!-- Message Input Area -->
+        <div class="input-section">
+          <div class="message-input-area">
+            <div class="toolbar">
+              <div class="toolbar-section text-formatting">
+                <button class="toolbar-btn font-family" title="Font Family">
+                  <i class="icon">𝔸</i>
+                </button>
+                <button class="toolbar-btn font-size" title="Font Size">
+                  <i class="icon">𝟙𝟚</i>
+                </button>
+                <button class="toolbar-btn bold" title="Bold">
+                  <i class="icon">𝐁</i>
+                </button>
+                <button class="toolbar-btn italic" title="Italic">
+                  <i class="icon">𝑰</i>
+                </button>
+                <button class="toolbar-btn underline" title="Underline">
+                  <i class="icon">𝕌</i>
+                </button>
+                <button class="toolbar-btn text-color" title="Text Color">
+                  <i class="icon">🎨</i>
+                </button>
+              </div>
+              <div class="toolbar-divider"></div>
+              <div class="toolbar-section message-options">
+                <button
+                  class="toolbar-btn emoticon-btn"
+                  title="Insert Emoticon"
+                >
+                  ☺
+                </button>
+                <button
+                  class="toolbar-btn background"
+                  title="Change Background"
+                >
+                  🖼️
+                </button>
+                <button class="toolbar-btn nudge-btn" title="Send Nudge">
+                  ≫
+                </button>
+                <button class="toolbar-btn draw" title="Draw Something">
+                  ✎
+                </button>
+                <button class="toolbar-btn voice" title="Voice Clip">🎤</button>
+              </div>
+            </div>
+            <div class="input-wrapper">
+              <div class="input-container">
+                <textarea
+                  id="chatInput"
+                  placeholder="Type a message…"
+                ></textarea>
+              </div>
+            </div>
+            <button class="send-btn">Send</button>
+          </div>
+
+          <!-- User Avatar Side Panel — R5 ("Keep Display name for each person").
+               #user-display-name is what chatUI.js's updateUserDisplayName()
+               writes to; without this block that call was a silent no-op and
+               the room showed no display name at all. -->
+          <div class="user-avatar-panel">
+            <img
+              src="assets/images/mask.svg"
+              alt="Your Avatar"
+              class="avatar user-avatar"
+            />
+            <span class="contact-name" id="user-display-name"></span>
+            <!-- The other player, on this same row rather than in a bar of
+                 its own: it costs no height on a phone, and it reads as the
+                 pair it is — you, and who you're with. Populated from
+                 room-status; hidden until they arrive. -->
+            <span class="contact-with" id="other-player" hidden></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Username Popup (kept before the room-entry popup in the DOM so
+         chatUI.js's querySelector('.login-content') attaches the username
+         error here, not in the room-entry popup) -->
+    <div id="username-popup" class="popup" style="display: none">
+      <div class="popup-content msn-style">
+        <div class="title-bar">
+          <img
+            src="assets/images/icons/chat-room-icon.svg"
+            alt="icon"
+            class="msn-icon"
+          />
+          <span class="window-title">Sign In</span>
+        </div>
+        <div class="login-content">
+          <p>Please enter your display name to continue</p>
+          <input
+            type="text"
+            id="username-input"
+            placeholder="Display name"
+            maxlength="20"
+          />
+          <button id="username-submit">Sign In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room-name entry popup (shown only when there is no room in the URL hash) -->
+    <div id="room-entry-popup" class="popup" style="display: none">
+      <div class="popup-content msn-style">
+        <div class="title-bar">
+          <img
+            src="assets/images/icons/chat-room-icon.svg"
+            alt="icon"
+            class="msn-icon"
+          />
+          <span class="window-title">Join a room</span>
+        </div>
+        <div class="login-content">
+          <p>Enter the room name on your QR card to join</p>
+          <input
+            type="text"
+            id="room-name-input"
+            placeholder="Room name"
+            maxlength="30"
+          />
+          <button id="room-name-submit">Join</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/roomMain.js"></script>
+  </body>
+</html>

@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "check:dialogue": "node scripts/check-dialogue.js",
     "build:dialogue": "node scripts/twee-to-json.js src/data/twine/thebodyisobsolete.twee public/data/dialogues/thebodyisobsolete.json",
+    "make:audio": "node scripts/make-placeholder-audio.js",
     "test": "npm run check:dialogue"
   },
   "type": "module",
@@ -18,6 +19,7 @@
   "dependencies": {
     "express": "^5.1.0",
     "p5": "^2.0.3",
+    "qrcode": "^1.5.4",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
   },

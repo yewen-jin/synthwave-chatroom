@@ -25,6 +25,21 @@ export default defineConfig({
         ws: true,
         changeOrigin: true,
       },
+      // Card-game audio lives in audio-assets/ and is served by the backend's
+      // express.static in production. In dev the page runs on Vite (5173), so
+      // without this proxy /audio/* hits Vite's SPA fallback (text/html) and
+      // the client's <audio> never reaches canplaythrough — "stuck loading".
+      "/audio": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
+      // Same reason as /audio: the QR is rendered by the backend, so without
+      // this the pairing image 404s against the Vite dev server and player A
+      // has nothing to show their partner.
+      "/qr.svg": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
     },
   },
   build: {
@@ -36,7 +51,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, "src/index.html"),
-        docs: path.resolve(__dirname, "src/docs.html"),
+        chatroom: path.resolve(__dirname, "src/chatroom.html"),
+        room: path.resolve(__dirname, "src/room.html"),
         control: path.resolve(__dirname, "src/control.html"),
         room1: path.resolve(__dirname, "src/room1.html"),
         room2: path.resolve(__dirname, "src/room2.html"),

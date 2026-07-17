@@ -8,6 +8,19 @@ export const SYSTEM_MESSAGE_DELAY_MS = 2000;
 export const ENDING_DELAY_MS = 2000;
 export const STATE_CLEANUP_MS = 5 * 60 * 1000;
 
+// ========== ROOM-BASED CARD GAME (/rooms namespace) ==========
+// Max named players per room — a third scanner is turned away, not dropped in.
+export const ROOM_CAPACITY = 2;
+
+// Marks on the room's track timeline, in seconds from the start. These are
+// Symone's timing signals — the moments the track cues something in the
+// physical card game — made visible, so a pair can see one coming without
+// being given a countdown. Deliberately absolute times, not fractions of the
+// track: they have to line up with the sound design, not with wherever the
+// bar happens to be. Markers past the end of the actual track simply aren't
+// drawn, so a shorter track degrades to fewer dots.
+export const TRACK_MARKERS_SEC = [180, 360, 540, 720]; // 3, 6, 9, 12 min
+
 // Delay modes: "dynamic" (narrator length-based), "fallback" (fixed 2000ms), "test" (0ms instant)
 export const DELAY_MODE = "dynamic";
 // export const DELAY_MODE = "test";
