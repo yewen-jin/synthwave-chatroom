@@ -1,0 +1,45 @@
+name: Build deploy branch
+
+# On every push to main: build dist/ and force-push it to the `build` branch
+# as a single commit whose parent is the exact main commit it came from.
+# The VPS tracks origin/build with `git fetch && git reset --hard origin/build`
+# and never builds itself — it doesn't have enough RAM for vite/terser.
+# Force-push keeps the branch to one dist snapshot; old ones are GC'd by GitHub.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # manual rebuild from the Actions tab, no push needed
+
+permissions:
+  contents: write # GITHUB_TOKEN needs this to push the build branch
+
+concurrency:
+  group: build-branch
+  cancel-in-progress: true # only the newest main commit is worth deploying
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm # keys off the tracked package-lock.json
+
+      - run: npm ci
+
+      # Refuse to deploy if the shipped dialogue JSON has drifted from the twee
+      - run: npm test
+
+      - run: npm run build
+
+      - name: Force-push dist to build branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dist
+          git commit --message "build: dist from main@${GITHUB_SHA::7}"
+          git push --force origin HEAD:build
