@@ -358,15 +358,259 @@ broadcast on the default namespace, never `/rooms` — making `/room` live-react
 need a real architecture decision (dual namespace connection, or bridging broadcasts), which
 wasn't asked for and isn't built. The background animation runs on its own regardless.
 
-### Phase 4 — rebrand + mobile (rebrand: main session inline; mobile: agent)
+### Interlude 2 — Yewen's first real test pass, and a scope change (16 Jul)
 
-- [ ] 4.1 Rebrand: grep `B0dy_is_0bs0let3` / `Symone` across `src/`; retitle `chatroom.html`
-      to `thisverisionofme_thisverisionofyou` (title + `.window-title`). Front page branding
-      stays pending Symone's answer (open question 4). Symone's attached visual edits slot in
-      here **when they arrive**.
-- [ ] 4.2 Mobile: audit `/room` first, then `/chatroom`, at 320/375/390/412px via Chrome device
-      emulation; `100vh` → `100dvh`; fix what breaks. Screenshots as evidence.
-- **Acceptance:** no horizontal scroll at any width; input area usable; screenshots attached.
+Yewen pulled the branch into her own checkout for the first time (`origin/worktree-thisverisionofme`,
+pushed after realising the earlier work was sitting in an unreachable background-job worktree) and
+reported three things from actually clicking through it:
+
+1. **Bug: the track-selection bar showed no options.** Root cause: `audioTracks` was a constant
+   read once at server boot. If `npm run make:audio` ran after the server was already up — or, at
+   the real event, Symone's rsync landing after the process was started — every room stayed stuck
+   with an empty list until a manual restart. Fixed by replacing it with `readAudioTracks()`,
+   called fresh on room creation and on each join. Reproduced the exact failure (boot with no
+   `audio-assets/`, generate the file after boot, no restart) and confirmed a join now sees it.
+2. **New requirement: pause, not just start.** No pause/resume existed before.
+3. **New requirement: single track for now.** The real event will ship with exactly one track, not
+   the 1–5 the plan had been carrying as open question 2. Symone plans a separate "change track"
+   button + popup for multi-track in the future — explicitly not wanted yet.
+
+**Redesign (`16525e1`):** the track-selection UI is gone. The room auto-selects `tracks[0]` the
+moment it's created — no picker step. Server protocol is now `audio-play-request` /
+`audio-pause-request`, both idempotent intents (not a blind toggle), so a click race between both
+players can't leave the room in the wrong state. Room state gained `pausedElapsed` (seconds already
+played, accumulated across pause/resume cycles) alongside `playing`/`startedAt`, so a late joiner or
+reconnecting client seeks to the correct position whether mid-play or paused, instead of restarting
+from 0. Client-side, `room.html`'s two panels collapsed into one audio bar with a single toggle
+button (▶ Start / ⏸ Pause), gated on `playerCount >= 2` same as before.
+
+The list-shaped protocol (`audio-tracks`, `readAudioTracks()`) was kept deliberately rather than
+hardcoding "one track" into the wire format — so the future multi-track picker button can read from
+the same source without another server rewrite; it just isn't built.
+
+Verified: 13/13 on a new scripted protocol test (the no-restart fix, auto-select on room creation,
+play/pause-request idempotency in both directions, and the elapsed-time arithmetic across a real
+pause-then-resume cycle). Placeholder track bumped from 3s to 20s so pause/resume is actually
+manually testable, and reduced from 3 placeholder files to 1 to match the real scenario. Re-ran the
+existing isolation matrix (capacity, cross-room, cross-namespace) — still 4/4.
+
+**Open question 2 (track count) is resolved — one track, for now.** The "before the event" question
+list below still needs Symone's answers on room-naming and front-page branding.
+
+### Interlude 3 — "Loading track…" resolved, and the preload gate removed (16 Jul)
+
+**The reported bug was already fixed on disk but never delivered.** `8bcc587` (proxy `/audio` to
+the backend in Vite dev) was committed at 02:14 but sat unpushed, and Yewen's Vite had been
+started at 09:15 — before the config existed. Restarting Vite picked it up; Yewen confirmed:
+_"I'm able to start the track now."_ All commits are now pushed to `origin/worktree-thisverisionofme`.
+
+**A worse bug was sitting behind it.** The toggle was `disabled` until `canplaythrough` fired.
+That is a bad gate on any stall — venue wifi, a 15-minute track — and mobile browsers (iOS Safari
+especially) routinely ignore `preload="auto"` entirely and fetch nothing until a gesture. On those
+devices `canplaythrough` never fires before the first press, so **the button would have been dead
+on arrival at the event** while working perfectly on the desktop it was tested on.
+
+Fixed in `8988ba1`. Preload is now an optimisation, never a precondition:
+
+- the toggle is enabled as soon as a track exists and both players are present;
+- seeking waits for `loadedmetadata` (which it needs) rather than `canplaythrough` (which it doesn't);
+- a load `error` becomes a retryable "⟳ Retry track" instead of a permanently dead button;
+- the presser calls `play()` **synchronously inside the click**, since iOS only grants an element
+  playback permission from a real gesture — the old code only ever called `play()` from the
+  `room-status` callback, which iOS is liable to reject **for both players**;
+- the non-presser, whose device made no gesture on its own audio element, falls back to a
+  "🔇 Tap to enable sound" prompt that re-seeks to the room's live elapsed position (new
+  `audio-status-request`, emitted to that one socket) — so it rejoins the music **in sync**
+  rather than restarting it.
+
+**Verified** on desktop Chrome, two clients, including a tab where preload never completes
+(background tabs are media-throttled, which reproduces "canplaythrough never fires"): button stays
+enabled, either player can start, play/pause syncs both ways, and the elapsed clock resumes from
+the paused position (0.0 → 6.1 → 6.1 → 6.7s) rather than restarting.
+
+⚠️ **Not verified, and cannot be here:** the actual iOS autoplay behaviour. The gesture handling
+above addresses Safari's documented rules _in principle_ — it is reasoned from the spec, not
+tested on hardware. **A real-iPhone test is a gate before the event**, not a nice-to-have: if
+the non-presser's audio is blocked, the fallback prompt is what saves the feature, and nobody
+has seen it fire on real hardware.
+
+**Note on the background-throttle test:** it reproduces the _consequence_ (no `canplaythrough`),
+not the _mechanism_ (iOS autoplay policy). Don't let it stand in for a device test.
+
+### Symone's visual edits — RECEIVED 16 Jul (`~/KEEP or DELETE.pdf`)
+
+The long-missing "additional visual edits attached". Three annotated slides. Transcribed here
+because the source lives outside the repo; the PDF is the authority if they ever disagree.
+(Extracted with PDFKit via `swift` — `pdftotext`/poppler is not installed on this machine.)
+
+Her screenshots are of **`room1.html` / `player-room.html`** (the legacy pages), not the new
+`room.html` — so a few notes describe elements the card-game room never had.
+
+| #      | Requirement (her words, condensed)                                                                                             | Slide | Status           |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------ | ----- | ---------------- |
+| **R1** | "Sam entered the room — keep this"                                                                                             | 2     | ✅ done          |
+| **R2** | "Sam is typing…" or live typing visual — _"still nice to have"_                                                                | 2     | ❌ **new**       |
+| **R3** | "Take out Symone is online" (avatar + status bar)                                                                              | 2     | ✅ done          |
+| **R4** | Take out "The B0dy_is(..)", replace with `thisverisionofme_thisverisionofyou`                                                  | 2     | ⚠️ partial       |
+| **R5** | "Keep Display name for each person if possible"                                                                                | 2     | ⚠️ **broken**    |
+| **R6** | Synthwave background could be removed — _"if you want/if it's simple"_; not visible on mobile, "might be taking extra storage" | 2     | ⚠️ **conflict**  |
+| **R7** | One player presses **"begin conversation"** → opens the chatroom **+ plays music**                                             | 3     | ⚠️ partial       |
+| **R8** | Game end: **(a)** "thank you for playing" + chat closed, **or** **(b)** chat continues, music stops                            | 3     | ❌ **new**       |
+| **R9** | "suitable for all mobile devices, ensure the ___"                                                                              | 3     | ❓ **truncated** |
+| **R0** | "Keep this intro page" — the Sign In / display-name popup                                                                      | 1     | ✅ done          |
+
+### Audit of phases 1–3 against the PDF (16 Jul)
+
+**Satisfied.** R0 (`#username-popup` on `room.html`), R1 (`onUserJoined` renders
+"_**Sam** entered the chat_"), R3 (the `.contact-info` avatar/"Online" bar is commented out in
+both `room.html` and `chatroom.html`).
+
+**R5 is silently broken — the audit's real find.** `updateUserDisplayName()`
+(`src/js/chatUI.js:147`) writes to `#user-display-name`. That element exists **only** in
+`player-room.html` and `room1.html` — the pages Symone screenshotted. `room.html` has no such
+element, so `roomMain.js` calls the function on every join and it does nothing, silently. Her
+arrow points at the `.user-avatar-panel` (mask avatar + name, bottom-right of the input row);
+that whole block is absent from `room.html`. Note the softer reading too: per-message sender
+names already appear on every line, so "display name for each person" is arguably met — but the
+panel she circled is genuinely missing. Fix is a copy of the block from `room1.html:106–114`.
+
+**R4 partial.** `room.html` is already correct. Still carrying "The B0dy_is_0bs0let3":
+`index.html:11`, `chatroom.html:7,26`, `room1.html:7,26`, `room2.html:7,26`,
+`player-room.html:7,27`, `narrator-room.html:7,26`. ⚠️ **`player-room` / `narrator-room` are the
+legacy narrator show — a different work.** Retitling those renames The Body is Obsolete itself.
+Assume rebrand = `index` + `chatroom` + `room` only, pending Symone (open question 4).
+
+**R7 partial — smaller than it looks.** Currently: both players sign in → chat is open
+immediately → a separate "▶ Start" plays music. Symone wants **one** button that opens the chat
+_and_ starts the music. The machinery already matches: the button only appears once both players
+are present, either may press it, and one press starts music for both. The delta is only
+(1) relabel "▶ Start" → "begin conversation", (2) gate the chat area behind that press.
+**The audio work stands — the non-presser still receives music by broadcast, so the iOS
+tap-to-enable fallback is exactly as load-bearing under this framing.**
+
+**R8 not implemented at all.** There is no end-of-game concept; `refresh` is the only reset.
+
+**R6 is a stakeholder conflict, not a task.** Yewen (16 Jul): _"I want /room to share the same
+background with the rest of the site"_ — which is why `roomMain.js` calls `initVisuals()`.
+Symone: the background could go, it's invisible on mobile and "might be taking extra storage".
+Not a neutral toss-up: dropping it also removes p5 (the heaviest dependency), which helps mobile
+performance and answers her storage worry. **Needs Yewen's call.**
+
+**R9 is truncated in the source PDF** — the sentence ends "ensure the". Not recoverable here;
+only Symone has the rest. **Ask.**
+
+### Phase 4 — REVISED after the PDF (16 Jul). Scope now exceeds the 5h remaining.
+
+R2, R7 and R8 are **net-new** beyond "rebrand + mobile". The original Phase 4 was ~3h of a 5h
+remainder; these do not fit alongside it. Triage below uses Symone's own signals — she marked R2
+"nice to have" and R6 "if you want/if it's simple", so those defer first.
+
+**Core (fits ~5h, in priority order):**
+
+- [x] 4.1 Rebrand (R4) — **DONE 16 Jul; it was already complete, 0h spent.**
+      **Yewen's ruling: the new name applies _only_ to `/room`** — the new paired-room + music
+      system. Not `/chatroom`, not the front page, not the legacy pages. Verified: `room.html`
+      carries `thisverisionofme_thisverisionofyou` (title + `.window-title`); `index`,
+      `chatroom`, `room1`, `room2`, `player-room`, `narrator-room` all still read
+      "The B0dy_is_0bs0let3", which is correct — TBIO is a separate, continuing work.
+      This closes open question 1c and supersedes question 4.
+      _Spelling:_ keep **"verision"**. Symone writes it that way twice in her own PDF, so it is
+      deliberate. (Yewen typed it "thisversionofme" in chat on 16 Jul — treat that as shorthand,
+      not a correction; the PDF is authoritative. Closes question 5.)
+- [x] 4.2 Mobile (R9) — **`/room` + `/chatroom` DONE 16 Jul** (`7b5b284`), ~1h. Root cause was
+      _not_ the 26 hardcoded widths: the mobile block set **no height** on `.msn-window`, so it
+      came out at title-bar + `calc(100vh - 40px)` = exactly `100vh`, and `100vh` is the _large_
+      viewport → taller than the phone shows → clipped top and bottom. Now `95dvh` to match the
+      95% width (Yewen's call: even inset all round), `vh` fallback, safe-area insets for
+      notch/home indicator, and `.chat-area` flexes instead of assuming a 40px bar.
+      **Second bug, caused by the rebrand:** the longer title refused to shrink (flex items
+      default to `min-width: auto`), squeezing `.window-controls` until its four buttons stacked
+      vertically — a **121px** title bar on a 320px phone, controls pushed past the window edge.
+      Now truncates; 121px → 31px.
+      Verified 320/375/390/412 on both pages via same-origin iframes (media queries evaluate
+      against the iframe viewport — `resize_window` does not work in this Chrome context):
+      95%×95%, no clipping, no horizontal scroll, Send reachable. Desktop unchanged at 1024/1440.
+      ⚠️ Still needs a real-device pass: iOS Safari's collapsing toolbar and zoom-on-focus are
+      not reproducible here.
+- [ ] 4.2b Mobile — remaining pages (`index`, legacy rooms) if budget allows; not the QR path.
+- [ ] 4.3 Display-name panel (R5) — ~0.25h. Port `.user-avatar-panel` from `room1.html`.
+- [ ] 4.4 "begin conversation" (R7) — ~0.75h. Relabel + gate the chat area on the press.
+- [x] 4.3 / 4.4 / 4.9 — **DONE 16 Jul** (`07d4684`, `68c2e54`). Display-name panel, "begin
+      conversation", and the other player's name ("with Alex", on the avatar row — no extra
+      height, and deliberately _not_ a revival of the contact-info bar R3 removed: that was a
+      hardcoded host, this is the live partner). `room-status` now carries `usernames`.
+- [x] 4.8 **Track timeline — DONE 16 Jul** (`68c2e54`). Built as designed below. Verified against
+      a 900s track by driving the client's own `room-status` handler with chosen `pausedElapsed`
+      values (`playing:false` ⇒ elapsed _is_ `pausedElapsed`, so no clock patching):
+      dots at exactly 20/40/60/80%, each lighting on crossing (179s → none, 181s → the 3-min
+      dot), fill = elapsed/duration, capped at 100% past the end.
+      **Two things could not be verified here and need the device pass:** continuous ticking, and
+      `duration` arriving from real metadata — this Chrome tab is backgrounded and Chrome
+      throttles both media loading and `setInterval` in hidden tabs.
+      _Testing note for whoever comes next:_ don't patch `Date.now` to fast-forward the room
+      clock — socket.io reads it for ping timeouts, so a jump of minutes disconnects the client
+      and wedges the renderer. Drive the `room-status` handler instead.
+
+      Original design (kept — all of it held up):
+
+          A line showing how far into the track the pair is, with dots at **3/6/9/12 min**.
+              **No numeric countdown** — deliberate: this is a mood cue, not a clock.
+
+              Design decisions, so they aren't re-litigated mid-build:
+
+              1. **Drive it from the room clock, not `audio.currentTime`.** The server already owns
+                 `startedAt` + `pausedElapsed` (see Interlude 3), so both players see an identical
+                 timeline. `audio.currentTime` is per-device and would diverge — and on a device whose
+                 playback is autoplay-blocked it would sit at 0 while the game actually runs. The
+                 timeline is the _game's_ progress, not this speaker's.
+              2. **Marker times are absolute seconds, not proportions.** `[180, 360, 540, 720]` →
+                 `shared/gameParameters.js` (it already holds constants shared by client and server).
+                 Position each as `marker / duration`; render only markers that fall inside the actual
+                 duration, so a shorter track degrades to fewer dots instead of dots off the end.
+                 Yewen's "3/6/9/12 min" implies Symone's ~15-min track → dots at 20/40/60/80%.
+              3. **Duration comes from `audio.duration`** (needs `loadedmetadata`). Unknown on a device
+                 that hasn't loaded → render the line with no fill and no dots rather than guessing.
+              4. **Ticking:** interpolate locally between `room-status` broadcasts — the server already
+                 sends everything needed (`playing`, `startedAt`, `pausedElapsed`). **Do not add a
+                 per-second server tick**; that would be a new broadcast per room per second for a
+                 cosmetic bar.
+
+              ⚠️ **Dev-testing gap:** the placeholder track is 20 s, so no dot would ever render and the
+              fill would complete instantly. `scripts/make-placeholder-audio.js` needs a long option
+              before this can be verified honestly — 15 min at 44.1 kHz is ~79 MB, but 8 kHz mono is
+              ~14 MB, which is fine for a gitignored dev file.
+
+              **Ties to R8:** if the track is the game clock, this line _is_ the game's progress bar and
+              its end is the game ending. Worth putting to Symone alongside the (a)/(b) question — one
+              coherent design rather than two features.
+
+**Deferred unless Symone's answers or spare budget say otherwise:**
+
+- [ ] 4.5 Game end (R8) — needs her (a)/(b) choice first. **Cost is asymmetric:** (b) "chat
+      continues, music stops" is near-free _if the single track is the game clock_ — the audio
+      `ended` event is the game-over signal. (a) needs an explicit end trigger plus chat locking.
+      Don't build either arm speculatively.
+- [ ] 4.6 Typing indicator (R2) — her own "nice to have". Needs a `typing` event on the `/rooms`
+      namespace + debounce. ~0.75h.
+- ~~4.7 Background removal (R6)~~ — **RESOLVED 16 Jul: the background stays. Do not remove it.**
+  Yewen's call. Symone's underlying worry was that rendering the background would steal
+  processing power from live audio playback — it doesn't: audio decoding runs off the main
+  thread with its own buffer, so canvas work doesn't cause dropouts. The two are unrelated.
+  She wrote "could", not "must". **p5 and `initVisuals()` stay in `roomMain.js`.**
+
+      One honest caveat, recorded so it isn't rediscovered later: her _other_ reason ("on the
+      mobile its not visible") is a design observation, not the misconception, and it broadly
+      checks out — at ≤768px `.msn-window` is `width: 95%; height: 100vh`, leaving the background
+      as a ~2.5% sliver each side. It is fully visible on desktop, which is where it carries the
+      piece. Not a reason to remove it; just don't be surprised on a phone.
+
+**Proposal worth putting to Symone (resolves R7 + R8(b) together, cheaply):** the single track
+_is_ the game clock — "begin conversation" starts it, the track ending ends the game and stops
+the music. It matches her "15-minute track with all the timing signals" idea and needs no
+separate timer. **Offer as a proposal, not a decision.**
+
+- **Acceptance:** no horizontal scroll at any width; input area usable on a real phone;
+  screenshots attached; iPhone audio test passed (see Interlude 3 — that is still a gate).
 
 ### Phase 5 — final verification + docs (main session)
 
@@ -385,12 +629,30 @@ and reports.**
 
 **Blocking — need these today:**
 
-1. **The attached visual edits** — can't scope task 2 without them.
-2. **Track count** — 1 to 5? **Still open (`?`).** The selection UI is now data-driven
-   (server lists whatever is in `audio-assets/`), so the count no longer blocks the build —
-   but the final number from Symone is still needed to prep the masters. Dev currently runs
-   with 3 placeholders (`npm run make:audio`); add/remove entries in
-   `scripts/make-placeholder-audio.js` to change the placeholder count.
+1. **The attached visual edits — RECEIVED 16 Jul** (`~/KEEP or DELETE.pdf`). Transcribed and
+   audited above (R0–R9). They **grew the job past the remaining 5h**: R2, R7, R8 are net-new.
+   See the revised Phase 4 for the triage. Three follow-ups came _out_ of the PDF:
+
+   1a. **R9 is cut off mid-sentence** — "Additionally: suitable for all mobile devices, ensure
+   the ___". The slide just ends. **What was the rest?** Can't guess this one.
+
+   1b. **R8 — she offered (a) or (b) and didn't pick.** Needs a decision. Suggest (b) (chat
+   continues, music stops) with the track as the game clock — near-free, and it matches her
+   "15-minute track with all the timing signals" plan. (a) costs more (explicit end trigger +
+   chat locking).
+
+   1c. **R4 vs the narrator show** — "The B0dy_is_0bs0let3" also titles `player-room` /
+   `narrator-room`, which are the _legacy TBIO piece_, not the card game. Confirm the rename
+   covers only the card-game pages (front page, `/chatroom`, `/room`). See also Q4.
+
+2. **Track count — RESOLVED (16 Jul): one track for now.** Symone confirmed the real event
+   ships with exactly one track. The UI stays as the current single-track ▶/⏸ bar — no picker.
+   The list-shaped protocol (`audio-tracks`, `readAudioTracks()`) is kept deliberately rather
+   than hardcoding "one track" into the wire format, so a future "change track" button + popup
+   for multi-track can read from the same source without another server rewrite. That multi-track
+   UI is explicitly **not** wanted yet. Dev runs with 1 placeholder (`npm run make:audio`
+   generates `track-1.wav`, 20 s); add entries in `scripts/make-placeholder-audio.js` when more
+   tracks are needed.
 
 **Before the event, not before I start:**
 

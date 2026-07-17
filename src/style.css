@@ -196,7 +196,12 @@ button {
 /* Maximized window state (fullscreen) */
 .msn-window.maximized {
   width: 100% !important;
+  /* dvh, not vh: on mobile 100vh is the *large* viewport (measured as if the
+     browser toolbar were retracted), so a 100vh box is taller than what the
+     phone actually shows and its top/bottom get clipped. dvh tracks the real,
+     collapsing viewport. vh first as the fallback for browsers without dvh. */
   height: 100vh !important;
+  height: 100dvh !important;
   top: 0 !important;
   left: 0 !important;
   transform: none !important;
@@ -207,6 +212,7 @@ button {
 .msn-window.maximized .chat-area {
   width: 100%;
   height: calc(100vh - 30px);
+  height: calc(100dvh - 30px);
 }
 
 .msn-window.maximized .chat-body {
@@ -259,6 +265,16 @@ button {
 
 .window-title {
   font-size: var(--font-size-md);
+  /* thisverisionofme_thisverisionofyou is long enough to overflow a phone's
+     title bar. A flex item defaults to min-width:auto and so refuses to
+     shrink below its text — which squeezed .window-controls until its four
+     buttons stacked vertically, making the title bar 121px tall (22% of a
+     320px-wide window) and pushing the controls past the window's edge.
+     Truncate instead. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .msn-icon {
@@ -270,6 +286,10 @@ button {
 /* Window control buttons (minimize, maximize, close) */
 .window-controls {
   margin-left: auto;
+  /* Keep the controls on one row at their natural size — they are the last
+     thing that should give when the title bar runs out of width. */
+  display: flex;
+  flex-shrink: 0;
 }
 
 .window-controls button {
@@ -537,6 +557,10 @@ button {
 /* User avatar panel on right side of input */
 .user-avatar-panel {
   width: 120px;
+  /* Without this the mobile rule's `width: 100%` sits on top of the padding
+     and the panel renders wider than its container — it was overhanging the
+     window's right edge, hidden only because .input-section clips overflow. */
+  box-sizing: border-box;
   padding: 0 var(--spacing-sm);
   display: flex;
   flex-direction: column;
@@ -1093,13 +1117,19 @@ button:hover {
 }
 
 /* ============================================================================
-   16. RESPONSIVE - Mobile (max-width: 768px)
+   16. RESPONSIVE - Mobile (narrow OR short viewports)
    ============================================================================ */
 
-@media screen and (max-width: 768px) {
+/* Also matches on max-height, not width alone. A phone in landscape is wide
+   but short — an iPhone 14 is 844px across, over the 768px breakpoint — so a
+   width-only rule handed it the desktop layout: a 1006px window on an 844px
+   screen, scrolling sideways. Any viewport too short for the desktop window
+   gets the mobile treatment regardless of how wide it is. */
+@media screen and (max-width: 768px), screen and (max-height: 500px) {
   body {
     padding: 0;
     height: 100vh;
+    height: 100dvh;
   }
 
   .msn-window {
@@ -1107,12 +1137,48 @@ button:hover {
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
     width: 95%;
+    /* Height matches the 95% width so the inset is even on all four sides.
+       Previously no height was set here, so the window came out as
+       title-bar + chat-area's `calc(100vh - 40px)` = exactly 100vh — and
+       100vh is the *large* viewport (measured as if the browser toolbar were
+       retracted), which is taller than the phone actually shows. That is why
+       the top and bottom were being cut off. dvh tracks the real viewport. */
+    height: 95vh; /* fallback for browsers without dvh */
+    height: 95dvh;
+    /* The 2.5% inset alone doesn't clear a notch or home indicator, which are
+       fixed pixel intrusions rather than a share of the screen. */
+    max-height: calc(
+      100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) -
+        var(--spacing-md)
+    );
+  }
+
+  /* The title bar must keep its natural height in the flex column; only the
+     chat area below it should absorb the slack. */
+  .title-bar {
+    flex-shrink: 0;
+  }
+
+  /* At 320px only ~150px is left for the title once the icon and the four
+     controls take their share, and the game's name needs 12px to fit that.
+     Shrinking it beats ellipsising the title of the piece down to
+     "thisverisionofme_t…". The ellipsis above stays as the safety net. */
+  .window-title {
+    font-size: var(--font-size-xs);
   }
 
   .chat-area {
     width: 100%;
-    height: calc(100vh - 40px);
+    /* Fill whatever the window has left, rather than assuming a 40px title
+       bar and a 100vh viewport. min-height:0 lets a flex child shrink below
+       its content size instead of pushing the window taller than 95dvh. */
+    flex: 1;
+    min-height: 0;
+    height: auto;
   }
 
   /* Stack input area vertically on mobile */
@@ -1123,11 +1189,15 @@ button:hover {
     overflow: hidden;
   }
 
+  /* Horizontal padding matches .message-input-area's (--spacing-sm) so the
+     avatar starts on the same vertical line as the toolbar, input and Send
+     directly below it. It was --spacing-xs, putting the avatar 2px left of
+     that spine — enough to read as misaligned rather than as a choice. */
   .user-avatar-panel {
     flex-direction: row;
     align-items: center;
     justify-content: left;
-    padding: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
     width: 100%;
     border-left: none;
     border-bottom: 1px solid var(--border-color);
@@ -1143,9 +1213,20 @@ button:hover {
     font-size: var(--font-size-base);
   }
 
+  /* Touch targets. These were 40px (input) and 21px (send) — both under the
+     44px iOS asks for, and Send badly so: a 21px target on the one control
+     every message goes through. The height the audio bar gave back by
+     collapsing to a single row pays for most of this. */
   #chatInput {
-    height: 40px;
-    font-size: var(--font-size-base); /* Prevent zoom on iOS */
+    height: 56px;
+    min-height: 56px;
+    font-size: var(--font-size-base); /* 16px+ or iOS zooms the page on focus */
+  }
+
+  .send-btn {
+    min-height: 44px;
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-base);
   }
 
   .toolbar {
@@ -1170,6 +1251,38 @@ button:hover {
 }
 
 /* ============================================================================
+   16b. RESPONSIVE - Short viewports (landscape phones)
+   ============================================================================ */
+
+/* In landscape there is very little height to spend, and the fixed chrome
+   (title bar, audio bar, avatar panel, toolbar, input, send) would leave the
+   chat itself a sliver. The formatting toolbar is the only part that is
+   purely decorative — those buttons have no handlers anywhere in src/js — so
+   it is what gives way, not the conversation. */
+@media screen and (max-height: 500px) {
+  .toolbar {
+    display: none;
+  }
+
+  #chatInput {
+    height: 44px;
+    min-height: 44px;
+  }
+
+  /* Vertical padding goes (height is the scarce axis here), but the
+     horizontal keeps --spacing-sm so the avatar stays on the same spine as
+     everything else in the column. */
+  .user-avatar-panel {
+    padding: 0 var(--spacing-sm);
+  }
+
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ============================================================================
    17. RESPONSIVE - Small Screens (max-width: 320px)
    ============================================================================ */
 
@@ -1186,13 +1299,30 @@ button:hover {
     width: 12px;
     height: 12px;
   }
+
+  /* Same trade as the landscape block: on the smallest screens the fixed
+     chrome was taking 37% and leaving the conversation 47%. The decorative
+     toolbar goes so the chat can have the room. */
+  .toolbar {
+    display: none;
+  }
+
+  /* No .window-title override here on purpose. At 320px the full name needs
+     ~169px against ~160px available, so it ellipsises to
+     "thisverisionofme_thisverisiono…". Shrinking it far enough to fit costs
+     more legibility than the ellipsis does, for a class of device (iPhone SE
+     1st gen, 2016) that is now vanishingly rare — every phone from 375px up
+     shows the name in full. Let the ellipsis do its job. */
 }
 
 /* ============================================================================
-   18. RESPONSIVE - Desktop (min-width: 769px)
+   18. RESPONSIVE - Desktop (wide AND tall enough)
    ============================================================================ */
 
-@media screen and (min-width: 769px) {
+/* Mirrors the mobile query's height condition — without min-height a
+   landscape phone would match both blocks and take desktop's larger type on
+   a screen that has no room for it. */
+@media screen and (min-width: 769px) and (min-height: 501px) {
   /* Larger text for desktop readability */
   .message {
     font-size: var(--font-size-xl);
@@ -1287,35 +1417,43 @@ button:hover {
 }
 
 /* ============================================================================
-   20. COMPONENTS - Card Game Room (/room track selection + now-playing)
+   20. COMPONENTS - Card Game Room (/room audio bar + now-playing)
    Uses the site's existing tokens and the same hover accent as
    #username-submit so it reads as one visual system, not a bolted-on panel.
    ============================================================================ */
 
+/* One row: the transport button and the status sit side by side rather than
+   stacking. On a phone the two used to eat ~9% of the window between them for
+   what is a single idea — "the music, and what it's doing". Wraps at the
+   narrowest widths rather than overflowing. */
 .track-selection {
   width: 100%;
   box-sizing: border-box;
-  padding: var(--spacing-lg) var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-xl);
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
 }
 
-.track-selection__title {
-  margin: 0 0 var(--spacing-sm);
-  font-size: var(--font-size-sm);
-  color: var(--text-color);
+/* Same spine as the rest of the column on a phone: --spacing-xl put the
+   button and timeline 8px right of the avatar, toolbar, input and Send. The
+   roomier padding stays on desktop, where the bar has width to spare.
+   This lives here, not in section 16, because section 20 is *later* in the
+   file — at equal specificity an override up there would simply lose. */
+@media screen and (max-width: 768px), screen and (max-height: 500px) {
+  .track-selection {
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+  }
 }
 
 .track-selection__hint {
-  margin: var(--spacing-sm) 0 0;
+  margin: 0;
   font-size: var(--font-size-xs);
   color: var(--secondary-text-color);
-}
-
-.track-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
 }
 
 .track-btn {
@@ -1341,12 +1479,160 @@ button:hover {
   color: #00ff00;
 }
 
-.now-playing {
-  width: 100%;
-  box-sizing: border-box;
-  padding: var(--spacing-sm) var(--spacing-xl);
-  border-bottom: 1px solid var(--border-color);
+/* "begin conversation" is the one press that opens the room, so it carries
+   more weight than the Pause/Resume it becomes afterwards. */
+.track-btn--begin {
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: var(--font-size-base);
+  letter-spacing: 0.05em;
+}
+
+/* The other player, sharing the avatar row with your own name. Pushed right
+   so the row reads as the two of you at either end. */
+.contact-with {
+  margin-left: auto;
+  padding-right: var(--spacing-sm);
+  color: var(--secondary-text-color);
+  font-size: var(--font-size-xs);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- track timeline ---------------------------------------------------- */
+
+/* Its own full row, always under the button and status. `order: 1` puts it
+   last regardless of DOM position — .now-playing is appended at runtime and
+   would otherwise land after it, splitting the button from its status, which
+   is meant to sit beside it. flex 0 0 100% stops it shrinking up onto that
+   first row instead of wrapping. */
+.timeline {
+  order: 1;
+  flex: 0 0 100%;
+}
+
+.timeline__track {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+/* No transition: the fill is driven by the room clock every 500ms, and
+   animating it would fight the next update — and lie during a seek. */
+.timeline__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  border-radius: 2px;
+  background: var(--text-color);
+  opacity: 0.75;
+}
+
+.timeline__dots {
+  position: absolute;
+  inset: 0;
+}
+
+/* Centred on their mark: left is the marker's position, the translate pulls
+   the dot back by half its own width so the dot's middle lands on the time,
+   not its leading edge. */
+.timeline__dot {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
   background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+}
+
+.timeline__dot--passed {
+  background: var(--text-color);
+  border-color: var(--text-color);
+}
+
+/* ---- pairing invite (the QR player B scans) ---------------------------- */
+
+.pair-invite {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.pair-invite[hidden] {
+  display: none; /* [hidden] loses to display:flex without this */
+}
+
+.pair-invite__line {
+  margin: 0;
+  color: var(--text-color);
+  font-size: var(--font-size-base);
+}
+
+/* Capped, and never wider than the window: this is scanned off a phone
+   screen, so it wants to be as large as the space allows but must not force
+   the layout wider. */
+.pair-invite__qr {
+  width: min(200px, 55vmin);
+  height: auto;
+  max-width: 100%;
+  background: #fff; /* quiet zone — scanners need the light background */
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border-color);
+}
+
+.pair-invite__code {
+  margin: 0;
+  color: var(--secondary-text-color);
+  font-size: var(--font-size-xs);
+}
+
+.pair-invite__code strong {
+  color: var(--text-color);
+  letter-spacing: 0.12em; /* read aloud or typed, not skimmed */
+  font-size: var(--font-size-base);
+}
+
+.pair-invite__alt {
+  background: none;
+  border: none;
+  padding: var(--spacing-sm);
+  color: var(--secondary-text-color);
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Stands in for the hidden chat before the pair begins, so the empty panel
+   reads as "not yet" rather than as a broken room. */
+.chat-not-begun {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--secondary-text-color);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+/* Lives inside .track-selection now, beside the button — so no width, no
+   border and no padding of its own; the bar provides all three. */
+.now-playing {
   color: var(--text-color);
   font-size: var(--font-size-xs);
   font-style: italic;

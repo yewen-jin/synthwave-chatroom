@@ -4,7 +4,16 @@ import { createServer } from "http";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { readFile } from "fs/promises";
-import { readdirSync, existsSync } from "fs";
+import {
+  readdirSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+  renameSync,
+} from "fs";
+import { randomBytes } from "crypto";
+import QRCode from "qrcode";
 import * as GameParameters from "./shared/gameParameters.js";
 
 // Fix for __dirname in ES modules
@@ -17,13 +26,19 @@ const server = createServer(app);
 // create the socket
 const io = new Server(server, {
   cors: {
+    // CORS only governs CROSS-origin socket connections; same-origin (the
+    // normal case here — the server serves both the page and the socket on one
+    // origin) is never checked, so this allowlist is effectively a no-op for a
+    // standard deploy. It only bites if a browser loads the page from a
+    // different origin than the socket server (e.g. some dev/proxy setups).
+    // Production: the VPS deploy domain. A CORS origin is scheme+host(+port)
+    // only, never a path — the old onrender "/control" entry could never match.
+    // Dev: reflect the request origin (origin: true) so cross-origin dev access
+    // from a LAN/Tailscale/forwarded host works without curating a list.
     origin:
       process.env.NODE_ENV === "production"
-        ? [
-            "https://void-space-chatroom.onrender.com",
-            "https://void-space-chatroom.onrender.com/control",
-          ]
-        : ["http://localhost:5173", "http://localhost:3000"],
+        ? ["https://chat.datadadaist.space"]
+        : true,
     methods: ["GET", "POST", "OPTIONS"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -41,23 +56,61 @@ app.use("/assets", express.static(join(__dirname, "dist/assets")));
 // Symone's re-exports never enter git and Vite's emptyOutDir never wipes them).
 app.use("/audio", express.static(join(__dirname, "audio-assets")));
 
-// Track list is DATA, not code: read whatever audio files are present at boot.
-// Count is unbounded — 1, 3, 5, whatever Symone drops in. Final count is still
-// open; see __context__/thisverisionofme-plan.md.
+// Renders a QR as SVG, server-side. Player A's page shows one of these for
+// player B to scan, which is how a pair ends up in the same room. Done here
+// rather than in the browser so the frontend stays plain HTML/JS with no
+// bundled encoder — see AGENTS.md on dependencies.
+app.get("/qr.svg", async (req, res) => {
+  const data = String(req.query.d ?? "");
+  // Bound the input: this endpoint is public, and QR encoding cost climbs
+  // with length. A room URL is ~60 chars.
+  if (!data || data.length > 512) {
+    return res.status(400).type("text/plain").send("bad or missing ?d=");
+  }
+  try {
+    const svg = await QRCode.toString(data, {
+      type: "svg",
+      errorCorrectionLevel: "M",
+      margin: 1,
+    });
+    // Immutable for a given ?d= — the room id never changes meaning.
+    res
+      .type("image/svg+xml")
+      .set("Cache-Control", "public, max-age=3600")
+      .send(svg);
+  } catch (err) {
+    console.error("[qr] render failed:", err);
+    res.status(500).type("text/plain").send("qr render failed");
+  }
+});
+
+// Track list is DATA, not code: read whatever audio files are present in
+// audio-assets/ *each time a room needs to know*, not once at boot. Reading
+// once at boot means `npm run make:audio` (or Symone's rsync) after the
+// server has already started leaves every room stuck with an empty list
+// until a restart — a real trap, since deploy is deliberately "rsync audio
+// separately from git pull, no restart needed" (see the plan doc). For now
+// there's exactly one track for the actual event; this stays list-shaped
+// (not hardcoded to one) so a future multi-track picker doesn't need a
+// server rewrite — see the room-state comment below.
 const AUDIO_DIR = join(__dirname, "audio-assets");
 const AUDIO_EXTS = [".mp3", ".wav", ".ogg", ".m4a"];
-const audioTracks = existsSync(AUDIO_DIR)
-  ? readdirSync(AUDIO_DIR)
-      .filter((f) =>
-        AUDIO_EXTS.includes(f.slice(f.lastIndexOf(".")).toLowerCase()),
-      )
-      .sort()
-  : [];
-console.log(
-  audioTracks.length
-    ? `[/rooms] serving ${audioTracks.length} audio track(s): ${audioTracks.join(", ")}`
-    : "[/rooms] WARNING: no audio tracks found in audio-assets/ — run `npm run make:audio`",
-);
+function readAudioTracks() {
+  if (!existsSync(AUDIO_DIR)) return [];
+  return readdirSync(AUDIO_DIR)
+    .filter((f) =>
+      AUDIO_EXTS.includes(f.slice(f.lastIndexOf(".")).toLowerCase()),
+    )
+    .sort();
+}
+{
+  const bootTracks = readAudioTracks();
+  console.log(
+    bootTracks.length
+      ? `[/rooms] found ${bootTracks.length} audio track(s) at boot: ${bootTracks.join(", ")}`
+      : "[/rooms] WARNING: no audio tracks found in audio-assets/ — run `npm run make:audio`",
+  );
+}
 
 // send() treats any dot-segment in the path as a dotfile and 404s it by
 // default — worktree checkouts live under .claude/, so allow explicitly.
@@ -714,30 +767,183 @@ io.on("connection", (socket) => {
 const roomsNsp = io.of("/rooms");
 
 // Per-room state. Own map, own username sets — never the global takenUsernames,
-// or the cross-contamination comes straight back. selectedTrack/started/startedAt
-// are added by Phase 3 (audio); stubbed here so empty-room cleanup has one place
-// to clear. started/startedAt exist so a late-joiner or a reconnecting client can
-// seek to the correct elapsed position instead of restarting the track from 0.
-const roomStates = new Map(); // roomName -> { usernames, selectedTrack, started, startedAt }
+// or the cross-contamination comes straight back.
+//
+// Audio: for the actual event there is exactly one track. Deliberately NOT
+// stored on room creation — currentTrack() below reads audio-assets/ fresh
+// every time it's asked, same as readAudioTracks(). Storing "the room's
+// track" once, at creation, was a real bug: a room created before the file
+// existed (or during any transient audio-assets/ state) would carry a
+// permanently-null track for its whole lifetime, silently no-oping every
+// play request with no client-visible explanation. Recomputing removes that
+// class of bug entirely. Stays list-shaped rather than hardcoded to "the one
+// track" so a future multi-track picker (a separate button + popup, per
+// Symone — not built yet) can slot in later without a server rewrite.
+//
+// playing/startedAt/pausedElapsed model a pause-able, resumable playback
+// clock: pausedElapsed accumulates seconds already played; startedAt marks
+// when the current playing segment began (null while paused). Elapsed time
+// at any moment = playing ? pausedElapsed + (now - startedAt) : pausedElapsed.
+// This is what lets a late joiner or a reconnecting client seek to the
+// correct position — playing or paused — instead of restarting from 0.
+const roomStates = new Map(); // roomName -> { usernames, playing, startedAt, pausedElapsed }
 
 function getRoomState(roomName) {
   if (!roomStates.has(roomName)) {
     roomStates.set(roomName, {
       usernames: new Set(),
-      selectedTrack: null,
-      started: false,
+      // Has either player pressed "begin conversation" yet? Latches true on
+      // the first play and stays true — pausing the music must not shut the
+      // chat again, and a reconnecting player has to be able to tell "not
+      // started" from "started but currently paused". Cleared only on reset.
+      begun: false,
+      playing: false,
       startedAt: null,
+      pausedElapsed: 0,
+      updatedAt: Date.now(), // for pruning abandoned rooms — see SESSION_TTL_MS
     });
   }
   return roomStates.get(roomName);
 }
 
+// Mark a room as touched and schedule a write. Call after any change worth
+// surviving a restart.
+function touchRoom(state) {
+  state.updatedAt = Date.now();
+  persistSessions();
+}
+
+function currentTrack() {
+  return readAudioTracks()[0] ?? null;
+}
+
+// ---------------------------------------------------------------------------
+// Session persistence
+//
+// Rooms are minted per pair and their ids are never reused, so a room that
+// empties can't be inherited by anyone — which is what lets us keep it. Both
+// players can close everything, reopen their #hash, and find their game where
+// they left it, even across a server restart or deploy.
+//
+// Two rules make this work:
+//
+// 1. PRESENCE IS NEVER PERSISTED. `usernames` is bound to live sockets;
+//    restoring it would greet returning players with "name taken" — their own
+//    ghost holding the slot. Only the session (begun + the clock) is written.
+//
+// 2. THE FILE ALWAYS HOLDS A PAUSED SNAPSHOT. Writing `playing: true` with a
+//    `startedAt` would be a lie the moment the process dies: on boot the
+//    elapsed time would be computed against a timestamp from before the
+//    outage, and the track would jump forward by however long the server was
+//    down. So a playing room is written as paused at its elapsed-so-far, and
+//    restored paused. Players press Resume — which is the same thing they'd
+//    do after any interruption.
+// ---------------------------------------------------------------------------
+const SESSIONS_DIR = join(__dirname, "data");
+const SESSIONS_FILE = join(SESSIONS_DIR, "room-sessions.json");
+const SESSION_TTL_MS = 24 * 60 * 60 * 1000; // prune abandoned rooms after a day
+let persistTimer = null;
+
+// The room's elapsed position right now, whether it's running or paused.
+function elapsedNow(state) {
+  return state.playing && state.startedAt
+    ? state.pausedElapsed + (Date.now() - state.startedAt) / 1000
+    : state.pausedElapsed;
+}
+
+function writeSessionsNow() {
+  persistTimer = null;
+  const now = Date.now();
+  const out = {};
+  for (const [roomName, state] of roomStates) {
+    if (state.updatedAt && now - state.updatedAt > SESSION_TTL_MS) continue;
+    out[roomName] = {
+      begun: state.begun,
+      pausedElapsed: elapsedNow(state), // see rule 2 above
+      updatedAt: state.updatedAt ?? now,
+    };
+  }
+  try {
+    mkdirSync(SESSIONS_DIR, { recursive: true });
+    // Write-then-rename: a process that dies mid-write must not leave a
+    // half-written file that fails to parse on the next boot, taking every
+    // room with it.
+    const tmp = `${SESSIONS_FILE}.tmp`;
+    writeFileSync(tmp, JSON.stringify(out, null, 2));
+    renameSync(tmp, SESSIONS_FILE);
+  } catch (err) {
+    // Never let a disk problem take the show down — the in-memory session is
+    // still authoritative and the game carries on.
+    console.error("[/rooms] could not persist sessions:", err.message);
+  }
+}
+
+function persistSessions() {
+  if (persistTimer) return; // coalesce bursts; at most one write per second
+  persistTimer = setTimeout(writeSessionsNow, 1000);
+}
+
+function loadSessions() {
+  if (!existsSync(SESSIONS_FILE)) return;
+  let parsed;
+  try {
+    parsed = JSON.parse(readFileSync(SESSIONS_FILE, "utf8"));
+  } catch (err) {
+    console.error(
+      `[/rooms] ignoring unreadable ${SESSIONS_FILE}: ${err.message}`,
+    );
+    return;
+  }
+  const now = Date.now();
+  let restored = 0;
+  for (const [roomName, s] of Object.entries(parsed ?? {})) {
+    if (s.updatedAt && now - s.updatedAt > SESSION_TTL_MS) continue;
+    roomStates.set(roomName, {
+      usernames: new Set(), // presence is live — never restored (rule 1)
+      begun: !!s.begun,
+      playing: false, // restored paused (rule 2)
+      startedAt: null,
+      pausedElapsed: Number(s.pausedElapsed) || 0,
+      updatedAt: s.updatedAt ?? now,
+    });
+    restored++;
+  }
+  if (restored)
+    console.log(`[/rooms] restored ${restored} session(s) from disk`);
+}
+
+// A fresh room id, guaranteed not to be one that already has state. Player A
+// scans the printed code, gets one of these, and shows their partner a QR for
+// it — so every pair plays in a room that has never existed before, and a
+// previous pair's abandoned tab holds an id nobody will ever be sent to
+// again. Ambiguous glyphs are out of the alphabet because this id is also
+// shown as text for anyone whose camera won't read a phone screen.
+const ROOM_ID_ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789"; // no i/l/o/0/1
+function newRoomName() {
+  for (let attempt = 0; attempt < 50; attempt++) {
+    const id = [...randomBytes(6)]
+      .map((b) => ROOM_ID_ALPHABET[b % ROOM_ID_ALPHABET.length])
+      .join("");
+    if (!roomStates.has(id)) return id;
+  }
+  // 31^6 ids against at most a handful of live rooms — reaching here means
+  // something is very wrong, so fail loudly rather than hand out a collision.
+  throw new Error("could not find a free room id in 50 attempts");
+}
+
 function roomStatusPayload(state) {
   return {
     playerCount: state.usernames.size,
-    selectedTrack: state.selectedTrack,
-    started: state.started,
+    // Who is here. The client shows whoever isn't itself as "the other
+    // player" — a pair only ever has one. Sent with every status so the name
+    // appears and disappears as they join and leave, rather than relying on
+    // the "entered the chat" line, which scrolls away.
+    usernames: [...state.usernames],
+    track: currentTrack(),
+    begun: state.begun,
+    playing: state.playing,
     startedAt: state.startedAt,
+    pausedElapsed: state.pausedElapsed,
   };
 }
 
@@ -745,15 +951,43 @@ function freeRoomSlot(roomName, username) {
   const state = roomStates.get(roomName);
   if (!state) return;
   state.usernames.delete(username);
-  // Clear all room state once the room empties — fresh slate for the next pair.
-  if (state.usernames.size === 0) {
-    roomStates.delete(roomName);
-    console.log(`Room "${roomName}" emptied — cleared all state`);
+
+  // A player vanished mid-game: hold the session where it is rather than let
+  // the track run on without them. Their partner sees the pairing QR again
+  // (playerCount < 2) and the timeline stops too, since both follow the room
+  // clock rather than either device's audio.
+  if (state.playing && state.usernames.size < GameParameters.ROOM_CAPACITY) {
+    state.pausedElapsed = elapsedNow(state);
+    state.playing = false;
+    state.startedAt = null;
+    console.log(
+      `[/rooms] "${roomName}" auto-paused at ${state.pausedElapsed.toFixed(1)}s — a player dropped`,
+    );
   }
+
+  // The room is deliberately NOT deleted when it empties. Ids are minted per
+  // pair and never handed out twice, so an idle room cannot be inherited by
+  // anyone — and both players must be able to reopen their #hash and find the
+  // game where they left it. Abandoned rooms age out via SESSION_TTL_MS.
+  touchRoom(state);
 }
 
 roomsNsp.on("connection", (socket) => {
   console.log(`[/rooms] client connected: ${socket.id}`);
+
+  // Player A arrived via the printed code, which names no room — mint one.
+  // Server-side so "a room that didn't exist before" is actually checked
+  // against live state rather than trusted to client randomness.
+  socket.on("create room", () => {
+    try {
+      const roomName = newRoomName();
+      console.log(`[/rooms] minted new room "${roomName}" for ${socket.id}`);
+      socket.emit("room created", { roomName });
+    } catch (err) {
+      console.error("[/rooms] room mint failed:", err);
+      socket.emit("room create failed");
+    }
+  });
 
   // Check whether a username is already taken in this room only.
   socket.on("check username", ({ roomName, username } = {}) => {
@@ -783,6 +1017,9 @@ roomsNsp.on("connection", (socket) => {
     socket.roomName = roomName;
     socket.username = username;
     state.usernames.add(username);
+    // Not for the username's sake (presence is never persisted) — this keeps
+    // an active room's updatedAt fresh so it can't age out mid-game.
+    touchRoom(state);
 
     console.log(
       `[/rooms] ${username} joined room "${roomName}" (${state.usernames.size}/${GameParameters.ROOM_CAPACITY})`,
@@ -790,13 +1027,14 @@ roomsNsp.on("connection", (socket) => {
 
     // Confirm the join to the joining client so it can leave name-entry.
     socket.emit("room-joined", { roomName, username });
-    // Send the current track list (data-driven count) to the joiner.
-    socket.emit("audio-tracks", { tracks: audioTracks });
+    // Send the current track list to the joiner, read fresh (not a boot-time
+    // snapshot) so it reflects whatever's actually in audio-assets/ right now.
+    socket.emit("audio-tracks", { tracks: readAudioTracks() });
 
     // Broadcast join to the room only.
     roomsNsp.to(roomName).emit("user joined", { username });
-    // Room status so every client knows player count + any already-selected
-    // track + whether playback has started (and when, for elapsed-time sync).
+    // Room status so every client knows player count + the room's current
+    // playback state (track, playing, and enough to compute elapsed time).
     roomsNsp.to(roomName).emit("room-status", roomStatusPayload(state));
   });
 
@@ -814,49 +1052,54 @@ roomsNsp.on("connection", (socket) => {
     }
   });
 
-  // Track selection — music is picked once at session start by either player
-  // and is per-room. First pick wins; later picks are ignored until a reset
-  // empties the room and clears selectedTrack. Selecting a track does NOT
-  // start playback — it only locks the choice in and reveals the Start
-  // button (to both players) via room-status. See audio-start below.
-  socket.on("audio-select", ({ track } = {}) => {
-    if (!socket.roomName || !track) return;
+  // Play / pause — either player can press either intent, from a single
+  // toggle button on the client. Both are idempotent by design (an explicit
+  // "play" request when already playing, or two players pressing at once,
+  // is a no-op) rather than a blind flip, so a click race can't leave the
+  // room in the wrong state. The session starts/resumes/pauses for both
+  // players at (approximately) the same moment via the room-status broadcast.
+  socket.on("audio-play-request", () => {
+    if (!socket.roomName) return;
     const state = getRoomState(socket.roomName);
-    if (!audioTracks.includes(track) || state.started) return;
+    const track = currentTrack();
+    if (!track || state.playing) return;
 
-    if (!state.selectedTrack) {
-      state.selectedTrack = track;
-      console.log(
-        `[/rooms] track "${track}" selected in room "${socket.roomName}"`,
-      );
-    } else if (state.selectedTrack !== track) {
-      // Already locked to a different track — honour the first pick, just
-      // resend status so this client's UI reflects the locked-in choice.
-    }
-
+    const first = !state.begun;
+    state.begun = true; // latches: "begin conversation" opens the chat for good
+    state.playing = true;
+    state.startedAt = Date.now();
+    console.log(
+      `[/rooms] ${first ? "BEGIN CONVERSATION" : "play"} in room "${socket.roomName}" (track "${track}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
+    );
+    touchRoom(state);
     roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
   });
 
-  // Start — the one and only playback trigger. Either player can press it
-  // once a track is chosen; the session starts for both at (approximately)
-  // the same moment. Idempotent: a second press (or a race between both
-  // players clicking at once) is a no-op once started is true.
-  socket.on("audio-start", () => {
+  socket.on("audio-pause-request", () => {
     if (!socket.roomName) return;
     const state = getRoomState(socket.roomName);
-    if (!state.selectedTrack || state.started) return;
+    if (!state.playing) return;
 
-    state.started = true;
-    state.startedAt = Date.now();
+    state.pausedElapsed += (Date.now() - state.startedAt) / 1000;
+    state.playing = false;
+    state.startedAt = null;
     console.log(
-      `[/rooms] playback started in room "${socket.roomName}" (track "${state.selectedTrack}")`,
+      `[/rooms] pause in room "${socket.roomName}" (track "${currentTrack()}", elapsed ${state.pausedElapsed.toFixed(1)}s)`,
     );
-
-    roomsNsp.to(socket.roomName).emit("audio-play", {
-      track: state.selectedTrack,
-      startedAt: state.startedAt,
-    });
+    touchRoom(state);
     roomsNsp.to(socket.roomName).emit("room-status", roomStatusPayload(state));
+  });
+
+  // Re-send current state to one client only. Used when a device's playback
+  // was blocked by its autoplay policy and the player taps to enable sound:
+  // it needs the room's live elapsed position to join the music in sync, and
+  // it must not disturb the other player — hence socket.emit, not a broadcast.
+  socket.on("audio-status-request", () => {
+    if (!socket.roomName) return;
+    socket.emit(
+      "room-status",
+      roomStatusPayload(getRoomState(socket.roomName)),
+    );
   });
 
   // Refresh button — broadcast reset to the room; both clients reload, which
@@ -875,9 +1118,30 @@ roomsNsp.on("connection", (socket) => {
       console.log(`[/rooms] ${username} left room "${roomName}"`);
       roomsNsp.to(roomName).emit("user left", username);
       freeRoomSlot(roomName, username);
+      // Tell whoever is left. Without this the remaining player's UI keeps
+      // the last playerCount it saw, so it would neither surface the pairing
+      // QR again nor reflect the auto-pause above.
+      const state = roomStates.get(roomName);
+      if (state) {
+        roomsNsp.to(roomName).emit("room-status", roomStatusPayload(state));
+      }
     }
   });
 });
+
+// Bring back any sessions from a previous run before accepting connections,
+// so a pair reopening their #hash after a restart finds their game rather
+// than a blank room. Restored paused — see the persistence notes above.
+loadSessions();
+
+// Last-gasp flush. A clean shutdown (systemd restart, deploy, Ctrl-C) would
+// otherwise lose up to the 1s debounce window.
+for (const signal of ["SIGINT", "SIGTERM"]) {
+  process.on(signal, () => {
+    writeSessionsNow();
+    process.exit(0);
+  });
+}
 
 // Start server
 const PORT = process.env.PORT || 3000;
