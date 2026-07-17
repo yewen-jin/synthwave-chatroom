@@ -105,13 +105,27 @@ function onChat(messageObj) {
   msgDiv.className = `message ${
     messageObj.username === username ? "mine" : "others"
   }`;
-  msgDiv.innerHTML = `
-    <span class="user-id">${messageObj.username}:</span>
-    <span class="text">${messageObj.text}</span>
-    <span class="timestamp">${new Date(
-      messageObj.timestamp,
-    ).toLocaleTimeString()}</span>
-  `;
+  // Built with textContent, not innerHTML: both the username and the text are
+  // player-typed, and this text is now stored server-side and replayed on
+  // every rejoin — an innerHTML template would turn a typed "<img onerror>"
+  // into a stored script that re-runs each time the log is replayed. There is
+  // no formatting toolbar to lose (its buttons have no handlers).
+  const user = document.createElement("span");
+  user.className = "user-id";
+  user.textContent = `${messageObj.username}:`;
+  const text = document.createElement("span");
+  text.className = "text";
+  text.textContent = messageObj.text;
+  const time = document.createElement("span");
+  time.className = "timestamp";
+  time.textContent = new Date(messageObj.timestamp).toLocaleTimeString();
+  msgDiv.append(
+    user,
+    document.createTextNode(" "),
+    text,
+    document.createTextNode(" "),
+    time,
+  );
   addMessageToChat(msgDiv);
 }
 
@@ -684,6 +698,17 @@ function preloadTrackAndReturn(name) {
   preloadTrack(name);
   return audioCache.get(name);
 }
+
+// The conversation so far, replayed by the server on join/rejoin. Clear and
+// rebuild from the snapshot rather than append: the "connect" handler re-emits
+// "user joined" on every reconnection, so this fires again each time — a
+// rebuild keeps that idempotent instead of doubling every message. The
+// snapshot is the whole backlog, so nothing is lost by clearing first.
+window._socket.on("chat-history", ({ messages } = {}) => {
+  if (!Array.isArray(messages) || !chatBodyEl) return;
+  chatBodyEl.innerHTML = "";
+  messages.forEach(onChat);
+});
 
 window._socket.on("room-status", (payload = {}) => {
   applyPlaybackState(payload);

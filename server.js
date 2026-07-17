@@ -800,6 +800,14 @@ function getRoomState(roomName) {
       playing: false,
       startedAt: null,
       pausedElapsed: 0,
+      // The conversation so far, replayed to anyone who joins or rejoins so a
+      // player who dropped picks up everything said while they were away —
+      // nothing lost. In memory only: it lives exactly as long as the server
+      // process, the same lifetime the chat relay has always had. It is
+      // deliberately NOT written to disk with the session clock — a piece
+      // about intimacy shouldn't leave transcripts on the VPS unless that's a
+      // decision made on purpose.
+      messages: [],
       updatedAt: Date.now(), // for pruning abandoned rooms — see SESSION_TTL_MS
     });
   }
@@ -843,6 +851,12 @@ const SESSIONS_DIR = join(__dirname, "data");
 const SESSIONS_FILE = join(SESSIONS_DIR, "room-sessions.json");
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000; // prune abandoned rooms after a day
 let persistTimer = null;
+
+// Bounds on the in-memory chat log. A 15-minute two-person game won't approach
+// these; they exist so a stuck tab hammering the socket can't grow a room
+// without limit. Oldest messages fall off the front once the cap is reached.
+const MAX_ROOM_MESSAGES = 500;
+const MAX_MESSAGE_LEN = 2000;
 
 // The room's elapsed position right now, whether it's running or paused.
 function elapsedNow(state) {
@@ -904,6 +918,7 @@ function loadSessions() {
       playing: false, // restored paused (rule 2)
       startedAt: null,
       pausedElapsed: Number(s.pausedElapsed) || 0,
+      messages: [], // transcript is not persisted to disk — see getRoomState
       updatedAt: s.updatedAt ?? now,
     });
     restored++;
@@ -1031,6 +1046,17 @@ roomsNsp.on("connection", (socket) => {
     // snapshot) so it reflects whatever's actually in audio-assets/ right now.
     socket.emit("audio-tracks", { tracks: readAudioTracks() });
 
+    // Replay the conversation so far to the joiner only. This is what makes a
+    // rejoin lossless: a player who dropped sees everything said while they
+    // were gone, not just what their own phone happened to receive. Emitted
+    // inside this synchronous handler, after the socket has joined the room,
+    // so it reaches this client before any subsequent live broadcast — no
+    // gap, no double. Only when there's something to replay, so a first join
+    // doesn't clear a just-shown "entered the chat" notice for nothing.
+    if (state.messages.length) {
+      socket.emit("chat-history", { messages: state.messages });
+    }
+
     // Broadcast join to the room only.
     roomsNsp.to(roomName).emit("user joined", { username });
     // Room status so every client knows player count + the room's current
@@ -1048,7 +1074,22 @@ roomsNsp.on("connection", (socket) => {
       socket.username === messageObj.username &&
       socket.roomName
     ) {
-      roomsNsp.to(socket.roomName).emit("chat", messageObj);
+      // Build a clean record — only the three fields, text length-bounded —
+      // and relay exactly what we store so the log and the live feed can never
+      // disagree. The client escapes on render; capping here is belt-and-braces
+      // against an oversized payload bloating the log.
+      const msg = {
+        username: messageObj.username,
+        text: String(messageObj.text).slice(0, MAX_MESSAGE_LEN),
+        timestamp: messageObj.timestamp,
+      };
+      const state = getRoomState(socket.roomName);
+      state.messages.push(msg);
+      if (state.messages.length > MAX_ROOM_MESSAGES) {
+        state.messages.splice(0, state.messages.length - MAX_ROOM_MESSAGES);
+      }
+      touchRoom(state); // keeps updatedAt fresh so an active chat won't age out
+      roomsNsp.to(socket.roomName).emit("chat", msg);
     }
   });
 
@@ -1108,6 +1149,15 @@ roomsNsp.on("connection", (socket) => {
   socket.on("room-reset", () => {
     if (socket.roomName) {
       console.log(`[/rooms] reset requested in room "${socket.roomName}"`);
+      // Actually reset the server state, not just the clients. Since sessions
+      // now persist rather than delete-on-empty, a bare broadcast + reload
+      // would drop both players straight back into the same begun/elapsed
+      // session (the reload keeps the #hash) — and, now, replay the old
+      // transcript into a supposedly fresh room. Dropping the state makes the
+      // refresh button a real reset: the reload rejoins the same id and
+      // getRoomState rebuilds it clean.
+      roomStates.delete(socket.roomName);
+      persistSessions(); // drop it from disk too
       roomsNsp.to(socket.roomName).emit("room-reset");
     }
   });
