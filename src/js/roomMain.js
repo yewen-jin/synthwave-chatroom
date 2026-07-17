@@ -170,6 +170,9 @@ window._socket.on("room-joined", ({ username: name }) => {
   hideUsernamePopup();
   hideErrorMessage();
   updateUserDisplayName(name);
+  // Only once the server has actually accepted it: remembering a name that
+  // was rejected would prefill a name that can't be used.
+  rememberName(roomName, name);
 });
 
 // Room at capacity — turn the third scanner away explicitly. Rooms are minted
@@ -242,6 +245,58 @@ function setChatOpen(open, showNotYet = true) {
     notYetEl.remove();
     notYetEl = null;
   }
+}
+
+// ----- remembering the display name, per room -----
+//
+// The browser already remembers WHICH room: the id lives in the URL fragment,
+// so history and reopened tabs carry it for free. The one thing it can't carry
+// is the name — that's module state and dies with the page — so a player who
+// drops and comes back lands in the right room facing a blank sign-in.
+//
+// Keyed per room, not one name for the site: the same phone may be someone
+// else in a different game, and a name recalled from another room would be a
+// confusing prefill rather than a helpful one.
+const NAME_KEY = (room) => `tvom:${room}:username`;
+
+// Every access is guarded. Safari in private mode throws on setItem, and
+// storage can be disabled outright — remembering a name is a convenience and
+// must never be able to take the room down with it.
+function rememberName(room, name) {
+  try {
+    localStorage.setItem(NAME_KEY(room), name);
+  } catch {
+    /* private mode / storage disabled — carry on without it */
+  }
+}
+
+function recallName(room) {
+  try {
+    return localStorage.getItem(NAME_KEY(room));
+  } catch {
+    return null;
+  }
+}
+
+function forgetName(room) {
+  try {
+    localStorage.removeItem(NAME_KEY(room));
+  } catch {
+    /* nothing to do */
+  }
+}
+
+// Prefill only — deliberately not auto-submitting. A player who drops and
+// returns within the socket timeout (~20s) races their own ghost: the server
+// still holds their name, so an automatic sign-in would be rejected as "name
+// taken" by nobody but themselves. Prefilled, it's one tap, and if the ghost
+// is still there they can simply tap again a moment later.
+function prefillName() {
+  if (!roomName) return;
+  const saved = recallName(roomName);
+  if (!saved) return;
+  const input = document.getElementById("username-input");
+  if (input && !input.value) input.value = saved;
 }
 
 // ----- pairing: the QR player B scans -----
@@ -637,6 +692,10 @@ window._socket.on("room-status", (payload = {}) => {
 // Refresh button — server broadcasts room-reset to the room; both clients
 // reload, disconnecting sockets and freeing names + room state for the next pair.
 window._socket.on("room-reset", () => {
+  // Reset means this session is finished, so the remembered name goes with it
+  // — otherwise the next person handed this phone is prefilled as the last
+  // player, in a room that is no longer theirs.
+  forgetName(roomName);
   location.reload();
 });
 
@@ -674,6 +733,7 @@ window._socket.on("room created", ({ roomName: minted } = {}) => {
   if (!minted) return;
   roomName = minted;
   window.location.hash = encodeURIComponent(minted);
+  prefillName(); // a brand-new room won't have one, but reloads of it will
   showUsernamePopup();
 });
 
@@ -687,6 +747,7 @@ window._socket.on("room create failed", () => {
 // printed code, which names no room — so ask for a brand-new one rather than
 // making someone invent a name that might collide with a live game.
 if (roomName) {
+  prefillName(); // returning to a room we've been in — save them retyping it
   showUsernamePopup();
 } else {
   window._socket.emit("create room");
