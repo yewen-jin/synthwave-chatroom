@@ -17,7 +17,7 @@
 ### Code Review Highlights (Feb 2026)
 
 **Critical**
-[] XSS via innerHTML — user-supplied username/text injected without sanitization in `src/js/main.js`
+[x] XSS via innerHTML — user-supplied username/text injected without sanitization in `src/js/main.js` — FIXED 18 Jul 2026 (textContent rendering, both chats; see `__context__/review-remediation-2026-07-18.md`)
 [] No server-side input sanitization — no message length limits, rate limiting, or HTML stripping in `server.js`
 [] Arbitrary CSS class injection — `control-theme` event accepts any string as a class name (`src/js/socket.js`, `server.js`)
 
@@ -33,6 +33,6 @@
 [] Loose equality (`==`) in condition evaluation in `server.js` and `dialogueSystem.js`
 [] Duplicated condition evaluation logic across server/client/converter — extract to `shared/`
 [] Path traversal risk in `loadDialogueData` — validate `dialogueId` format in `server.js`
-[] No username validation (length, format, reserved names) in `server.js`
+[] No username validation (length, format, reserved names) in `server.js` — partially done 18 Jul 2026: `/rooms` validates type + length (20); the default (narrative) namespace is still open
 [] `dialogueUI.js` appears unused — verify and remove if dead code
 [] 404 handler returns full `index.html` — may confuse crawlers/monitoring

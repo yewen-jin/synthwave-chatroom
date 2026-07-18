@@ -97,3 +97,38 @@ The two entries dated before this log existed were backfilled at adoption (17 Ju
 **Files Changed:** `WORKLOG.md` (new), `.claude/agents/notes-keeper.md` (new), `AGENTS.md` (Decision Log section + one "What NOT to do" bullet), `CLAUDE.md` (Current status).
 
 **Backtrack Notes:** delete the two new files and revert the `AGENTS.md`/`CLAUDE.md` hunks; nothing else references them.
+
+## [2026-07-18 22:56] Security remediation of the 17 Jul card-game review (tiers 1–2)
+
+**Status:** completed
+
+**Summary:** Fixed the critical, high, and medium findings from `__context__/review-2026-07-17` (tiers 1–2 of the agreed plan) across the `/rooms` card game and — beyond the review's scope — the same XSS pattern in the legacy narrative chat. Committed as `684351a` on branch `card-game`; full notes in `__context__/review-remediation-2026-07-18.md`.
+
+**Decisions & Reasoning:**
+
+- Decision: validate join payloads server-side (`parseJoinPayload()` in `server.js`) before any destructuring; usernames length-capped (20, matching `room.html`) but NOT charset-restricted.
+  Why: Socket.IO handlers have no exception boundary — destructuring a crafted null payload threw synchronously and could kill the shared process, narrative show included. No charset rule because rendering is `textContent`-only so names can't carry markup; a charset would only exclude legitimate names (emoji, non-Latin scripts).
+- Decision: one room per socket — new `leaveCurrentRoom()` shared by `disconnect` and room-switching joins; the switch happens only after the new room accepts the join.
+  Why: the designed "joined the wrong room?" recovery was leaking the first room's private broadcasts and ghosting the old username in one of its two slots, through normal UI. Post-accept switching means a room-full/name-taken rejection never ejects a player from their current room.
+- Decision: all player/audience-typed content renders via `textContent` in BOTH chat clients (`roomMain.js` and `main.js`); `innerHTML` deliberately KEPT for Twine-authored system/speaker lines (`main.js:66`, `dialogueController.js`), with a comment added so nobody "fixes" it back.
+  Why: `innerHTML` interpolation of usernames/message bodies was script injection on the partner's phone (card game) and on every audience phone (narrative chat). The Twine script contains 47 lines of intentional `<strong>` markup that must render, and that content is artist-authored, i.e. trusted.
+- Decision: begin/two-player rules moved server-side — chat rejected while `state.begun` is false; the INITIAL play requires `usernames.size === ROOM_CAPACITY`; lone RESUMES remain allowed. Rejections are silent.
+  Why: the review scoped the gate to the initial play, and a pair must be able to carry on after one phone drops and rejoins (auto-pause holds the session; either resumes). Silent rejection matches the other handlers and avoids a log-flood vector.
+- Decision: `scripts/update-vps.sh` restarts the node process when `package.json`/lockfile change too, not just `server.js`/`shared/`.
+  Why: the running process keeps already-loaded dependency code after `npm install`; previously a deps-only deploy installed, didn't restart, and misreported itself as a "dist/-only update".
+- Decision: docs aligned — `package.json` engines + README now say Node >=24 (current LTS, matches CI's `node-version: 24`); README deploy steps describe the CI build-branch + `update-vps.sh` workflow; `__context__/VPS setup manual.md` §8 marked superseded with the old flow kept below for reference.
+  Why: the old instructions (`git pull` + build on the VPS) directly conflicted with the artifact workflow and its RAM constraint. Kept rather than deleted because the rest of the manual is still accurate operator documentation.
+
+**Alternatives Considered:**
+
+- Rejecting a second join on the same socket outright (instead of leave-then-join): rejected — it would break the "joined the wrong room?" recovery flow's UX, forcing a reload.
+- Charset-restricting usernames: rejected — `textContent` rendering already kills injection; restriction only excludes legitimate names.
+- Gating ALL plays on full capacity (not just the initial begin): rejected — a lone player whose partner dropped could never resume; the session would be stuck until reset.
+
+**Files Changed:** `AGENTS.md`, `README.md`, `__context__/VPS setup manual.md`, `__context__/review-2026-07-17` (status block), `__context__/review-remediation-2026-07-18.md` (new), `package.json`, `scripts/update-vps.sh`, `server.js`, `src/js/main.js`, `src/js/roomMain.js`, `src/room.html`, plus this `WORKLOG.md` entry. Full diff in commit `684351a`.
+
+**Verification:** two live smoke suites against a real server with real `socket.io-client` clients, 8/8 each: crash survival on 7 malformed-payload variants; username length cap; room-switch partner-notification, slot-freeing, and zero cross-room chat leakage; lone-begin rejection; pre-begin chat neither relayed nor stored; pair begin accepted; lone resume after partner drop. `node --check`, `bash -n`, and `npm test` (dialogue drift) green. **NOT verified on real devices** — this work touches none of the 17 Jul real-device gate items (iOS audio autoplay, `dvh` vs Safari toolbar, timeline from real metadata, camera QR scan, reconnect on real network loss); those remain outstanding.
+
+**Backtrack Notes:** `git revert 684351a` undoes the whole remediation (it is a single commit on branch `card-game`), except `WORKLOG.md` entries, which are append-only.
+
+**Still open (tier 3):** #5 in-memory room growth (needs a design call on room-id validation), #6 durable protocol tests (the smoke scripts written for this work are ready-made seeds), #8 room ids reaching access logs via `/qr.svg` (docs claim inaccurate), #12 player-facing missing-audio diagnosis, and the R8 game-end decision.
