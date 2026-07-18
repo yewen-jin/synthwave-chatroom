@@ -987,6 +987,50 @@ function freeRoomSlot(roomName, username) {
   touchRoom(state);
 }
 
+// Leave and clean up the socket's current room, if any: the partner is told
+// and gets a fresh room-status, and the name slot is freed (which auto-pauses
+// the room if it drops below capacity). Shared by "disconnect" and by a join
+// that switches rooms — membership is a one-room state transition.
+function leaveCurrentRoom(socket) {
+  const { roomName, username } = socket;
+  if (!roomName || !username) return;
+  // Leave first so the departing player doesn't receive their own notice.
+  socket.leave(roomName);
+  socket.roomName = null;
+  socket.username = null;
+  console.log(`[/rooms] ${username} left room "${roomName}"`);
+  roomsNsp.to(roomName).emit("user left", username);
+  freeRoomSlot(roomName, username);
+  // Tell whoever is left. Without this the remaining player's UI keeps the
+  // last playerCount it saw, so it would neither surface the pairing QR
+  // again nor reflect the auto-pause above.
+  const state = roomStates.get(roomName);
+  if (state) {
+    roomsNsp.to(roomName).emit("room-status", roomStatusPayload(state));
+  }
+}
+
+// Validation for the two payload-carrying join events. Socket.IO dispatches
+// handlers with no exception boundary, so destructuring a crafted payload
+// (e.g. null) inline throws synchronously — enough to take down the whole
+// process, narrative show included. Validate the raw payload as an object
+// first, then every field. The username length cap matches the client input
+// (maxlength=20 in room.html); characters are NOT restricted — names render
+// via textContent everywhere, so they can't carry markup.
+const MAX_USERNAME_LEN = 20;
+
+function parseJoinPayload(payload) {
+  if (!payload || typeof payload !== "object") return null;
+  const { roomName, username } = payload;
+  if (typeof roomName !== "string" || typeof username !== "string") return null;
+  const cleanRoom = roomName.trim();
+  const cleanName = username.trim();
+  if (!cleanRoom || !cleanName || cleanName.length > MAX_USERNAME_LEN) {
+    return null;
+  }
+  return { roomName: cleanRoom, username: cleanName };
+}
+
 roomsNsp.on("connection", (socket) => {
   console.log(`[/rooms] client connected: ${socket.id}`);
 
@@ -1005,15 +1049,18 @@ roomsNsp.on("connection", (socket) => {
   });
 
   // Check whether a username is already taken in this room only.
-  socket.on("check username", ({ roomName, username } = {}) => {
-    if (!roomName || !username) return;
-    const state = getRoomState(roomName);
-    socket.emit("username response", state.usernames.has(username));
+  socket.on("check username", (payload) => {
+    const creds = parseJoinPayload(payload);
+    if (!creds) return;
+    const state = getRoomState(creds.roomName);
+    socket.emit("username response", state.usernames.has(creds.username));
   });
 
   // Join a room as a named player.
-  socket.on("user joined", ({ roomName, username } = {}) => {
-    if (!roomName || !username) return;
+  socket.on("user joined", (payload) => {
+    const creds = parseJoinPayload(payload);
+    if (!creds) return;
+    const { roomName, username } = creds;
     const state = getRoomState(roomName);
 
     if (state.usernames.has(username)) {
@@ -1026,6 +1073,16 @@ roomsNsp.on("connection", (socket) => {
     if (state.usernames.size >= GameParameters.ROOM_CAPACITY) {
       socket.emit("room-full", { capacity: GameParameters.ROOM_CAPACITY });
       return;
+    }
+
+    // One room per socket. The "joined the wrong room?" recovery joins a
+    // second room from the same socket — leave and clean the previous room
+    // first, or the socket would keep receiving its private broadcasts and
+    // its old username would occupy a slot there forever. Done only after
+    // the new room has accepted us, so a failed switch doesn't eject the
+    // player from the room they were in.
+    if (socket.roomName && socket.roomName !== roomName) {
+      leaveCurrentRoom(socket);
     }
 
     socket.join(roomName);
@@ -1074,6 +1131,12 @@ roomsNsp.on("connection", (socket) => {
       socket.username === messageObj.username &&
       socket.roomName
     ) {
+      // The chat opens when "begin conversation" latches state.begun. The UI
+      // hides the input before then, but the gate has to live here: a scripted
+      // client must not write into the log of a conversation that hasn't
+      // started.
+      const state = getRoomState(socket.roomName);
+      if (!state.begun) return;
       // Build a clean record — only the three fields, text length-bounded —
       // and relay exactly what we store so the log and the live feed can never
       // disagree. The client escapes on render; capping here is belt-and-braces
@@ -1083,7 +1146,6 @@ roomsNsp.on("connection", (socket) => {
         text: String(messageObj.text).slice(0, MAX_MESSAGE_LEN),
         timestamp: messageObj.timestamp,
       };
-      const state = getRoomState(socket.roomName);
       state.messages.push(msg);
       if (state.messages.length > MAX_ROOM_MESSAGES) {
         state.messages.splice(0, state.messages.length - MAX_ROOM_MESSAGES);
@@ -1106,6 +1168,12 @@ roomsNsp.on("connection", (socket) => {
     if (!track || state.playing) return;
 
     const first = !state.begun;
+    // The initial begin needs a full pair. The UI disables the transport
+    // until both players are in, but that's not an authority boundary — a
+    // scripted client must not start the room clock (and open the chat)
+    // alone. Only the FIRST play is gated: once begun, a resume is allowed
+    // with one player so a pair can carry on after a drop/rejoin.
+    if (first && state.usernames.size < GameParameters.ROOM_CAPACITY) return;
     state.begun = true; // latches: "begin conversation" opens the chat for good
     state.playing = true;
     state.startedAt = Date.now();
@@ -1163,19 +1231,7 @@ roomsNsp.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    const { roomName, username } = socket;
-    if (roomName && username) {
-      console.log(`[/rooms] ${username} left room "${roomName}"`);
-      roomsNsp.to(roomName).emit("user left", username);
-      freeRoomSlot(roomName, username);
-      // Tell whoever is left. Without this the remaining player's UI keeps
-      // the last playerCount it saw, so it would neither surface the pairing
-      // QR again nor reflect the auto-pause above.
-      const state = roomStates.get(roomName);
-      if (state) {
-        roomsNsp.to(roomName).emit("room-status", roomStatusPayload(state));
-      }
-    }
+    leaveCurrentRoom(socket);
   });
 });
 

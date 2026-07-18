@@ -241,11 +241,17 @@
         </div>
         <div class="login-content">
           <p>Enter the room name on your QR card to join</p>
+          <!-- Minted room ids are lowercase — stop phones from capitalising
+               or "correcting" the code, which would silently land the second
+               player in a different empty room. roomMain.js also lowercases. -->
           <input
             type="text"
             id="room-name-input"
             placeholder="Room name"
             maxlength="30"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
           />
           <button id="room-name-submit">Join</button>
         </div>
