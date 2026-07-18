@@ -211,7 +211,12 @@
       </div>
     </div>
 
-    <!-- Room-name entry popup (shown only when there is no room in the URL hash) -->
+    <!-- Room-name entry popup — a recovery/navigation tool, not the entry gate.
+         Opened either by "joined the wrong room?" (dismissible: the player's own
+         room is live behind it, so closing returns there) or to carry a
+         room-full / mint-failure error (NOT dismissible: nothing safe is behind
+         it, only a blank pre-join page). showRoomEntryPopup() sets the close
+         button's visibility to match — see roomMain.js. -->
     <div id="room-entry-popup" class="popup" style="display: none">
       <div class="popup-content msn-style">
         <div class="title-bar">
@@ -221,6 +226,18 @@
             class="msn-icon"
           />
           <span class="window-title">Join a room</span>
+          <div class="window-controls">
+            <button
+              id="room-entry-close"
+              class="close"
+              type="button"
+              aria-label="Close"
+              title="Close"
+              style="display: none"
+            >
+              ×
+            </button>
+          </div>
         </div>
         <div class="login-content">
           <p>Enter the room name on your QR card to join</p>

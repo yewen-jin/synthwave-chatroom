@@ -23,23 +23,44 @@ const ROOMS_NAMESPACE = "/rooms";
 let username = null;
 let roomName = getRoomNameFromHash();
 
-// ----- room-name entry (only when the URL has no #roomName) -----
+// ----- room-name entry (recovery / navigation, never the entry gate) -----
 const roomEntryPopup = document.getElementById("room-entry-popup");
 const roomNameInput = document.getElementById("room-name-input");
 const roomNameSubmit = document.getElementById("room-name-submit");
+const roomEntryCloseBtn = document.getElementById("room-entry-close");
+
+// Whether the room-entry popup can be dismissed back to what's behind it.
+// True only when a live room is behind it (the "joined the wrong room?" case),
+// so closing returns the player to their own room. False when it carries a
+// room-full / mint-failure error, where the only thing behind is a blank
+// pre-join page — dismissing there would swap a loud trap for a quiet one.
+let roomEntryDismissible = false;
 
 function getRoomNameFromHash() {
   // location.hash includes the leading '#'; strip it and trim.
   return decodeURIComponent(window.location.hash.replace(/^#/, "")).trim();
 }
 
-function showRoomEntryPopup() {
+function showRoomEntryPopup({ dismissible = false } = {}) {
+  roomEntryDismissible = dismissible;
+  if (roomEntryCloseBtn) {
+    roomEntryCloseBtn.style.display = dismissible ? "" : "none";
+  }
   roomEntryPopup.style.display = "flex";
   roomNameInput?.focus();
 }
 
 function hideRoomEntryPopup() {
   roomEntryPopup.style.display = "none";
+}
+
+// Dismiss back to the live room behind the popup. Clears any error and the
+// stale input so reopening the popup is a clean slate, not last time's text.
+function closeRoomEntryPopup() {
+  if (!roomEntryDismissible) return;
+  hideRoomEntryPopup();
+  hideRoomError();
+  if (roomNameInput) roomNameInput.value = "";
 }
 
 function handleRoomNameSubmit() {
@@ -79,6 +100,20 @@ if (roomNameInput) {
     }
   });
 }
+if (roomEntryCloseBtn) {
+  roomEntryCloseBtn.addEventListener("click", closeRoomEntryPopup);
+}
+
+// Esc dismisses the room-entry popup when there's a room to fall back to. The
+// sign-in gate is deliberately not covered: nothing safe sits behind it, so
+// there's nowhere to escape to. closeRoomEntryPopup() self-guards on the
+// dismissible flag, so Esc is a no-op when the popup carries an error.
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (roomEntryPopup.style.display !== "none") {
+    closeRoomEntryPopup();
+  }
+});
 
 // ----- chat + username wiring (mirrors main.js, minus visuals/dialogue) -----
 function handleSend() {
@@ -341,10 +376,12 @@ function showPairInvite(show) {
 }
 
 // Recovery for the pair who both scanned the poster and are now sitting in
-// separate empty rooms waiting for each other.
+// separate empty rooms waiting for each other. Dismissible: this player's own
+// room is live behind the popup, so an accidental open (or a change of mind)
+// closes straight back to it via the × button or Esc — no longer a trap.
 if (pairJoinOtherEl) {
   pairJoinOtherEl.addEventListener("click", () => {
-    showRoomEntryPopup();
+    showRoomEntryPopup({ dismissible: true });
   });
 }
 

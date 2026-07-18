@@ -608,7 +608,10 @@ button:hover {
   cursor: pointer;
 }
 
-#username-input {
+/* The join-a-room input shares the sign-in input's sizing so the two popups
+   read as one system rather than the join box falling back to browser defaults. */
+#username-input,
+#room-name-input {
   margin: 10px 0;
   width: 200px;
   padding: var(--spacing-sm);
@@ -618,7 +621,8 @@ button:hover {
 
 #username-submit,
 #username-no,
-#custom-username-submit {
+#custom-username-submit,
+#room-name-submit {
   padding: 6px 20px;
   cursor: pointer;
   font-size: var(--font-size-md);
@@ -626,7 +630,8 @@ button:hover {
 
 #username-submit:hover,
 #username-no:hover,
-#custom-username-submit:hover {
+#custom-username-submit:hover,
+#room-name-submit:hover {
   background: #003300;
   color: #00ff00;
 }
@@ -1236,6 +1241,22 @@ button:hover {
   .popup-content {
     width: 90%;
     max-width: 300px;
+  }
+
+  /* Comfortable touch targets in the sign-in / join popups on phones — the
+     desktop 6px-padded buttons sit under the 44px the send button already
+     gets, and these popups are used on real devices. */
+  #username-input,
+  #room-name-input,
+  #custom-username-input {
+    min-height: 44px;
+  }
+
+  #username-submit,
+  #username-no,
+  #custom-username-submit,
+  #room-name-submit {
+    min-height: 44px;
   }
 
   /* Thinner scrollbar on mobile */
