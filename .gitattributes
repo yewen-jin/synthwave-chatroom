@@ -9,3 +9,8 @@ render.yaml merge=ours
 # Environment files (if you have them)
 .env.production merge=ours
 .env merge=ours
+
+# Append-only decision log: built-in union merge so parallel branch/worktree
+# appends merge cleanly. Do NOT change to merge=ours or configure a driver —
+# see CLAUDE.md worktree trap 3.
+WORKLOG.md merge=union
