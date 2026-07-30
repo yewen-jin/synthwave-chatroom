@@ -32,7 +32,7 @@ The two share the chat UI and visuals but are otherwise isolated (see [Architect
 ## Tech stack
 
 - **Frontend:** Vite, vanilla JS (ES modules), p5.js — deliberately no framework
-- **Backend:** Node.js (>=18), Express 5, Socket.IO 4
+- **Backend:** Node.js (>=24, current LTS), Express 5, Socket.IO 4
 - **QR:** `qrcode` (server-side SVG rendering — keeps the frontend framework-free)
 - **Build:** Vite, multi-page, Terser minification, vendor chunk splitting
 - **Testing:** a dialogue drift check (`npm test`) — **not** a unit-test suite; see [Testing](#testing)
@@ -161,16 +161,18 @@ Message types: `narrator` (Liz's lines), `system` (stage directions), `image` (i
 
 Self-hosted on a VPS, behind an **nginx reverse proxy** that forwards all paths to the Node server (a single catch-all `location /` — see `__context__/chatroom-web.conf`). Because nginx forwards everything, routes added to `server.js` (`/qr.svg`, `/audio`, …) need no nginx change — unlike the Vite dev proxy.
 
-Deploy steps:
+Deploy steps — the VPS tracks the CI-built `build` branch, it does **not** build (too little RAM). Push to `main` and CI runs `npm test`, `npm run build`, then force-pushes `dist/` to `build`. On the VPS:
 
 ```
-git pull
-npm ci                # pulls new deps (e.g. qrcode) — required, not optional
-npm run build         # rebuilds dist/ (gitignored, built fresh on the server)
-# restart the node process (NODE_ENV=production node server.js)
+./scripts/update-vps.sh    # git fetch + git reset --hard origin/build (never git pull —
+                           # the branch is rewritten every deploy), installs deps and
+                           # restarts the node process only when they actually changed
+                           # (set RESTART_CMD, e.g. RESTART_CMD="pm2 restart chatroom")
 ```
 
-Runtime data lives outside git and is not deployed via `git pull`:
+`dist`-only changes are live on the next page load. See `AGENTS.md` → Deploy for the full workflow.
+
+Runtime data lives outside git and is not deployed with the artifact:
 
 - **`audio-assets/`** — the real track is rsynced separately; dev placeholders come from `npm run make:audio`.
 - **`data/room-sessions.json`** — created by the server; belongs to whichever machine wrote it.

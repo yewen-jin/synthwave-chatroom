@@ -1,5 +1,18 @@
 # Comprehensive card-game code review
 
+  ## Remediation status (updated 18 Jul 2026)
+
+  - **#1 crash on malformed payload — FIXED.** `parseJoinPayload()` validates the raw payload and every field before any destructuring in both `/rooms` join handlers; usernames type-checked and capped at 20 chars server-side (`server.js`). Live smoke-tested with null/string/number/object payloads.
+  - **#2 room leak / ghost players — FIXED.** `leaveCurrentRoom()` is shared by `disconnect` and room-switching joins; the switch happens only after the new room accepts (`server.js`). Smoke-tested: partner notified, old slot freed, no cross-room broadcast leakage.
+  - **#3 display-name XSS — FIXED** in `/room` (`src/js/roomMain.js`), and — beyond this review's scope — the same pattern in the legacy narrative chat (`src/js/main.js`: chat messages + join/leave notices). Trusted Twine-authored system lines intentionally keep `innerHTML` (the script contains real `<strong>` markup).
+  - **Additional finding made during remediation** (not in the original review): the narrative chat interpolated audience-typed usernames *and message bodies* into `innerHTML`. Fixed alongside #3.
+  - **#4 begin/chat UI-only gates — FIXED.** Server rejects chat while `state.begun` is false, and the *initial* play unless the room is full (`server.js`). Resumes with one player stay allowed so a pair can carry on after a drop. Smoke-tested 8/8.
+  - **#7 phone autocapitalisation — FIXED.** Room-code input gets `autocapitalize="none" autocorrect="off" spellcheck="false"` (`src/room.html`) and manual entry is lowercased (`src/js/roomMain.js`).
+  - **#9 stale deploy docs — FIXED.** README deploy steps now describe the `build`-branch artifact workflow + `update-vps.sh`; `__context__/VPS setup manual.md` §8 marked superseded with the new flow.
+  - **#10 dep-only deploys not restarting — FIXED.** `scripts/update-vps.sh` restarts when `package.json`/lockfile change too, and no longer misreports those as "dist/-only".
+  - **#11 stale Node declaration — FIXED.** `package.json` engines and README now say Node >=24 (current LTS, matches CI).
+  - **#5, #6, #8, #12 + known-incomplete list:** pending (tier 3 / design decisions).
+
   ## Verdict
 
   The card-game architecture is thoughtful and substantially complete, but the current branch is not safe to deploy unchanged. One remotely triggerable input can crash the entire Node process, and three high-impact issues undermine the

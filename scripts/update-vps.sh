@@ -5,7 +5,9 @@
 # push to main, so this script never merges: it snaps the checkout to the
 # newest snapshot with `git fetch` + `git reset --hard` (never `git pull`).
 # It then does only the work that snapshot actually needs:
-#   - dependencies changed (package.json / package-lock.json) → npm install
+#   - dependencies changed (package.json / package-lock.json) → npm install + restart
+#     (a restart, not just the install: the running process still holds the
+#     old dependency code in memory)
 #   - server code changed (server.js / shared/)               → restart node
 #   - dist/-only change                                       → nothing; live on next page load
 #
@@ -51,17 +53,23 @@ main() {
 
   echo "Updated: ${old_head:0:7} -> ${new_head:0:7}"
 
+  local deps_changed=false
   if ! git diff --quiet "$old_head" "$new_head" -- package.json package-lock.json; then
     echo "Dependencies changed — installing production dependencies..."
     npm install --omit=dev
+    deps_changed=true
   fi
 
-  if ! git diff --quiet "$old_head" "$new_head" -- server.js shared/; then
+  # Restart on server-code changes AND on dependency changes: npm install
+  # swaps the files on disk, but the running process keeps the dependency
+  # code it already loaded. Without this, a deps-only deploy would install
+  # and then misreport itself as a "dist/-only update".
+  if ! git diff --quiet "$old_head" "$new_head" -- server.js shared/ || [ "$deps_changed" = true ]; then
     if [ -n "$restart_cmd" ]; then
-      echo "Server code changed — restarting with: $restart_cmd"
+      echo "Server code or dependencies changed — restarting with: $restart_cmd"
       $restart_cmd
     else
-      echo "WARNING: server code changed — restart the node process manually,"
+      echo "WARNING: server code or dependencies changed — restart the node process manually,"
       echo "or re-run with RESTART_CMD set (see script header)."
     fi
   else

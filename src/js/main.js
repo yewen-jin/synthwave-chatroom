@@ -58,7 +58,11 @@ function onChat(messageObj) {
     msgDiv.className = `message system-message-inline${speakerClass}`;
     if (messageObj.speaker) {
       msgDiv.dataset.speaker = messageObj.speaker;
-      // Speaker name and text come from server-controlled dialogue JSON, not user input
+      // Speaker name and text come from server-controlled dialogue JSON, not
+      // user input — and innerHTML is REQUIRED here: the Twine-authored
+      // script uses real markup (<strong>…</strong>) that must render as
+      // formatting. Do not "fix" this to textContent; that would show the
+      // raw tags to the audience.
       msgDiv.innerHTML = `<span class="speaker-name">${messageObj.speaker}:</span> <span class="text">${messageObj.text}</span>`;
     } else {
       msgDiv.innerHTML = `<span class="text">${messageObj.text}</span>`;
@@ -85,23 +89,46 @@ function onChat(messageObj) {
   msgDiv.className = `message ${
     messageObj.username === username ? "mine" : "others"
   }`;
-  msgDiv.innerHTML = `
-    <span class="user-id">${messageObj.username}:</span>
-    <span class="text">${messageObj.text}</span>
-    <span class="timestamp">${new Date(
-      messageObj.timestamp,
-    ).toLocaleTimeString()}</span>
-  `;
+  // Built with textContent, not innerHTML: both the username and the text are
+  // typed by audience members, so an innerHTML template would run a crafted
+  // "<img onerror>" as script on every other phone watching the show.
+  const user = document.createElement("span");
+  user.className = "user-id";
+  user.textContent = `${messageObj.username}:`;
+  const text = document.createElement("span");
+  text.className = "text";
+  text.textContent = messageObj.text;
+  const time = document.createElement("span");
+  time.className = "timestamp";
+  time.textContent = new Date(messageObj.timestamp).toLocaleTimeString();
+  msgDiv.append(
+    user,
+    document.createTextNode(" "),
+    text,
+    document.createTextNode(" "),
+    time,
+  );
   addMessageToChat(msgDiv);
   if (visuals) visuals.flash();
 }
 
+// Built node-by-node with textContent: the display name is audience-typed,
+// and interpolating it into innerHTML would run a crafted name as script on
+// every other phone in the room.
+function buildSystemMessage(name, action) {
+  const el = document.createElement("div");
+  el.className = "system-message";
+  const i = document.createElement("i");
+  const strong = document.createElement("strong");
+  strong.textContent = name;
+  i.append(strong, document.createTextNode(` ${action}`));
+  el.append(i);
+  return el;
+}
+
 function onUserJoined(data) {
   const { username: name, isPlayer: joinedAsPlayer } = data;
-  const joinMessage = document.createElement("div");
-  joinMessage.className = "system-message";
-  joinMessage.innerHTML = `<i><strong>${name}</strong> entered the chat</i>`;
-  addMessageToChat(joinMessage);
+  addMessageToChat(buildSystemMessage(name, "entered the chat"));
   updateLastJoinedUser(name);
   if (joinedAsPlayer) {
     updateLastJoinedPlayer(name);
@@ -109,10 +136,7 @@ function onUserJoined(data) {
 }
 
 function onUserLeft(name) {
-  const leaveMessage = document.createElement("div");
-  leaveMessage.className = "system-message";
-  leaveMessage.innerHTML = `<i><strong>${name}</strong> left the chat</i>`;
-  addMessageToChat(leaveMessage);
+  addMessageToChat(buildSystemMessage(name, "left the chat"));
 }
 
 function onUsernameResponse(isTaken) {

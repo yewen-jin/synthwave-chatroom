@@ -64,7 +64,9 @@ function closeRoomEntryPopup() {
 }
 
 function handleRoomNameSubmit() {
-  const name = (roomNameInput?.value || "").trim();
+  // Minted ids are lowercase; a phone that capitalised the first letter must
+  // not silently place this player in a different, empty room.
+  const name = (roomNameInput?.value || "").trim().toLowerCase();
   if (!name) return;
   roomName = name;
   // Put the room name in the hash so a refresh/reload rejoins the same room.
@@ -164,19 +166,26 @@ function onChat(messageObj) {
   addMessageToChat(msgDiv);
 }
 
+// Built node-by-node with textContent: the display name is player-typed, and
+// interpolating it into innerHTML would run a crafted name as script on the
+// partner's phone (the server bounds its length, not its characters).
+function buildSystemMessage(name, action) {
+  const el = document.createElement("div");
+  el.className = "system-message";
+  const i = document.createElement("i");
+  const strong = document.createElement("strong");
+  strong.textContent = name;
+  i.append(strong, document.createTextNode(` ${action}`));
+  el.append(i);
+  return el;
+}
+
 function onUserJoined(data) {
-  const { username: name } = data;
-  const joinMessage = document.createElement("div");
-  joinMessage.className = "system-message";
-  joinMessage.innerHTML = `<i><strong>${name}</strong> entered the chat</i>`;
-  addMessageToChat(joinMessage);
+  addMessageToChat(buildSystemMessage(data.username, "entered the chat"));
 }
 
 function onUserLeft(name) {
-  const leaveMessage = document.createElement("div");
-  leaveMessage.className = "system-message";
-  leaveMessage.innerHTML = `<i><strong>${name}</strong> left the chat</i>`;
-  addMessageToChat(leaveMessage);
+  addMessageToChat(buildSystemMessage(name, "left the chat"));
 }
 
 function onUsernameResponse(isTaken) {

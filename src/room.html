@@ -11,7 +11,10 @@
     />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
+  <!-- card-game-room scopes the /room-only style overrides in style.css, which
+       is shared with the narrative pages. Distinct from the palette-* classes
+       the control panel toggles, so a theme change can't strip it. -->
+  <body class="card-game-room">
     <!-- MSN-style Window Container -->
     <div class="msn-window">
       <!-- Title Bar -->
@@ -241,11 +244,17 @@
         </div>
         <div class="login-content">
           <p>Enter the room name on your QR card to join</p>
+          <!-- Minted room ids are lowercase — stop phones from capitalising
+               or "correcting" the code, which would silently land the second
+               player in a different empty room. roomMain.js also lowercases. -->
           <input
             type="text"
             id="room-name-input"
             placeholder="Room name"
             maxlength="30"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
           />
           <button id="room-name-submit">Join</button>
         </div>

@@ -329,7 +329,25 @@ sudo docker compose restart chatroom-web
 
 ## 8. Updating / redeploying the app
 
-Typical flow:
+> **Superseded (18 Jul 2026).** The app now deploys from the CI-built `build`
+> branch — the VPS does **not** build (too little RAM). The current flow is:
+>
+> ```bash
+> cd ~/voidspace/Void-Space-Chatroom
+> RESTART_CMD="pm2 restart voidspace" ./scripts/update-vps.sh
+> ```
+>
+> The script does `git fetch` + `git reset --hard origin/build` (**never
+> `git pull`** — the branch is force-pushed and rewritten every deploy),
+> installs deps only when `package.json`/lockfile changed, and restarts only
+> when `server.js`/`shared/` or dependencies changed. `dist`-only changes are
+> live on the next page load. See `AGENTS.md` → Deploy.
+>
+> The old flow below is kept for reference only — following it (git pull +
+> build on the VPS) conflicts with the artifact workflow and its RAM
+> constraint.
+
+Typical flow (old, pre-artifact-workflow):
 
 ```bash
 cd ~/voidspace/Void-Space-Chatroom
