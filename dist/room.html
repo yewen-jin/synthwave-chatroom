@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>thisverisionofme_thisverisionofyou</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/assets/favicon-CIpmKVVI.svg"
+    />
+    <script type="module" crossorigin src="/assets/room-DloLHoTt.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-Ca-8cqMb.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-BoNos3Xz.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-socket-C4-tnvru.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-p5-C9pDfyzF.js">
+    <link rel="modulepreload" crossorigin href="/assets/visuals-DRu00xoO.js">
+    <link rel="stylesheet" crossorigin href="/assets/style--ZPlz-4U.css">
+  </head>
+  <!-- card-game-room scopes the /room-only style overrides in style.css, which
+       is shared with the narrative pages. Distinct from the palette-* classes
+       the control panel toggles, so a theme change can't strip it. -->
+  <body class="card-game-room">
+    <!-- MSN-style Window Container -->
+    <div class="msn-window">
+      <!-- Title Bar -->
+      <div class="title-bar">
+        <img
+          src="data:image/svg+xml,%3csvg%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%3e%3cstyle%3e%20.pixel%20{%20fill:%20%2300ff00;%20/*%20Matches%20your%20neon%20green%20theme%20*/%20shape-rendering:%20crispEdges;%20/*%20Creates%20sharp%20pixels%20*/%20}%20%3c/style%3e%3c!--%208-bit%20chat%20bubble%20outline%20--%3e%3cpath%20class='pixel'%20d='%20M8,4%20h16%20v2%20h2%20v14%20h-2%20v2%20h-12%20v2%20h-2%20v2%20h-4%20v-4%20h2%20v-2%20h-2%20v-14%20h2%20z%20M10,6%20v12%20h12%20v-12%20z%20'/%3e%3c!--%20Optional:%20Add%208-bit%20dots%20inside%20bubble%20--%3e%3crect%20class='pixel'%20x='12'%20y='10'%20width='2'%20height='2'/%3e%3crect%20class='pixel'%20x='16'%20y='10'%20width='2'%20height='2'/%3e%3crect%20class='pixel'%20x='20'%20y='10'%20width='2'%20height='2'/%3e%3c/svg%3e"
+          alt="icon"
+          class="msn-icon"
+        />
+        <span class="window-title">thisverisionofme_thisverisionofyou</span>
+        <div class="window-controls">
+          <button id="refresh-btn" class="refresh-btn" title="Reset this room">
+            ↻
+          </button>
+          <button class="minimize">_</button>
+          <button class="maximize">□</button>
+          <button class="close">×</button>
+        </div>
+      </div>
+
+      <!-- Chat Area -->
+      <div class="chat-area">
+        <!-- Contact Info Bar -->
+        <!-- <div class="contact-info">
+        <img src="assets/images/mask.svg" alt="Avatar" class="avatar" />
+        <div class="contact-details">
+          <span class="contact-name">Anon7659</span>
+          <span class="status">Online</span>
+        </div>
+      </div> -->
+
+        <!-- Audio bar. Shown as soon as a player is in the room; the toggle
+             itself only appears once both players are named — before that,
+             a waiting hint. One track for now, auto-selected by the server —
+             no picker. Either player can press the toggle; play/pause
+             applies to both at once. Disabled until the track has preloaded,
+             so pressing it can't stall mid-game, or until both players have
+             joined. A future multi-track picker (separate button + popup)
+             would live here alongside the toggle — not built yet. -->
+        <div id="audio-bar" class="track-selection" style="display: none">
+          <p
+            id="audio-waiting"
+            class="track-selection__hint"
+            style="display: none"
+          >
+            Waiting for the other player to join…
+          </p>
+          <button
+            id="audio-toggle-btn"
+            class="track-btn"
+            type="button"
+            style="display: none"
+            disabled
+          >
+            ▶ Start
+          </button>
+
+          <!-- Track timeline: how far into the track the pair is, with dots
+               at TRACK_MARKERS_SEC. No numeric countdown, by request — it is
+               a sense of where you are, not a clock ticking down at you.
+               Takes a full row of the flex bar. Hidden until the conversation
+               has begun and the track's duration is known. -->
+          <div id="track-timeline" class="timeline" hidden>
+            <div class="timeline__track">
+              <div id="timeline-fill" class="timeline__fill"></div>
+              <div id="timeline-dots" class="timeline__dots"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shown to player A while they're alone in a freshly minted room:
+             the QR their partner scans to land in this same room. The code is
+             also given as text, because a phone camera reading another phone's
+             screen is exactly where glare and brightness bite — and because
+             someone who scanned the printed code by mistake needs a way back
+             to their partner's room. -->
+        <div id="pair-invite" class="pair-invite" hidden>
+          <p class="pair-invite__line">ask your pair to scan this</p>
+          <img
+            id="pair-qr"
+            class="pair-invite__qr"
+            alt="QR code to join this room"
+          />
+          <p class="pair-invite__code">
+            or enter this code: <strong id="pair-code"></strong>
+          </p>
+          <button id="pair-join-other" class="pair-invite__alt" type="button">
+            joined the wrong room? enter your pair's code
+          </button>
+        </div>
+
+        <!-- Messages Container -->
+        <div class="chat-body" id="chatBody"></div>
+
+        <!-- Message Input Area -->
+        <div class="input-section">
+          <div class="message-input-area">
+            <div class="toolbar">
+              <div class="toolbar-section text-formatting">
+                <button class="toolbar-btn font-family" title="Font Family">
+                  <i class="icon">𝔸</i>
+                </button>
+                <button class="toolbar-btn font-size" title="Font Size">
+                  <i class="icon">𝟙𝟚</i>
+                </button>
+                <button class="toolbar-btn bold" title="Bold">
+                  <i class="icon">𝐁</i>
+                </button>
+                <button class="toolbar-btn italic" title="Italic">
+                  <i class="icon">𝑰</i>
+                </button>
+                <button class="toolbar-btn underline" title="Underline">
+                  <i class="icon">𝕌</i>
+                </button>
+                <button class="toolbar-btn text-color" title="Text Color">
+                  <i class="icon">🎨</i>
+                </button>
+              </div>
+              <div class="toolbar-divider"></div>
+              <div class="toolbar-section message-options">
+                <button
+                  class="toolbar-btn emoticon-btn"
+                  title="Insert Emoticon"
+                >
+                  ☺
+                </button>
+                <button
+                  class="toolbar-btn background"
+                  title="Change Background"
+                >
+                  🖼️
+                </button>
+                <button class="toolbar-btn nudge-btn" title="Send Nudge">
+                  ≫
+                </button>
+                <button class="toolbar-btn draw" title="Draw Something">
+                  ✎
+                </button>
+                <button class="toolbar-btn voice" title="Voice Clip">🎤</button>
+              </div>
+            </div>
+            <div class="input-wrapper">
+              <div class="input-container">
+                <textarea
+                  id="chatInput"
+                  placeholder="Type a message…"
+                ></textarea>
+              </div>
+            </div>
+            <button class="send-btn">Send</button>
+          </div>
+
+          <!-- User Avatar Side Panel — R5 ("Keep Display name for each person").
+               #user-display-name is what chatUI.js's updateUserDisplayName()
+               writes to; without this block that call was a silent no-op and
+               the room showed no display name at all. -->
+          <div class="user-avatar-panel">
+            <img
+              src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%20width='100'%20height='100'%3e%3c!--%20Circle%20for%20the%20face%20--%3e%3ccircle%20cx='50'%20cy='50'%20r='45'%20fill='%23ccc'%20stroke='%23000'%20stroke-width='2'%20/%3e%3c!--%20Eyes%20--%3e%3cellipse%20cx='35'%20cy='40'%20rx='8'%20ry='10'%20fill='%23000'%20/%3e%3cellipse%20cx='65'%20cy='40'%20rx='8'%20ry='10'%20fill='%23000'%20/%3e%3c!--%20Mouth%20--%3e%3cpath%20d='M30,65%20Q50,80%2070,65'%20fill='none'%20stroke='%23000'%20stroke-width='2'%20/%3e%3c!--%20Mask%20outline%20--%3e%3c!--%20%3cpath%20d='M20,30%20Q50,10%2080,30%20Q50,90%2020,30'%20fill='none'%20stroke='%23000'%20stroke-width='2'%20/%3e%20--%3e%3c/svg%3e"
+              alt="Your Avatar"
+              class="avatar user-avatar"
+            />
+            <span class="contact-name" id="user-display-name"></span>
+            <!-- The other player, on this same row rather than in a bar of
+                 its own: it costs no height on a phone, and it reads as the
+                 pair it is — you, and who you're with. Populated from
+                 room-status; hidden until they arrive. -->
+            <span class="contact-with" id="other-player" hidden></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Username Popup (kept before the room-entry popup in the DOM so
+         chatUI.js's querySelector('.login-content') attaches the username
+         error here, not in the room-entry popup) -->
+    <div id="username-popup" class="popup" style="display: none">
+      <div class="popup-content msn-style">
+        <div class="title-bar">
+          <img
+            src="data:image/svg+xml,%3csvg%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%3e%3cstyle%3e%20.pixel%20{%20fill:%20%2300ff00;%20/*%20Matches%20your%20neon%20green%20theme%20*/%20shape-rendering:%20crispEdges;%20/*%20Creates%20sharp%20pixels%20*/%20}%20%3c/style%3e%3c!--%208-bit%20chat%20bubble%20outline%20--%3e%3cpath%20class='pixel'%20d='%20M8,4%20h16%20v2%20h2%20v14%20h-2%20v2%20h-12%20v2%20h-2%20v2%20h-4%20v-4%20h2%20v-2%20h-2%20v-14%20h2%20z%20M10,6%20v12%20h12%20v-12%20z%20'/%3e%3c!--%20Optional:%20Add%208-bit%20dots%20inside%20bubble%20--%3e%3crect%20class='pixel'%20x='12'%20y='10'%20width='2'%20height='2'/%3e%3crect%20class='pixel'%20x='16'%20y='10'%20width='2'%20height='2'/%3e%3crect%20class='pixel'%20x='20'%20y='10'%20width='2'%20height='2'/%3e%3c/svg%3e"
+            alt="icon"
+            class="msn-icon"
+          />
+          <span class="window-title">Sign In</span>
+        </div>
+        <div class="login-content">
+          <p>Please enter your display name to continue</p>
+          <input
+            type="text"
+            id="username-input"
+            placeholder="Display name"
+            maxlength="20"
+          />
+          <button id="username-submit">Sign In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room-name entry popup — a recovery/navigation tool, not the entry gate.
+         Opened either by "joined the wrong room?" (dismissible: the player's own
+         room is live behind it, so closing returns there) or to carry a
+         room-full / mint-failure error (NOT dismissible: nothing safe is behind
+         it, only a blank pre-join page). showRoomEntryPopup() sets the close
+         button's visibility to match — see roomMain.js. -->
+    <div id="room-entry-popup" class="popup" style="display: none">
+      <div class="popup-content msn-style">
+        <div class="title-bar">
+          <img
+            src="data:image/svg+xml,%3csvg%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%20xmlns='http://www.w3.org/2000/svg'%3e%3cstyle%3e%20.pixel%20{%20fill:%20%2300ff00;%20/*%20Matches%20your%20neon%20green%20theme%20*/%20shape-rendering:%20crispEdges;%20/*%20Creates%20sharp%20pixels%20*/%20}%20%3c/style%3e%3c!--%208-bit%20chat%20bubble%20outline%20--%3e%3cpath%20class='pixel'%20d='%20M8,4%20h16%20v2%20h2%20v14%20h-2%20v2%20h-12%20v2%20h-2%20v2%20h-4%20v-4%20h2%20v-2%20h-2%20v-14%20h2%20z%20M10,6%20v12%20h12%20v-12%20z%20'/%3e%3c!--%20Optional:%20Add%208-bit%20dots%20inside%20bubble%20--%3e%3crect%20class='pixel'%20x='12'%20y='10'%20width='2'%20height='2'/%3e%3crect%20class='pixel'%20x='16'%20y='10'%20width='2'%20height='2'/%3e%3crect%20class='pixel'%20x='20'%20y='10'%20width='2'%20height='2'/%3e%3c/svg%3e"
+            alt="icon"
+            class="msn-icon"
+          />
+          <span class="window-title">Join a room</span>
+          <div class="window-controls">
+            <button
+              id="room-entry-close"
+              class="close"
+              type="button"
+              aria-label="Close"
+              title="Close"
+              style="display: none"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+        <div class="login-content">
+          <p>Enter the room name on your QR card to join</p>
+          <!-- Minted room ids are lowercase — stop phones from capitalising
+               or "correcting" the code, which would silently land the second
+               player in a different empty room. roomMain.js also lowercases. -->
+          <input
+            type="text"
+            id="room-name-input"
+            placeholder="Room name"
+            maxlength="30"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+          />
+          <button id="room-name-submit">Join</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+  </body>
+</html>
