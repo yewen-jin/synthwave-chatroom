@@ -131,6 +131,17 @@ body.palette-green {
   --secondary-text-color: #0f0;
 }
 
+/* /room (thisverisionofme_thisverisionofyou) only — turquoise instead of the
+   green the narrative rooms use for your own messages. style.css is shared by
+   every page, so it is scoped to room.html's body class: /room1, /room2,
+   /chatroom and /player-room keep green. Retinting the token rather than the
+   rules covers both places it is used — the display name in the chat log and
+   the .message.mine border — including the duplicate .mine > .user-id inside
+   the desktop media query (section 18), which needs no override of its own. */
+body.card-game-room {
+  --username-mine-color: #0b7f8c;
+}
+
 /* ============================================================================
    3. TYPOGRAPHY
    ============================================================================ */

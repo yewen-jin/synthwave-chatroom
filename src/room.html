@@ -11,7 +11,10 @@
     />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
+  <!-- card-game-room scopes the /room-only style overrides in style.css, which
+       is shared with the narrative pages. Distinct from the palette-* classes
+       the control panel toggles, so a theme change can't strip it. -->
+  <body class="card-game-room">
     <!-- MSN-style Window Container -->
     <div class="msn-window">
       <!-- Title Bar -->
